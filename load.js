@@ -236,9 +236,6 @@ window.onload = function() {
   g_seg = args['no_seg'] ? false: true;
   g_z = get_size('z') || g_z;
 
-  data_path = '/home/d/data/ac3x75/mojo';
-
-  console.log(data_path);
   create_viewer(g_z, true, false);
   if (g_seg) {
     create_viewer(g_z, true, true);
