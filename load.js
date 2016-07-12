@@ -79,7 +79,6 @@ function create_ts(z) {
 //-----------------------------------
 function create_viewer(z, visible) {
 
-
     // create dom element
     var container_id = null;
     var style = 'background-color:black;position:absolute;top:0px;left:0px;width:100%;height:100%';
@@ -99,7 +98,6 @@ function create_viewer(z, visible) {
         id:            container_id,
         prefixUrl:     "images/",
         navigatorSizeRatio: 0.25,
-        //mouseNavEnabled: canNavigate,
         minZoomImageRatio: 0.5,
         maxZoomPixelRatio: 10,
         showNavigationControl: true,
