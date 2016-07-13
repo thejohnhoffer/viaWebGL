@@ -53,7 +53,7 @@ function getTileUrl( level, x, y ){
 // create_ol - Create an Overlay and Tilesource
 //
 //-----------------------------------
-function create_ol(callback) {
+function create_ol(handler) {
 
     ts = {
         height: g_height,
@@ -63,48 +63,11 @@ function create_ol(callback) {
         maxLevel: g_maxLevel,
         getTileUrl: getTileUrl
     }
-
-    async = new XMLHttpRequest();
-    async.onreadystatechange = () => {
-      if (async.readyState == 4 && async.status == 200) {
-        callback(ts, async.response);
-      }
+    overlaid = new Image();
+    overlaid.src = getTileUrl(0,0,0)+"&segmentation=y&segcolor=y";
+    overlaid.onload = () => {
+        handler(ts, overlaid);
     };
-    async.open("GET", getTileUrl(0,0,0)+"&segmentation=y&segcolor=y", true);
-    async.responseType = 'arraybuffer';
-    async.send();
-};
-
-//-----------------------------------
-//
-// bind_sea = Bind Overlay to Tilesource
-//
-//-----------------------------------
-function bind_sea(ts,ol,container_id) {
-
-  g_master_viewer = OpenSeadragon({
-      id:            container_id,
-      prefixUrl:     "images/",
-      navigatorSizeRatio: 0.25,
-      minZoomImageRatio: 0.5,
-      maxZoomPixelRatio: 10,
-      showNavigationControl: true,
-      animationTime: 0,
-      imageLoaderLimit: 3,
-      tileSources:   ts,
-      timeout: 120000
-  });
-
-  var overlay = this.g_master_viewer.canvasOverlay({
-    onRedraw:function() {
-        overlay.context2d().fillStyle = "red";
-        overlay.context2d().fillRect(0, 0, 500, 500);
-    },
-    clearBeforeRedraw:true
-  });
-
-//   var raw_s = new Zlib.Inflate(new Uint8Array(ol)).decompress();
-  var a = new Uint8Array(ol)
 };
 
 //----------------------------------
@@ -131,6 +94,38 @@ function create_viewer(ts,ol) {
     bind_sea(ts,ol,container_id);
     g_master_viewer.innerTracker.keyHandler = null;
     g_master_viewer.innerTracker.keyDownHandler = null;
+};
+
+//-----------------------------------
+//
+// bind_sea = Bind Overlay to Tilesource
+//
+//-----------------------------------
+function bind_sea(ts,ol,container_id) {
+
+  g_master_viewer = OpenSeadragon({
+      id:            container_id,
+      prefixUrl:     "images/",
+      navigatorSizeRatio: 0.25,
+      minZoomImageRatio: 0.5,
+      maxZoomPixelRatio: 10,
+      showNavigationControl: true,
+      animationTime: 0,
+      imageLoaderLimit: 3,
+      tileSources:   ts,
+      timeout: 120000
+  });
+
+  var overlay = this.g_master_viewer.canvasOverlay({
+    onRedraw: () => {
+      overlay.context2d().globalAlpha = 0.4;
+      overlay.context2d().drawImage(ol,0,0,g_width,g_height)
+    },
+    clearBeforeRedraw:true
+  });
+
+//   var raw_s = new Zlib.Inflate(new Uint8Array(ol)).decompress();
+  var a = new Uint8Array(ol)
 };
 
 window.onload = function() {
