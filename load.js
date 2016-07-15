@@ -36,7 +36,7 @@ way = function(e) {
     this.context2d().globalAlpha = 0.4;
     this.context2d().drawImage(lay.over,0,0,lay.width,lay.height);
   }
-  lay.over.onload = lay.bindSea.bind(lay.seaTerms,doRedraw);
+  lay.over.onload = () => lay.bindSea(lay.seaTerms,doRedraw);
 }
 //-----------------------------------
 //
@@ -66,9 +66,9 @@ way.prototype.Lay = function(preterms) {
     document.body.appendChild(eye_elem);
 };
 
-way.prototype.Lay.prototype.bindSea = function (doRedraw) {
+way.prototype.Lay.prototype.bindSea = function (terms,doRedraw) {
 
-  var seer = OpenSeadragon(this);
+  var seer = OpenSeadragon(terms);
   seer.innerTracker.keyDownHandler = null;
   seer.innerTracker.keyHandler = null;
 
