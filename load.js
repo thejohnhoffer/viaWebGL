@@ -33,12 +33,13 @@ way = function(e) {
   ];
   var lay = new this.Lay(preset);
   var layout = [lay.over,0,0,lay.width,lay.height];
+  // function for Canvas redrawing
   var doRedraw = function() {
     var ctx = this.context2d();
     ctx.drawImage.apply(ctx,layout);
     ctx.globalAlpha = 0.4;
   }
-  lay.over.onload = () => lay.bindSea(lay.seaTerms,doRedraw);
+  lay.over.onload = () => lay.bindSea(lay.under,doRedraw);
 }
 //-----------------------------------
 //
@@ -60,7 +61,7 @@ way.prototype.Lay = function(preterms) {
     // Make high layer
     this.over = new Image();
     this.over.src = this.getTile(0,0,0)+"&segmentation=y&segcolor=y";
-    this.seaTerms = Object.assign(preterms[1], {id: this.id, tileSources: base});
+    this.under = Object.assign(preterms[1], {id: this.id, tileSources: base});
 
     // put a section in the DOM
     var eye_elem = document.createElement('div');
