@@ -1,3 +1,11 @@
+//-----------------------------------
+//
+// way - test webGL overlay atop OpenSeaDragon
+//
+// http://<host>:<port>/index.html?canvas&server=<...>&datapath=<...>
+//
+//-----------------------------------
+
 way = function(e) {
   var preset = [
     {
@@ -6,6 +14,7 @@ way = function(e) {
       tileSize : 512,
       minLevel : 0,
       maxLevel : 5,
+      canvas   : false,
       height :   1024,
       width :    1024,
       depth :    1,
