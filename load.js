@@ -32,11 +32,11 @@ way = function(e) {
     }
   ];
   var lay = new this.Lay(preset);
-  var layout = [lay.over,0,0,lay.width,lay.height];
+  var layover = [lay.over,0,0,lay.width,lay.height];
   // function for Canvas redrawing
   var doRedraw = function() {
     var ctx = this.context2d();
-    ctx.drawImage.apply(ctx,layout);
+    ctx.drawImage.apply(ctx,layover);
     ctx.globalAlpha = 0.4;
   }
   lay.over.onload = () => lay.bindSea(lay.under,doRedraw);
