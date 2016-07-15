@@ -7,6 +7,9 @@
 //-----------------------------------
 
 way = function(e) {
+  var layout = {
+    alpha: 0.4
+  };
   var preset = [
     {
       server :   'viper.krash.net:2001',
@@ -32,15 +35,25 @@ way = function(e) {
     }
   ];
   var lay = new this.Lay(preset);
-  var layover = [lay.over,0,0,lay.width,lay.height];
-  // function for Canvas redrawing
-  var doRedraw = function() {
-    var ctx = this.context2d();
-    ctx.drawImage.apply(ctx,layover);
-    ctx.globalAlpha = 0.4;
-  }
-  lay.over.onload = () => lay.bindSea(lay.under,doRedraw);
+  layout.over = [lay.over,0,0,lay.width,lay.height];
+  ['canvas'].forEach((s) => layout[s] = lay[s]);
+  lay.over.onload = lay.bySea.bind(lay.under,this.how2Draw(layout));
 }
+way.prototype.how2Draw = function(layout) {
+
+  var canvas = function (terms) {
+    this.globalAlpha = terms.alpha;
+    this.drawImage.apply(this,terms.over);
+  }
+  var speedy = function (terms) {
+    this.globalAlpha = .1;
+    this.drawImage.apply(this,terms.over);
+  }
+  return function() {
+    var draw = layout.canvas? canvas : speedy;
+    draw.call(this.context2d(),layout);
+  }
+};
 //-----------------------------------
 //
 // Lay - Create an Overlay and Tilesource
@@ -69,9 +82,9 @@ way.prototype.Lay = function(preterms) {
     document.body.appendChild(eye_elem);
 };
 
-way.prototype.Lay.prototype.bindSea = function (terms,doRedraw) {
+way.prototype.Lay.prototype.bySea = function (doRedraw) {
 
-  var seer = OpenSeadragon(terms);
+  var seer = OpenSeadragon(this);
   seer.innerTracker.keyDownHandler = null;
   seer.innerTracker.keyHandler = null;
 
