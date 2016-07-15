@@ -32,9 +32,11 @@ way = function(e) {
     }
   ];
   var lay = new this.Lay(preset);
+  var layout = [lay.over,0,0,lay.width,lay.height];
   var doRedraw = function() {
-    this.context2d().globalAlpha = 0.4;
-    this.context2d().drawImage(lay.over,0,0,lay.width,lay.height);
+    var ctx = this.context2d();
+    ctx.drawImage.apply(ctx,layout);
+    ctx.globalAlpha = 0.4;
   }
   lay.over.onload = () => lay.bindSea(lay.seaTerms,doRedraw);
 }
