@@ -32,7 +32,11 @@ way = function(e) {
     }
   ];
   var lay = new this.Lay(preset);
-  lay.over.onload = lay.bindSea.bind(lay);
+  var doRedraw = function() {
+    this.context2d().globalAlpha = 0.4;
+    this.context2d().drawImage(lay.over,0,0,lay.width,lay.height);
+  }
+  lay.over.onload = lay.bindSea.bind(lay.seaTerms,doRedraw);
 }
 //-----------------------------------
 //
@@ -62,16 +66,12 @@ way.prototype.Lay = function(preterms) {
     document.body.appendChild(eye_elem);
 };
 
-way.prototype.Lay.prototype.bindSea = function () {
+way.prototype.Lay.prototype.bindSea = function (doRedraw) {
 
-  var seer = OpenSeadragon(this.seaTerms);
+  var seer = OpenSeadragon(this);
   seer.innerTracker.keyDownHandler = null;
   seer.innerTracker.keyHandler = null;
 
-  var doRedraw = () => {
-    layer.context2d().globalAlpha = 0.4;
-    layer.context2d().drawImage(this.over,0,0,this.width,this.height);
-  }
   var layer = seer.canvasOverlay({onRedraw: doRedraw});
 };
 
