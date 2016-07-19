@@ -8,7 +8,10 @@
 
 way = function(e) {
   var layout = {
-    alpha: 0.4
+    alpha: 0.4,
+    shadeA   : 'shaders/former.glsl',
+    shadeB   : 'shaders/latter.glsl',
+    makeWith    : ['canvas']
   };
   var preset = [
     {
@@ -36,18 +39,22 @@ way = function(e) {
   ];
   var lay = new this.Lay(preset);
   layout.over = [lay.over,0,0,lay.width,lay.height];
-  ['canvas'].forEach((s) => layout[s] = lay[s]);
+  layout.makeWith.forEach((s) => layout[s] = lay[s]);
   lay.over.onload = lay.bySea.bind(lay.under,this.how2Draw(layout));
 }
 way.prototype.how2Draw = function(layout) {
 
+  var act = function (f,l) {
+      console.log(f+l);
+  }
   var canvas = function (terms) {
     this.globalAlpha = terms.alpha;
     this.drawImage.apply(this,terms.over);
   }
   var speedy = function (terms) {
-    this.globalAlpha = .1;
-    this.drawImage.apply(this,terms.over);
+    var gl = document.createElement('canvas');
+//    this.viewport(0, 0, this._width, this._height);
+    Bide(terms.shadeA).then(a => Bide(terms.shadeB).then(b => act(a,b)));
   }
   return function() {
     var draw = layout.canvas? canvas : speedy;
@@ -103,10 +110,13 @@ way.prototype.Lay.prototype.getTile = function( level, x, y ) {
 
 way.prototype.Lay.prototype.doTerms = function( before, after ) {
 
-  var clean = (text) => text ? text.replace(new RegExp('\/$'),'') : true;
-  var read = (keys, ask) => typeof keys[ask[0]] === 'string' ? clean(ask[1]) : parseInt(ask[1],10);
-  var check = (obj, ask) => obj[ask[0]] = ask.length > 1 ? read(before, ask) : true;
+  // return a string if preset is string and int if preset is int
+  var clean = text => text ? text.replace(new RegExp('\/$'),'') : true;
+  var read = asking => typeof before[asking[0]] === 'string' ? clean(ask[1]) : parseInt(ask[1],10);
+  // Check whether asking string has answer or is only a true/false flag
+  var check = (obj, ask) => obj[ask[0]] = ask.length > 1 ? read(ask) : true;
   var deal = (obj, str) => { check(obj,str.split('=')); return obj;}
+  // Deal the array into an object
   return after.split('&').reduce(deal,{});
 };
 
