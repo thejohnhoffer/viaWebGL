@@ -1,10 +1,8 @@
 var J = J || {};
 
-J.offscreen_renderer = function(viewer) {
+J.Show = function(viewer) {
 
-  this._viewer = viewer;
-  this._canvas = this._viewer._offscreen_buffer;
-  this._controller = this._viewer._controller;
+  this._canvas = document.createElement('canvas');
 
   this._gl = null;
 
@@ -22,7 +20,7 @@ J.offscreen_renderer = function(viewer) {
 
 };
 
-J.offscreen_renderer.prototype.init = function(vs_id, fs_id) {
+J.Show.prototype.init = function(vs_id, fs_id) {
 
   var canvas = this._canvas;
   var gl = canvas.getContext('experimental-webgl') || canvas.getContext('webgl');
@@ -86,7 +84,7 @@ J.offscreen_renderer.prototype.init = function(vs_id, fs_id) {
 
 };
 
-J.offscreen_renderer.prototype.init_buffers = function() {
+J.Show.prototype.init_buffers = function() {
 
   var gl = this._gl;
 
@@ -124,7 +122,7 @@ J.offscreen_renderer.prototype.init_buffers = function() {
 
 };
 
-J.offscreen_renderer.prototype.draw = function(i, s, c, x, y) {
+J.Show.prototype.draw = function(i, s, c, x, y) {
 
   var gl = this._gl;
 

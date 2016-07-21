@@ -1,20 +1,14 @@
 //-----------------------------------
 //
-// J.way - test webGL overlay atop OpenSeaDragon
+// J.Way - test webGL overlay atop OpenSeaDragon
 //
 // http://<host>:<port>/index.html?canvas&server=<...>&datapath=<...>
 //
 //-----------------------------------
 
-J.way = function(e) {
-  var layout = {
-    alpha: 0.4,
-    shadeA   : 'shaders/former.glsl',
-    shadeB   : 'shaders/latter.glsl',
-    makeWith    : ['canvas']
-  };
-  var preset = [
-    {
+J.Way = function(e) {
+  // Terms to Lay the lower layer
+  var prelaid = {
       server :   'localhost:2001',
       datapath : '/Volumes/NeuroData/mojo',
       tileSize : 512,
@@ -25,71 +19,53 @@ J.way = function(e) {
       width :    1024,
       depth :    1,
       z :        0
-    },
-    {
-      prefixUrl :             "images/",
-      navigatorSizeRatio :    0.25,
-      minZoomImageRatio :     0.5,
-      maxZoomPixelRatio :     10,
-      showNavigationControl : true,
-      animationTime :         0,
-      imageLoaderLimit :      3,
-      timeout :               120000
-    }
+  };
+  var layout = [
+    // This binds upper and lower by Seadragon
+    {   prefixUrl :             "images/",
+        navigatorSizeRatio :    0.25,
+        minZoomImageRatio :     0.5,
+        maxZoomPixelRatio :     10,
+        showNavigationControl : true,
+        animationTime :         0,
+        imageLoaderLimit :      3,
+        timeout :               120000,
+        fromLay : ['id','tileSources']    },
+    // Terms to Show the upper layer
+    {   alpha: 0.4,
+        shadeA   : 'shaders/former.glsl',
+        shadeB   : 'shaders/latter.glsl',
+        fromLay : ['canvas']              }
   ];
-  var lay = new this.Lay(preset);
-  layout.over = [lay.over,0,0,lay.width,lay.height];
-  layout.makeWith.forEach((s) => layout[s] = lay[s]);
-  lay.over.onload = lay.bySea.bind(lay.under,this.how2Draw(layout));
-}
-J.way.prototype.how2Draw = function(layout) {
+  var lay = new this.Lay(prelaid);
+  layout[1].over = [lay.over,0,0,lay.width,lay.height];
+  layout.forEach((x) => this.fromLay.call(x,lay));
 
-  var act = function (f,l) {
-      console.log(f+l);
-  }
+  lay.over.onload = this.bySea.bind(layout[0],this.how2Draw(layout[1]));
+}
+
+J.Way.prototype.fromLay = function (lay) {
+  this.fromLay.forEach((s) => this[s] = lay[s])
+}
+
+J.Way.prototype.how2Draw = function(layout) {
+
   var canvas = function (terms) {
     this.globalAlpha = terms.alpha;
     this.drawImage.apply(this,terms.over);
   }
-  var speedy = function (terms) {
+  var webg = function (terms) {
     var gl = document.createElement('canvas');
 //    this.viewport(0, 0, this._width, this._height);
-    Bide(terms.shadeA).then(a => Bide(terms.shadeB).then(b => act(a,b)));
+    Bide(terms.shadeA).then(a => Bide(terms.shadeB).then(b => console.log('')));
   }
   return function() {
-    var draw = layout.canvas? canvas : speedy;
+    var draw = layout.canvas? canvas : webg;
     draw.call(this.context2d(),layout);
   }
 };
-//-----------------------------------
-//
-// Lay - Create an Overlay and Tilesource
-//
-//-----------------------------------
-J.way.prototype.Lay = function(preterms) {
 
-    // Change the inputs if passed as url terms
-    var terms = this.doTerms( preterms[0], decodeURI(document.location.search.substring(1)) );
-    Object.keys(preterms[0]).forEach((str) => this[str] = terms[str] || preterms[0][str]);
-    this.maxLevel = Math.min(this.maxLevel, Math.ceil(Math.log2(this.width/this.tileSize)));
-
-    // Make low layer
-    var base = new Object();
-    this.id = 'seer_' + preterms.z;
-    Object.assign(base,this).getTileUrl = this.getTile.bind(base);
-
-    // Make high layer
-    this.over = new Image();
-    this.over.src = this.getTile(0,0,0)+"&segmentation=y&segcolor=y";
-    this.under = Object.assign(preterms[1], {id: this.id, tileSources: base});
-
-    // put a section in the DOM
-    var eye_elem = document.createElement('div');
-    Object.assign(eye_elem,{className:'seers', id:this.id});
-    document.body.appendChild(eye_elem);
-};
-
-J.way.prototype.Lay.prototype.bySea = function (doRedraw) {
+J.Way.prototype.bySea = function (doRedraw) {
 
   var seer = OpenSeadragon(this);
   seer.innerTracker.keyDownHandler = null;
@@ -98,7 +74,34 @@ J.way.prototype.Lay.prototype.bySea = function (doRedraw) {
   var layer = seer.canvasOverlay({onRedraw: doRedraw});
 };
 
-J.way.prototype.Lay.prototype.getTile = function( level, x, y ) {
+//-----------------------------------
+//
+// Lay - Create an Overlay and Tilesource
+//
+//-----------------------------------
+J.Way.prototype.Lay = function(preterms) {
+
+    // Change the inputs if passed as url terms
+    var terms = this.doTerms( preterms, decodeURI(document.location.search.substring(1)) );
+    Object.keys(preterms).forEach((str) => this[str] = terms[str] || preterms[str]);
+    this.maxLevel = Math.min(this.maxLevel, Math.ceil(Math.log2(this.width/this.tileSize)));
+
+    // Make low layer
+    this.tileSources = Object.assign({},this);
+    this.tileSources.getTileUrl = this.getTile.bind(this.tileSources);
+
+    // Make high layer
+    this.over = new Image();
+    this.over.src = this.getTile(0,0,0)+"&segmentation=y&segcolor=y";
+
+    // put a section in the DOM
+    this.id = 'seer_' + preterms.z;
+    var eye_elem = document.createElement('div');
+    Object.assign(eye_elem,{className:'seers', id: this.id});
+    document.body.appendChild(eye_elem);
+};
+
+J.Way.prototype.Lay.prototype.getTile = function( level, x, y ) {
 
   level = this.maxLevel - level;
   x *= this.tileSize;
@@ -108,7 +111,7 @@ J.way.prototype.Lay.prototype.getTile = function( level, x, y ) {
          "&size=" + this.tileSize + "," + this.tileSize + ","+this.depth;
 };
 
-J.way.prototype.Lay.prototype.doTerms = function( before, after ) {
+J.Way.prototype.Lay.prototype.doTerms = function( before, after ) {
 
   // return a string if preset is string and int if preset is int
   var clean = text => text ? text.replace(new RegExp('\/$'),'') : true;
@@ -120,4 +123,4 @@ J.way.prototype.Lay.prototype.doTerms = function( before, after ) {
   return after.split('&').reduce(deal,{});
 };
 
-window.onload = (e) => new J.way(e);
+window.onload = (e) => new J.Way(e);
