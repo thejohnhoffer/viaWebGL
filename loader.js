@@ -1,12 +1,12 @@
 //-----------------------------------
 //
-// way - test webGL overlay atop OpenSeaDragon
+// J.way - test webGL overlay atop OpenSeaDragon
 //
 // http://<host>:<port>/index.html?canvas&server=<...>&datapath=<...>
 //
 //-----------------------------------
 
-way = function(e) {
+J.way = function(e) {
   var layout = {
     alpha: 0.4,
     shadeA   : 'shaders/former.glsl',
@@ -15,8 +15,8 @@ way = function(e) {
   };
   var preset = [
     {
-      server :   'viper.krash.net:2001',
-      datapath : '/home/d/data/ac3x75/mojo',
+      server :   'localhost:2001',
+      datapath : '/Volumes/NeuroData/mojo',
       tileSize : 512,
       minLevel : 0,
       maxLevel : 5,
@@ -42,7 +42,7 @@ way = function(e) {
   layout.makeWith.forEach((s) => layout[s] = lay[s]);
   lay.over.onload = lay.bySea.bind(lay.under,this.how2Draw(layout));
 }
-way.prototype.how2Draw = function(layout) {
+J.way.prototype.how2Draw = function(layout) {
 
   var act = function (f,l) {
       console.log(f+l);
@@ -66,7 +66,7 @@ way.prototype.how2Draw = function(layout) {
 // Lay - Create an Overlay and Tilesource
 //
 //-----------------------------------
-way.prototype.Lay = function(preterms) {
+J.way.prototype.Lay = function(preterms) {
 
     // Change the inputs if passed as url terms
     var terms = this.doTerms( preterms[0], decodeURI(document.location.search.substring(1)) );
@@ -89,7 +89,7 @@ way.prototype.Lay = function(preterms) {
     document.body.appendChild(eye_elem);
 };
 
-way.prototype.Lay.prototype.bySea = function (doRedraw) {
+J.way.prototype.Lay.prototype.bySea = function (doRedraw) {
 
   var seer = OpenSeadragon(this);
   seer.innerTracker.keyDownHandler = null;
@@ -98,26 +98,26 @@ way.prototype.Lay.prototype.bySea = function (doRedraw) {
   var layer = seer.canvasOverlay({onRedraw: doRedraw});
 };
 
-way.prototype.Lay.prototype.getTile = function( level, x, y ) {
+J.way.prototype.Lay.prototype.getTile = function( level, x, y ) {
 
-    level = this.maxLevel - level;
-    x *= this.tileSize;
-    y *= this.tileSize;
-    return "http://" + this.server + "/data/?datapath=" + this.datapath +
-           "&start=" + x + "," + y + "," + this.z + "&mip=" + level +
-           "&size=" + this.tileSize + "," + this.tileSize + ","+this.depth;
+  level = this.maxLevel - level;
+  x *= this.tileSize;
+  y *= this.tileSize;
+  return "http://" + this.server + "/data/?datapath=" + this.datapath +
+         "&start=" + x + "," + y + "," + this.z + "&mip=" + level +
+         "&size=" + this.tileSize + "," + this.tileSize + ","+this.depth;
 };
 
-way.prototype.Lay.prototype.doTerms = function( before, after ) {
+J.way.prototype.Lay.prototype.doTerms = function( before, after ) {
 
   // return a string if preset is string and int if preset is int
   var clean = text => text ? text.replace(new RegExp('\/$'),'') : true;
-  var read = asking => typeof before[asking[0]] === 'string' ? clean(ask[1]) : parseInt(ask[1],10);
-  // Check whether asking string has answer or is only a true/false flag
+  var read = ask => typeof before[ask[0]] === 'string' ? clean(ask[1]) : parseInt(ask[1],10);
+  // Check whether the asking string has answer or has only a true/false flag
   var check = (obj, ask) => obj[ask[0]] = ask.length > 1 ? read(ask) : true;
   var deal = (obj, str) => { check(obj,str.split('=')); return obj;}
   // Deal the array into an object
   return after.split('&').reduce(deal,{});
 };
 
-window.onload = (e) => new way(e);
+window.onload = (e) => new J.way(e);
