@@ -1,35 +1,48 @@
 var J = J || {};
 
-J.Show = function(given) {
+J.Show = function(see) {
 
-  var canvas = given[0].appendChild(document.createElement('canvas'));
-  var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  canvas.className = 'seer';
-  var got = given[1];
+    var find = [null,'webgl', 'experimental-webgl'],
+    canvas = see.canvas.appendChild(document.createElement('canvas')),
+    gl = find.reduce((all,now) => all = all || canvas.getContext(now)),
+    square = Float32Array.from('00100111');
 
-  this.standard = {
-      square : [gl.ARRAY_BUFFER,Float32Array.from('00100111'),gl.STATIC_DRAW],
-      kind : [2, gl.FLOAT, false, 0, 0],
-      plan : [gl.TRIANGLE_STRIP, 0, 4],
-      take : given[2]
-  }
-  // Wait a bit to load both shaders
-  var shady = [Bide(got.sh0), Bide(got.sh1)];
-  Promise.all(shady).then(sh => this.Start.call(this.standard,gl,sh));
+    this.square = [gl.ARRAY_BUFFER,square,gl.STATIC_DRAW];
+    this.kind = [2, gl.FLOAT, false, 0, 0];
+    this.plan = [gl.TRIANGLE_STRIP, 0, 4];
+
+    canvas.className = 'seer';
+    this.seer = see;
+    this.gl = gl;
+    return this;
 };
 
-// Link up the Show with the shaders
-J.Show.prototype.Start = function(gl,sh) {
+J.Show.prototype.Shade = function(draw,shade_tokens) {
 
-    var linker = Shade(gl,sh);
-    var buffer = gl.createBuffer();
+    // Wait a bit to load both shaders
+    this.take = shade_tokens;
+    var shady = [Bide(draw.shade0), Bide(draw.shade1)];
+    Promise.all(shady).then(this.Shaded.bind(this));
+}
+
+J.Show.prototype.Shaded = function(shaders) {
+
+    var doRedraw = this.Go.bind(this,shaders,Shade(shaders,this.gl));
+    this.seer.canvasOverlay({onRedraw: doRedraw});
+}
+
+// Link up the Show with the shaders
+J.Show.prototype.Go = function(sh,link) {
+
+    var gl = this.gl;
+    buffer = gl.createBuffer();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(...this.square);
-    gl.useProgram(linker);
+    gl.useProgram(link);
 
     for (t in this.take) {
-      var token = [gl.getAttribLocation(linker,this.take[t]), ...this.kind];
+      var token = [gl.getAttribLocation(link,this.take[t]), ...this.kind];
       gl.enableVertexAttribArray(token[0]);
       gl.vertexAttribPointer(...token);
     }

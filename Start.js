@@ -35,8 +35,8 @@ J.Start = function(e) {
     // Terms to Show the upper layer
     {   alpha: 0.4,
         shape : [laid.over,0,0,laid.width,laid.height],
-        sh0   : 'shaders/former.glsl',
-        sh1   : 'shaders/latter.glsl',
+        shade0   : 'shaders/former.glsl',
+        shade1   : 'shaders/latter.glsl',
         taking : ['canvas']
     },
     // Linking tokens for shaders
@@ -45,32 +45,14 @@ J.Start = function(e) {
     }
   ];
   layout.forEach(this.fro.bind(laid));
-  laid.over.onload = this.runBySea(layout);
+  laid.over.onload = this.howToSee(...layout);
 }
 
-J.Start.prototype.runBySea = function (layout) {
+J.Start.prototype.howToSee = function (see,draw,shade) {
 
-  var seer = OpenSeadragon(layout[0]);
-  var drawer = this.sayHowToDraw(layout[1]);
-  var layer = seer.canvasOverlay({onRedraw: drawer});
-  layout[0] = layer.canvas().parentNode;
-
-  // Create an additional layer for the webgl color overlay
-  var shower = layout[1].canvas? 0: new J.Show(layout);
-};
-
-J.Start.prototype.sayHowToDraw = function(c) {
-
-  var canv = function () {
-      var ctx = this.context2d();
-      ctx.globalAlpha = c.alpha;
-      ctx.drawImage(...c.shape);
-  }
-  var webg = function () {
-      var ctx = this.context2d();
-  }
-  // check whether to draw with canvas or webgl
-  return c.canvas? canv : webg;
+  see = OpenSeadragon(see);
+  // draw with canvas or webgl
+  draw.canvas? new J.ShowCanvas(see,draw) : new J.Show(see).Shade(draw,shade);
 };
 
 J.Start.prototype.fro = function (x) {
