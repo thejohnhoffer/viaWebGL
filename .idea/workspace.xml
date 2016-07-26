@@ -2,8 +2,49 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aec0796f-8147-42f6-be98-6fd451581b40" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loader.js" afterPath="$PROJECT_DIR$/loader.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/renderer.js" afterPath="$PROJECT_DIR$/renderer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Help.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Show.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Start.js" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/helper.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/loader.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/renderer.js" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/fullpage_grouphover.png" afterPath="$PROJECT_DIR$/lib/images/fullpage_grouphover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/fullpage_hover.png" afterPath="$PROJECT_DIR$/lib/images/fullpage_hover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/fullpage_pressed.png" afterPath="$PROJECT_DIR$/lib/images/fullpage_pressed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/fullpage_rest.png" afterPath="$PROJECT_DIR$/lib/images/fullpage_rest.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/home_grouphover.png" afterPath="$PROJECT_DIR$/lib/images/home_grouphover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/home_hover.png" afterPath="$PROJECT_DIR$/lib/images/home_hover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/home_pressed.png" afterPath="$PROJECT_DIR$/lib/images/home_pressed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/home_rest.png" afterPath="$PROJECT_DIR$/lib/images/home_rest.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/next_grouphover.png" afterPath="$PROJECT_DIR$/lib/images/next_grouphover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/next_hover.png" afterPath="$PROJECT_DIR$/lib/images/next_hover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/next_pressed.png" afterPath="$PROJECT_DIR$/lib/images/next_pressed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/next_rest.png" afterPath="$PROJECT_DIR$/lib/images/next_rest.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/previous_grouphover.png" afterPath="$PROJECT_DIR$/lib/images/previous_grouphover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/previous_hover.png" afterPath="$PROJECT_DIR$/lib/images/previous_hover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/previous_pressed.png" afterPath="$PROJECT_DIR$/lib/images/previous_pressed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/previous_rest.png" afterPath="$PROJECT_DIR$/lib/images/previous_rest.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/rotateleft_grouphover.png" afterPath="$PROJECT_DIR$/lib/images/rotateleft_grouphover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/rotateleft_hover.png" afterPath="$PROJECT_DIR$/lib/images/rotateleft_hover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/rotateleft_pressed.png" afterPath="$PROJECT_DIR$/lib/images/rotateleft_pressed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/rotateleft_rest.png" afterPath="$PROJECT_DIR$/lib/images/rotateleft_rest.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/rotateright_grouphover.png" afterPath="$PROJECT_DIR$/lib/images/rotateright_grouphover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/rotateright_hover.png" afterPath="$PROJECT_DIR$/lib/images/rotateright_hover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/rotateright_pressed.png" afterPath="$PROJECT_DIR$/lib/images/rotateright_pressed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/rotateright_rest.png" afterPath="$PROJECT_DIR$/lib/images/rotateright_rest.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/zoomin_grouphover.png" afterPath="$PROJECT_DIR$/lib/images/zoomin_grouphover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/zoomin_hover.png" afterPath="$PROJECT_DIR$/lib/images/zoomin_hover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/zoomin_pressed.png" afterPath="$PROJECT_DIR$/lib/images/zoomin_pressed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/zoomin_rest.png" afterPath="$PROJECT_DIR$/lib/images/zoomin_rest.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/zoomout_grouphover.png" afterPath="$PROJECT_DIR$/lib/images/zoomout_grouphover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/zoomout_hover.png" afterPath="$PROJECT_DIR$/lib/images/zoomout_hover.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/zoomout_pressed.png" afterPath="$PROJECT_DIR$/lib/images/zoomout_pressed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/images/zoomout_rest.png" afterPath="$PROJECT_DIR$/lib/images/zoomout_rest.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shaders/former.glsl" afterPath="$PROJECT_DIR$/shaders/former.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shaders/latter.glsl" afterPath="$PROJECT_DIR$/shaders/latter.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style/sea.css" afterPath="$PROJECT_DIR$/style/sea.css" />
     </list>
     <ignored path="waymesh.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,11 +65,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="latter.glsl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shaders/latter.glsl">
+      <file leaf-file-name="former.glsl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shaders/former.glsl">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="4" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="4" />
+              <caret line="0" column="26" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -38,37 +79,37 @@
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-4.95">
-              <caret line="9" column="60" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
+              <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="former.glsl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shaders/former.glsl">
+      <file leaf-file-name="latter.glsl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shaders/latter.glsl">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="1" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="renderer.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/renderer.js">
+      <file leaf-file-name="Start.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Start.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-0.42307693">
-              <caret line="4" column="50" selection-start-line="4" selection-start-column="50" selection-end-line="4" selection-end-column="50" />
+              <caret line="1" column="2" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="loader.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/loader.js">
+      <file leaf-file-name="Show.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Show.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.030054646">
-              <caret line="2" column="48" selection-start-line="2" selection-start-column="48" selection-end-line="2" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.108757064">
+              <caret line="7" column="21" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -93,21 +134,23 @@
         <option value="$PROJECT_DIR$/openseadragon.min.js" />
         <option value="$PROJECT_DIR$/serve.js" />
         <option value="$PROJECT_DIR$/lib/openseadragon.min.js" />
-        <option value="$PROJECT_DIR$/style/sea.css" />
         <option value="$PROJECT_DIR$/json/Lay.json" />
         <option value="$PROJECT_DIR$/networker.js" />
         <option value="$PROJECT_DIR$/presets.js" />
         <option value="$PROJECT_DIR$/start.js" />
         <option value="$PROJECT_DIR$/lib/openseadragon-canvas-overlay.js" />
-        <option value="$PROJECT_DIR$/shaders/latter.glsl" />
-        <option value="$PROJECT_DIR$/shaders/former.glsl" />
-        <option value="$PROJECT_DIR$/lib/helper.js" />
         <option value="$PROJECT_DIR$/lib/canvas-overlay.js" />
         <option value="$PROJECT_DIR$/lib/gl-overlay.js" />
         <option value="$PROJECT_DIR$/load.js" />
-        <option value="$PROJECT_DIR$/index.html" />
-        <option value="$PROJECT_DIR$/renderer.js" />
         <option value="$PROJECT_DIR$/loader.js" />
+        <option value="$PROJECT_DIR$/renderer.js" />
+        <option value="$PROJECT_DIR$/style/sea.css" />
+        <option value="$PROJECT_DIR$/shaders/former.glsl" />
+        <option value="$PROJECT_DIR$/shaders/latter.glsl" />
+        <option value="$PROJECT_DIR$/Start.js" />
+        <option value="$PROJECT_DIR$/Show.js" />
+        <option value="$PROJECT_DIR$/lib/helper.js" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -141,7 +184,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -158,6 +200,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="waymesh" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="waymesh" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="waymesh" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="style" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -191,6 +247,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -198,14 +255,15 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../BTFLY" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/John/Desktop/16Q3/waymesh/Start.js" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/lib" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/lib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager">
@@ -349,13 +407,13 @@
     <frame x="0" y="23" width="1440" height="873" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19642857" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20071429" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34428573" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34428573" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -367,25 +425,6 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.095" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24785714" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -403,6 +442,46 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/shaders/latter.glsl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shaders/latter.glsl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="4" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="60" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shaders/former.glsl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="1" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/shaders/latter.glsl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -523,6 +602,9 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
           <first_editor vertical-scroll-proportion="0.0">
@@ -530,9 +612,6 @@
           </first_editor>
           <second_editor />
         </state>
-      </provider>
-      <provider editor-type-id="MarkdownFxPreviewEditor">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
@@ -553,28 +632,73 @@
     <entry file="file://$PROJECT_DIR$/style/sea.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/helper.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.075445816">
-          <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/gl-overlay.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31073445">
-          <caret line="30" column="52" selection-start-line="30" selection-start-column="52" selection-end-line="30" selection-end-column="52" />
+        <state vertical-scroll-proportion="-6.82">
+          <caret line="31" column="35" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
+          <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/fullpage_rest.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/zoomout_rest.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/zoomin_hover.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/next_pressed.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/home_pressed.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/zoomin_rest.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/next_hover.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/home_hover.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/next_rest.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/images/home_rest.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shaders/latter.glsl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="4" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="4" />
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -582,7 +706,7 @@
     <entry file="file://$PROJECT_DIR$/shaders/former.glsl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="1" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+          <caret line="0" column="26" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -590,23 +714,31 @@
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.95">
-          <caret line="9" column="60" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
+          <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/renderer.js">
+    <entry file="file://$PROJECT_DIR$/Start.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.42307693">
-          <caret line="4" column="50" selection-start-line="4" selection-start-column="50" selection-end-line="4" selection-end-column="50" />
+          <caret line="1" column="2" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/loader.js">
+    <entry file="file://$PROJECT_DIR$/Help.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.030054646">
-          <caret line="2" column="48" selection-start-line="2" selection-start-column="48" selection-end-line="2" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Show.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.108757064">
+          <caret line="7" column="21" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
           <folding />
         </state>
       </provider>
