@@ -21,8 +21,7 @@ J.Show = function(see,draw,dot) {
     this.tiles = [k.tex, 0, ...imp('tiles'), draw.overlay];
     this.square = [k.ab, k.box, imp('square')];
 
-    this.alpha = draw.alpha;
-    this.shape = draw.shape;
+    Object.assign(this,{alpha:draw.alpha, shape:draw.shape});
     this.kind = [2, gl.FLOAT, false, 0, 0];
     this.plan = [imp('mesh'), 0, 4];
 
