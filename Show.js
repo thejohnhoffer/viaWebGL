@@ -8,7 +8,7 @@ J.Show = function(see,draw,dot) {
     gl = find.reduce((all,now) => all = all || offscreen.getContext(now)),
     k = {
         color : [gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
-        box: Float32Array.from('00100111').map(x => 1*x-0),
+        box: Float32Array.from('00100111'),
         min: gl.TEXTURE_MIN_FILTER,
         mag: gl.TEXTURE_MAG_FILTER,
         ab : gl.ARRAY_BUFFER,
@@ -21,6 +21,7 @@ J.Show = function(see,draw,dot) {
     this.tiles = [k.tex, 0, ...imp('tiles'), draw.overlay];
     this.square = [k.ab, k.box, imp('square')];
 
+    this.alpha = draw.alpha;
     this.shape = draw.shape;
     this.kind = [2, gl.FLOAT, false, 0, 0];
     this.plan = [imp('mesh'), 0, 4];
@@ -54,7 +55,7 @@ J.Show.prototype.Go = function(shaders,dot,gl) {
     return function(){
 
         var ctx = this.context2d();
-//        ['width','height'].map(deal.bind([offscreen,this.canvas]))
+        ctx.globalAlpha = self.alpha;
 
         // Set pointers for GLSL
         for (var where in dot) {
