@@ -1,4 +1,7 @@
+precision mediump float;
+uniform sampler2D u_tiler;
+varying vec2 v_tile;
 
 void main() {
-  gl_FragColor = vec4(0, 1, 0, 1);  // green
+  gl_FragColor = texture2D(u_tiler, v_tile);
 }

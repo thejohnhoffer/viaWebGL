@@ -22,7 +22,7 @@ function Bide(where, what) {
 //
 // ----------------------------------
 
-function Shade(files, gl) {
+function Shading(files, gl) {
 
   var shaderWork = gl.createProgram();
   var make = function(gl, str, it) {

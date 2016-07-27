@@ -21,7 +21,7 @@ J.Start = function(e) {
       mip : 5
   });
   var layout = [
-    // This binds upper and lower by Seadragon
+    // This binds the lower layer in Seadragon
     {   prefixUrl :             "lib/images/",
         navigatorSizeRatio :    0.25,
         minZoomImageRatio :     0.5,
@@ -34,25 +34,29 @@ J.Start = function(e) {
     },
     // Terms to Show the upper layer
     {   alpha: 0.4,
-        shape : [laid.over,0,0,laid.width,laid.height],
+        shape : [laid.overlay,0,0,laid.width,laid.height],
         shade0   : 'shaders/former.glsl',
         shade1   : 'shaders/latter.glsl',
-        taking : ['canvas']
+        mesh : 'TRIANGLE_STRIP',
+        style : 'STATIC_DRAW',
+        scale   : 'NEAREST',
+        taking : ['canvas','overlay']
     },
-    // Linking tokens for shaders
+    // Pointwise values for shaders
     {
-        positionLocation : 'a_position'
+        a_where : {},
+        a_tile  : {}
     }
   ];
   layout.forEach(this.fro.bind(laid));
-  laid.over.onload = this.howToSee(...layout);
+  laid.overlay.onload = this.howToSee(...layout);
 }
 
-J.Start.prototype.howToSee = function (see,draw,shade) {
+J.Start.prototype.howToSee = function (see,draw,dots) {
 
   see = OpenSeadragon(see);
-  // draw with canvas or webgl
-  draw.canvas? new J.ShowCanvas(see,draw) : new J.Show(see).Shade(draw,shade);
+  // Cover the Seadragon with either canvas or webgl
+  draw.canvas? new J.ShowCanvas(see,draw) : new J.Show(see,draw).Shade(dots);
 };
 
 J.Start.prototype.fro = function (x) {
@@ -76,8 +80,9 @@ J.Start.prototype.Lay = function(preterms) {
     this.tileSources.getTileUrl = this.getTile.bind(this.tileSources);
 
     // Make high layer
-    this.over = new Image();
-    this.over.src = this.getTile(0,0,0)+"&segmentation=y&segcolor=y";
+    this.overlay = new Image();
+    this.overlay.crossOrigin = "anonymous";
+    this.overlay.src = this.getTile(0,0,0)+"&segmentation=y&segcolor=y";
 
     // put a section in the DOM
     this.id = 'seer_' + preterms.z;
