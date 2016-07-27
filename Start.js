@@ -38,7 +38,7 @@ J.Start = function(e) {
         shade0   : 'shaders/former.glsl',
         shade1   : 'shaders/latter.glsl',
         mesh : 'TRIANGLE_STRIP',
-        style : 'STATIC_DRAW',
+        square : 'STATIC_DRAW',
         scale   : 'NEAREST',
         taking : ['canvas','overlay']
     },
@@ -56,7 +56,7 @@ J.Start.prototype.howToSee = function (see,draw,dots) {
 
   see = OpenSeadragon(see);
   // Cover the Seadragon with either canvas or webgl
-  draw.canvas? new J.ShowCanvas(see,draw) : new J.Show(see,draw).Shade(dots);
+  draw.canvas? new J.ShowCanvas(see,draw) : new J.Show(see,draw,dots);
 };
 
 J.Start.prototype.fro = function (x) {
@@ -87,7 +87,7 @@ J.Start.prototype.Lay = function(preterms) {
     // put a section in the DOM
     this.id = 'seer_' + preterms.z;
     idiv = document.createElement('div');
-    Object.assign(idiv,{className:'seer canv', id: this.id});
+    Object.assign(idiv,{className:'seer', id: this.id});
     document.body.appendChild(idiv);
 };
 
