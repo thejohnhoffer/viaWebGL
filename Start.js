@@ -35,11 +35,12 @@ J.Start = function(e) {
     // Terms to Show the upper layer
     {   alpha: 0.4,
         shape : [laid.overlay,0,0,laid.width,laid.height],
-        shade0   : 'shaders/former.glsl',
-        shade1   : 'shaders/latter.glsl',
+        shaders : ['shaders/former.glsl','shaders/latter.glsl'],
         mesh : 'TRIANGLE_STRIP',
         square : 'STATIC_DRAW',
-        scale   : 'NEAREST',
+        min   : 'NEAREST',
+        mag   : 'NEAREST',
+        tiles : 'color',
         taking : ['canvas','overlay']
     },
     // Pointwise values for shaders

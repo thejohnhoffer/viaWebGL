@@ -2,23 +2,26 @@ var J = J || {};
 
 J.Show = function(see,draw,dots) {
 
-    var find = [null,'webgl', 'experimental-webgl'],
-    shady = [Bide(draw.shade0), Bide(draw.shade1)];
+    var shady = draw.shaders.map(Bide),
+    find = [null,'webgl', 'experimental-webgl'],
     offscreen = document.createElement('canvas'),
     gl = find.reduce((all,now) => all = all || offscreen.getContext(now)),
-    tiler = [gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
-    scale = [gl.TEXTURE_MIN_FILTER,gl.TEXTURE_MAG_FILTER],
-    square = [Float32Array.from('00100111')],
-    join = function (x) {
-      return [gl[this[0]],x,gl[draw[this[1]]]];
-    };
+    k = {
+        color : [gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
+        box: Float32Array.from('00100111'),
+        min: gl.TEXTURE_MIN_FILTER,
+        mag: gl.TEXTURE_MAG_FILTER,
+        tex: gl.TEXTURE_2D,
+        ab : gl.ARRAY_BUFFER,
+    },
+    imp = (x) =>  k.hasOwnProperty(draw[x])? k[draw[x]]: gl[draw[x]];
 
     // put together needed bits for webGL
-    this.image = [...tiler,draw.overlay];
-    this.square = square.map(join.bind(['ARRAY_BUFFER','square']));
-    this.scale = scale.map(join.bind(['TEXTURE_2D', 'scale']));
+    this.scale = [ [k.tex, k.min, imp('min')], [k.tex, k.min, imp('mag')] ];
+    this.tiles = [k.tex, 0, ...imp('tiles'), draw.overlay];
+    this.square = [k.ab, k.box, imp('square')];
     this.kind = [2, gl.FLOAT, false, 0, 0];
-    this.plan = [gl[draw.mesh], 0, 4];
+    this.plan = [imp('mesh'), 0, 4];
     this.dots = dots;
 
     this.shape = draw.shape.fill(offscreen,0,1);
@@ -45,7 +48,7 @@ J.Show.prototype.Go = function(shaders,gl) {
         var ctx = this.context2d();
         // Essential position buffer for the showing
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(...self.square[0]);
+        gl.bufferData(...self.square);
         gl.useProgram(link);
 
         // Get the pointers for GLSL
@@ -58,9 +61,10 @@ J.Show.prototype.Go = function(shaders,gl) {
         // Needed for the colored tiling
         gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
         self.scale.map(x => gl.texParameteri(...x));
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
 
         // Upload the image into the texture.
-        gl.texImage2D(...self.image);
+        gl.texImage2D(...self.tiles);
         // Draw everything needed to canvas
         gl.drawArrays(...self.plan);
         ctx.drawImage(...self.shape);
