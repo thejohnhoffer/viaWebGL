@@ -20,11 +20,13 @@ J.Show = function(see,draw,dot) {
     this.scale = [ [k.tex, k.min, imp('min')], [k.tex, k.min, imp('mag')] ];
     this.tiles = [k.tex, 0, ...imp('tiles'), draw.overlay];
     this.square = [k.ab, k.box, imp('square')];
+
+    this.shape = draw.shape.fill(offscreen,0,1);
     this.kind = [2, gl.FLOAT, false, 0, 0];
     this.plan = [imp('mesh'), 0, 4];
 
-    this.shape = draw.shape.fill(offscreen,0,1);
-    var out = {dot:dot,gl:gl,see:see,Go:this.Go.bind(this)};
+    var Go = this.Go.bind(this),
+    out = {dot:dot,gl:gl,see:see,Go:Go};
     Promise.all(shady).then(this.Shade.bind(out));
 };
 
