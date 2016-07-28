@@ -46,7 +46,7 @@ J.Start = function(e) {
     // Pointwise values for shaders
     {
         a_where : {},
-        a_tile  : {}
+        a_tile_pos  : {}
     }
   ];
   layout.forEach(this.fro.bind(laid));

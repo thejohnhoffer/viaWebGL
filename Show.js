@@ -18,7 +18,7 @@ J.Show = function(see,draw,dot) {
 
     // put together needed bits for webGL
     this.scale = [ [k.tex, k.min, imp('min')], [k.tex, k.min, imp('mag')] ];
-    this.tiles = [k.tex, 0, ...imp('tiles'), draw.overlay];
+    this.tiler = [k.tex, 0, ...imp('tiles'), draw.overlay];
     this.square = [k.ab, k.box, imp('square')];
 
     Object.assign(this,{alpha:draw.alpha, shape:draw.shape});
@@ -69,7 +69,7 @@ J.Show.prototype.Go = function(shaders,dot,gl) {
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
 
         // Upload the image into the texture.
-        gl.texImage2D(...self.tiles);
+        gl.texImage2D(...self.tiler);
         // Draw everything needed to canvas
         gl.drawArrays(...self.plan);
         ctx.drawImage(...self.shape);
