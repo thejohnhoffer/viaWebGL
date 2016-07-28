@@ -55,7 +55,7 @@ J.Start = function(e) {
 
 J.Start.prototype.howToSee = function (see,draw,dots) {
 
-  see = OpenSeadragon(see);
+  see = new OpenSeadragon(see);
   // Cover the Seadragon with either canvas or webgl
   draw.canvas? new J.ShowCanvas(see,draw) : new J.Show(see,draw,dots);
 };

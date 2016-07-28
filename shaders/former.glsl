@@ -1,4 +1,4 @@
-attribute vec2 a_tile;
+attribute vec2 a_tile_pos;
 attribute vec2 a_where;
 
 varying vec2 v_tile_pos;
