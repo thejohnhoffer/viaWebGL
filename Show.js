@@ -21,10 +21,10 @@ J.Show = function(low,top,spot) {
 
     // put together needed bits for webGL
     this.scale = [ [k.tex, k.min, imp('min')], [k.tex, k.min, imp('mag')] ];
-    this.tiler = [k.tex, 0, ...imp('tiles'), top.shape[0]];
+    this.tiler = [k.tex, 0, ...imp('type'), top.image];
     this.square = [k.ab, k.box, imp('square')];
-    this.shape = top.shape.fill(offscreen,0,1);
-    this.view = top.shape.slice(1);
+    this.offscreen = offscreen;
+    this.shape = top.shape;
     this.spot = spot;
     this.gl = gl;
 
@@ -33,7 +33,7 @@ J.Show = function(low,top,spot) {
     this.plan = [imp('mesh'), 0, 4];
 
     var go = this.Go.bind(this);
-    var joiner = new J.Join(low, top, go);
+    var joiner = new J.Join(low, top, go, offscreen);
     Promise.all(shady).then(joiner.ready);
 };
 
@@ -48,7 +48,7 @@ J.Show.prototype.Go = function(shaders) {
     // Find all of the glsl spotwise attributes
     var find = x => self.spot[x].id = gl.getAttribLocation(link,x);
     Object.keys(self.spot).map(find);
-    gl.viewport(...self.view);
+    gl.viewport(...self.shape);
 
     // Essential position buffer for the showing
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());

@@ -1,7 +1,7 @@
 var J = J || {};
 
 // Join webgl top with low seadragon
-J.Join = function(low,top,go) {
+J.Join = function(low,top,go,offscreen) {
 
     this.ready = function(shaders) {
 
@@ -18,12 +18,12 @@ J.Join = function(low,top,go) {
             var idiv = document.createElement('div');
             Object.assign(idiv,{className:'seer', id: id});
             document.body.appendChild(idiv);
-            idiv.appendChild(top.shape[0]);
+            idiv.appendChild(offscreen);
             return;
         }
 
         // Actually join to canvas
-        new J.ShowCanvas(low,top);
+        new J.ShowCanvas(low,top,offscreen);
     }
 
 };

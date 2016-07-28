@@ -38,13 +38,14 @@ J.Start = function(e) {
     {   alpha: 0.6,
         debug : laid.debug,
         canvas : laid.canvas,
-        shape : [laid.overlay,0,0,laid.width,laid.height],
+        image : laid.overlay,
+        shape : [0,0,laid.width,laid.height],
         shaders : ['shaders/former.glsl','shaders/latter.glsl'],
         mesh : 'TRIANGLE_STRIP',
         square : 'STATIC_DRAW',
         min   : 'NEAREST',
         mag   : 'NEAREST',
-        tiles : 'color'
+        type : 'color'
     },
     // Spotwise values for shaders
     {
@@ -57,9 +58,10 @@ J.Start = function(e) {
 
 J.Start.prototype.howToStart = function (low,top,spot) {
 
+  var image = top.image;
   low = new OpenSeadragon(low);
   // Cover the Seadragon with either canvas or webgl
-  top.canvas? new J.ShowCanvas(low,top) : new J.Show(low,top,spot);
+  top.canvas? new J.ShowCanvas(low,top,image) : new J.Show(low,top,spot);
 };
 
 //-----------------------------------

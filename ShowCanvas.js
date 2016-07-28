@@ -1,12 +1,12 @@
 var J = J || {};
 
-J.ShowCanvas = function(see,draw) {
+J.ShowCanvas = function(low,top,source) {
 
     var Go = function() {
         var ctx = this.context2d();
-        ctx.globalAlpha = draw.alpha;
-        ctx.drawImage(...draw.shape);
+        ctx.globalAlpha = top.alpha;
+        ctx.drawImage(source,...top.shape);
     }
 
-    see.canvasOverlay({onRedraw: Go});
+    low.canvasOverlay({onRedraw: Go});
 };
