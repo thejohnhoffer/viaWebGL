@@ -12,16 +12,17 @@ J.Start = function(e) {
       server :   'localhost:2001',
       datapath : '/Volumes/NeuroData/mojo',
       canvas   : false,
+      debug  :   false,
       height :   1024,
       width :    1024,
       depth :    1,
       z :        0,
       tileSize : 512,
       minLevel : 0,
-      mip : 5
+      mip : 1
   });
   var layout = [
-    // This binds the lower layer in Seadragon
+    // low: Lower layer in Seadragon
     {   prefixUrl :             "lib/images/",
         navigatorSizeRatio :    0.25,
         minZoomImageRatio :     0.5,
@@ -33,8 +34,9 @@ J.Start = function(e) {
         tileSources : laid.tileSources,
         id : laid.id
     },
-    // Terms to Show the upper layer
-    {   alpha: 0.4,
+    // top: Upper layer with webgl or canvas
+    {   alpha: 0.6,
+        debug : laid.debug,
         canvas : laid.canvas,
         shape : [laid.overlay,0,0,laid.width,laid.height],
         shaders : ['shaders/former.glsl','shaders/latter.glsl'],
@@ -44,7 +46,7 @@ J.Start = function(e) {
         mag   : 'NEAREST',
         tiles : 'color'
     },
-    // Pointwise values for shaders
+    // Spotwise values for shaders
     {
         a_where : {},
         a_tile_pos  : {}
@@ -53,11 +55,11 @@ J.Start = function(e) {
   laid.overlay.onload = this.howToStart(...layout);
 }
 
-J.Start.prototype.howToStart = function (see,draw,dots) {
+J.Start.prototype.howToStart = function (low,top,spot) {
 
-  see = new OpenSeadragon(see);
+  low = new OpenSeadragon(low);
   // Cover the Seadragon with either canvas or webgl
-  draw.canvas? new J.ShowCanvas(see,draw) : new J.Show(see,draw,dots);
+  top.canvas? new J.ShowCanvas(low,top) : new J.Show(low,top,spot);
 };
 
 //-----------------------------------
