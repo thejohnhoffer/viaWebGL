@@ -30,18 +30,19 @@ J.Start = function(e) {
         animationTime :         0,
         imageLoaderLimit :      3,
         timeout :               120000,
-        taking : ['id','tileSources']
+        tileSources : laid.tileSources,
+        id : laid.id
     },
     // Terms to Show the upper layer
     {   alpha: 0.4,
+        canvas : laid.canvas,
         shape : [laid.overlay,0,0,laid.width,laid.height],
         shaders : ['shaders/former.glsl','shaders/latter.glsl'],
         mesh : 'TRIANGLE_STRIP',
         square : 'STATIC_DRAW',
         min   : 'NEAREST',
         mag   : 'NEAREST',
-        tiles : 'color',
-        taking : ['canvas','overlay']
+        tiles : 'color'
     },
     // Pointwise values for shaders
     {
@@ -49,19 +50,14 @@ J.Start = function(e) {
         a_tile_pos  : {}
     }
   ];
-  layout.forEach(this.fro.bind(laid));
-  laid.overlay.onload = this.howToSee(...layout);
+  laid.overlay.onload = this.howToStart(...layout);
 }
 
-J.Start.prototype.howToSee = function (see,draw,dots) {
+J.Start.prototype.howToStart = function (see,draw,dots) {
 
   see = new OpenSeadragon(see);
   // Cover the Seadragon with either canvas or webgl
   draw.canvas? new J.ShowCanvas(see,draw) : new J.Show(see,draw,dots);
-};
-
-J.Start.prototype.fro = function (x) {
-  if (x.taking) x.taking.forEach((s) => x[s] = this[s]);
 };
 
 //-----------------------------------
