@@ -43,23 +43,18 @@ J.Start = function(e) {
         context_keys : {preserveDrawingBuffer:true},
         sizes : {width: laid.tileSize, height: laid.tileSize},
         shaders : ['shaders/former.glsl','shaders/latter.glsl']
-    },
-    // Spotwise values for shaders
-    {
-        a_where : {},
-        a_tile_pos  : {}
     }
   ];
   laid.overlay.onload = this.howToStart(...layout);
 }
 
-J.Start.prototype.howToStart = function (sea,top,spot) {
+J.Start.prototype.howToStart = function (sea,top) {
 
   var image = top.image;
   var low = new OpenSeadragon(sea);
 
   // Cover the Seadragon with either canvas or webgl
-  top.canvas? new J.ShowCanvas(low,top,image) : new J.Show(low,top,spot);
+  top.canvas? new J.ShowCanvas(low,top) : new J.Show(low,top);
 };
 
 //-----------------------------------

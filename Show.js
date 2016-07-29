@@ -1,6 +1,6 @@
 var J = J || {};
 
-J.Show = function(low,top,spot) {
+J.Show = function(low,top) {
 
     var go = this.Go.bind(this);
     var shady = top.shaders.map(Bide);
@@ -9,6 +9,10 @@ J.Show = function(low,top,spot) {
     var gl = context('webgl') || context('experimental-webgl');
     var joiner = new J.Join(low, top, go, offscreen);
 
+    var spot = {
+        a_where : {},
+        a_tile_pos  : {}
+    }
     var k = {
         square_strip: [gl.TRIANGLE_STRIP, 0, 4],
         floating: [2, gl.FLOAT, false, 0, 0],
