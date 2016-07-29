@@ -48,7 +48,7 @@ J.Show.prototype.Go = function(shaders) {
     var overlay = gl.createTexture();
 
     // Find glsl spotwise attributes
-    for (x in self.spot) {
+    for (var where in self.spot) {
       self.spot[x].id = gl.getAttribLocation(link,x);
       self.spot[x].kind = self.kind;
     }
