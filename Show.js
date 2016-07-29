@@ -49,8 +49,8 @@ J.Show.prototype.Go = function(shaders) {
 
     // Find glsl spotwise attributes
     for (var where in self.spot) {
-      self.spot[x].id = gl.getAttribLocation(link,x);
-      self.spot[x].kind = self.kind;
+      self.spot[where].id = gl.getAttribLocation(link,where);
+      self.spot[where].kind = self.kind;
     }
 
     // Essential position buffer for the showing
