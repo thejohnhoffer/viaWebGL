@@ -2,11 +2,16 @@ var J = J || {};
 
 J.Show = function(low,top,spot) {
 
+    var go = this.Go.bind(this);
     var shady = top.shaders.map(Bide);
-    var offscreen = document.createElement('canvas');
-    var context = (s) => offscreen.getContext(s,{preserveDrawingBuffer:true});
+    var offscreen = Object.assign(document.createElement('canvas'), top.sizes);
+    var context = (s) => offscreen.getContext(s,top.context_keys);
     var gl = context('webgl') || context('experimental-webgl');
+    var joiner = new J.Join(low, top, go, offscreen);
+
     var k = {
+        square_strip: [gl.TRIANGLE_STRIP, 0, 4],
+        floating: [2, gl.FLOAT, false, 0, 0],
         color : [gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
         box: Float32Array.from('00100111').map(x=>-x),
         min: gl.TEXTURE_MIN_FILTER,
@@ -14,26 +19,23 @@ J.Show = function(low,top,spot) {
         ab : gl.ARRAY_BUFFER,
         tex: gl.TEXTURE_2D,
     };
-    var imp = (x) =>  k.hasOwnProperty(top[x])? k[top[x]]: gl[top[x]];
-    offscreen.width = 512;
-    offscreen.height = 512;
-
+    k.square_static = [k.ab, k.box, gl.STATIC_DRAW];
+    k.tiler = [k.tex, 0, ...k.color, top.image];
+    k.near_min = [k.tex, k.min, gl.NEAREST];
+    k.near_mag = [k.tex, k.mag, gl.NEAREST];
 
     // put together needed bits for webGL
-    this.scale = [ [k.tex, k.min, imp('min')], [k.tex, k.min, imp('mag')] ];
-    this.tiler = [k.tex, 0, ...imp('type'), top.image];
-    this.square = [k.ab, k.box, imp('square')];
+    this.scale = [ k.near_min, k.near_mag ];
+    this.square = k.square_static;
+    this.plan = k.square_strip;
     this.offscreen = offscreen;
     this.shape = top.shape;
+    this.alpha = top.alpha;
+    this.kind = k.floating;
+    this.tiler = k.tiler;
     this.spot = spot;
     this.gl = gl;
 
-    Object.assign(this,{alpha:top.alpha});
-    this.kind = [2, gl.FLOAT, false, 0, 0];
-    this.plan = [imp('mesh'), 0, 4];
-
-    var go = this.Go.bind(this);
-    var joiner = new J.Join(low, top, go, offscreen);
     Promise.all(shady).then(joiner.ready);
 };
 
@@ -45,14 +47,16 @@ J.Show.prototype.Go = function(shaders) {
     var link = Shading(shaders,gl);
     var overlay = gl.createTexture();
 
-    // Find all of the glsl spotwise attributes
-    var find = x => self.spot[x].id = gl.getAttribLocation(link,x);
-    Object.keys(self.spot).map(find);
-    gl.viewport(...self.shape);
+    // Find glsl spotwise attributes
+    for (x in self.spot) {
+      self.spot[x].id = gl.getAttribLocation(link,x);
+      self.spot[x].kind = self.kind;
+    }
 
     // Essential position buffer for the showing
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(...self.square);
+    gl.viewport(...self.shape);
     gl.useProgram(link);
 
     // The webgl animation
@@ -61,7 +65,8 @@ J.Show.prototype.Go = function(shaders) {
         // Set pointers for GLSL
         for (var where in self.spot) {
           var id = self.spot[where].id;
-          gl.vertexAttribPointer(id,...self.kind);
+          var kind = self.spot[where].kind;
+          gl.vertexAttribPointer(id,...kind);
           gl.enableVertexAttribArray(id);
         }
 

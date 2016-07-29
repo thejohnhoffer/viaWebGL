@@ -22,7 +22,7 @@ J.Start = function(e) {
       mip : 1
   });
   var layout = [
-    // low: Lower layer in Seadragon
+    // sea: Lower layer in Seadragon
     {   prefixUrl :             "lib/images/",
         navigatorSizeRatio :    0.25,
         minZoomImageRatio :     0.5,
@@ -40,12 +40,9 @@ J.Start = function(e) {
         canvas : laid.canvas,
         image : laid.overlay,
         shape : [0,0,laid.width,laid.height],
-        shaders : ['shaders/former.glsl','shaders/latter.glsl'],
-        mesh : 'TRIANGLE_STRIP',
-        square : 'STATIC_DRAW',
-        min   : 'NEAREST',
-        mag   : 'NEAREST',
-        type : 'color'
+        context_keys : {preserveDrawingBuffer:true},
+        sizes : {width: laid.tileSize, height: laid.tileSize},
+        shaders : ['shaders/former.glsl','shaders/latter.glsl']
     },
     // Spotwise values for shaders
     {
@@ -56,10 +53,11 @@ J.Start = function(e) {
   laid.overlay.onload = this.howToStart(...layout);
 }
 
-J.Start.prototype.howToStart = function (low,top,spot) {
+J.Start.prototype.howToStart = function (sea,top,spot) {
 
   var image = top.image;
-  low = new OpenSeadragon(low);
+  var low = new OpenSeadragon(sea);
+
   // Cover the Seadragon with either canvas or webgl
   top.canvas? new J.ShowCanvas(low,top,image) : new J.Show(low,top,spot);
 };
