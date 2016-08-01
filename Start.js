@@ -39,6 +39,7 @@ J.Start = function(e) {
         debug : laid.debug,
         canvas : laid.canvas,
         image : laid.overlay,
+        tileSources : laid.tileSources,
         shape : [0,0,laid.width,laid.height],
         context_keys : {preserveDrawingBuffer:true},
         sizes : {width: laid.tileSize, height: laid.tileSize},
@@ -51,8 +52,8 @@ J.Start = function(e) {
 J.Start.prototype.howToStart = function (sea,top) {
  
   var low = new OpenSeadragon(sea);
-
-  // Cover the Seadragon with either canvas or webgl
+  
+  // Cover the Seadragon with colors
   var a = new J.Show(low,top);
 };
 
@@ -86,12 +87,15 @@ J.Start.prototype.Lay = function(preterms) {
 
 J.Start.prototype.Lay.prototype.getTile = function( level, x, y ) {
 
-  level = this.maxLevel - level;
   x *= this.tileSize;
   y *= this.tileSize;
-  return "http://" + this.server + "/data/?datapath=" + this.datapath +
-         "&start=" + x + "," + y + "," + this.z + "&mip=" + level +
-         "&size=" + this.tileSize + "," + this.tileSize + ","+this.depth;
+  level = this.maxLevel - level;
+
+  var source = "http://" + this.server + "/data/?datapath=" + this.datapath + "&start=" +
+               x + "," + y + "," + this.z + "&mip=" + level + "&size=" + this.tileSize +
+               "," + this.tileSize + ","+this.depth;
+
+  return source;
 };
 
 J.Start.prototype.Lay.prototype.fixTerms = function( before, after ) {

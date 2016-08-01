@@ -2,15 +2,21 @@ var J = J || {};
 
 J.Show = function(low,top) {
 
-    var go = this.Go.bind(this);
-    var shady = top.shaders.map(Timing);
-    var offscreen = Object.assign(document.createElement('canvas'), top.sizes);
-    var context = (s) => offscreen.getContext(s,top.context_keys);
-    var gl = context('webgl') || context('experimental-webgl');
+    // Allow for webGL or canvas fallback
+    this.offscreen = Object.assign(document.createElement('canvas'), top.sizes);
+    this.joiner = new J.Join(low, top, this.Go.bind(this), this.offscreen);
+    if (top.canvas) return this.joiner.ready(0);
 
-    // Allow for canvas fallback
-    var joiner = new J.Join(low, top, go, offscreen);
-    if (top.canvas) return joiner.ready(0);
+    // Run WebGL if possible
+    this.GL(top);
+
+};
+
+J.Show.prototype.GL = function(top) {
+
+    var shady = top.shaders.map(Timing);
+    var context = (s) => this.offscreen.getContext(s,top.context_keys);
+    var gl = context('webgl') || context('experimental-webgl');
 
     // Begin all needed for WebGL
     var spot = {
@@ -36,7 +42,6 @@ J.Show = function(low,top) {
     this.scale = [ k.near_min, k.near_mag ];
     this.square = k.square_static;
     this.plan = k.square_strip;
-    this.offscreen = offscreen;
     this.shape = top.shape;
     this.alpha = top.alpha;
     this.kind = k.floating;
@@ -44,8 +49,8 @@ J.Show = function(low,top) {
     this.spot = spot;
     this.gl = gl;
 
-    Promise.all(shady).then(joiner.ready);
-};
+    Promise.all(shady).then(this.joiner.ready);
+}
 
 // Link up the Show with the shaders
 J.Show.prototype.Go = function(shaders) {
