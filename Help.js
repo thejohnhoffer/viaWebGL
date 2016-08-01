@@ -4,7 +4,7 @@
 //
 // ----------------------------------
 
-function Bide(where, what) {
+function Timing(where, what) {
     return new Promise((done) => {
         var bid = new XMLHttpRequest();
         var cry = () => console.log("A bug on the web");

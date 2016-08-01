@@ -49,12 +49,12 @@ J.Start = function(e) {
 }
 
 J.Start.prototype.howToStart = function (sea,top) {
-
-  var image = top.image;
+ 
   var low = new OpenSeadragon(sea);
 
   // Cover the Seadragon with either canvas or webgl
-  top.canvas? new J.ShowCanvas(low,top) : new J.Show(low,top);
+  var a = new J.Show(low,top);
+  console.log(a);
 };
 
 //-----------------------------------
@@ -87,6 +87,7 @@ J.Start.prototype.Lay = function(preterms) {
 
 J.Start.prototype.Lay.prototype.getTile = function( level, x, y ) {
 
+  console.log('hi-it\'s-me');
   level = this.maxLevel - level;
   x *= this.tileSize;
   y *= this.tileSize;

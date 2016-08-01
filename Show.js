@@ -3,12 +3,16 @@ var J = J || {};
 J.Show = function(low,top) {
 
     var go = this.Go.bind(this);
-    var shady = top.shaders.map(Bide);
+    var shady = top.shaders.map(Timing);
     var offscreen = Object.assign(document.createElement('canvas'), top.sizes);
     var context = (s) => offscreen.getContext(s,top.context_keys);
     var gl = context('webgl') || context('experimental-webgl');
-    var joiner = new J.Join(low, top, go, offscreen);
 
+    // Allow for canvas fallback
+    var joiner = new J.Join(low, top, go, offscreen);
+    if (top.canvas) return joiner.ready(0);
+
+    // Begin all needed for WebGL
     var spot = {
         a_where : {},
         a_tile_pos  : {}
