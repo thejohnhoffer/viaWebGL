@@ -8,7 +8,7 @@ J.Show = function() {
 // Begins the rendering of WebGL
 J.Show.prototype.GL = function(top,offscreen) {
 
-    var shady = top.shaders.map(Timing);
+    var shady = top.shaders.map((s) => Timing(s));
     var context = (s) => offscreen.getContext(s,top.context_keys);
     var gl = context('webgl') || context('experimental-webgl');
 
@@ -18,25 +18,27 @@ J.Show.prototype.GL = function(top,offscreen) {
         a_tile_pos  : {}
     }
     var k = {
-        square_strip: [gl.TRIANGLE_STRIP, 0, 4],
+        square_tri: [gl.TRIANGLES, 0, 6],
         floating: [2, gl.FLOAT, false, 0, 0],
+        square_strip: [gl.TRIANGLE_STRIP, 0, 4],
+        box_strip: Float32Array.from('00100111'),
+        box_tri: Float32Array.from('001001011011'),
         color : [gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
-        box: Float32Array.from('00100111').map(x=>-x),
         min: gl.TEXTURE_MIN_FILTER,
         mag: gl.TEXTURE_MAG_FILTER,
         ab : gl.ARRAY_BUFFER,
         tex: gl.TEXTURE_2D,
     };
+    k.box = top.strip? k.box_strip: k.box_tri;
     k.square_static = [k.ab, k.box, gl.STATIC_DRAW];
     k.tiler = [k.tex, 0, ...k.color, null];
     k.near_min = [k.tex, k.min, gl.NEAREST];
     k.near_mag = [k.tex, k.mag, gl.NEAREST];
 
     // put together needed bits for webGL
+    this.plan = top.strip? k.square_strip: k.square_tri;
     this.scale = [ k.near_min, k.near_mag ];
     this.square = k.square_static;
-    this.plan = k.square_strip;
-    this.shape = top.shape;
     this.alpha = top.alpha;
     this.kind = k.floating;
     this.tiler = k.tiler;
@@ -49,7 +51,7 @@ J.Show.prototype.GL = function(top,offscreen) {
 
 J.Show.prototype.setTile = function(img,x,y,m) {
 
-    this.joiner.setShape(x,y,m);
+    this.joiner.setShape(img,x,y,m);
     this.tiler.fill(img,-1);
     this.ok = 1;
 }
@@ -67,11 +69,9 @@ J.Show.prototype.Tick = function(shaders) {
       self.spot[where].id = gl.getAttribLocation(link,where);
       self.spot[where].kind = self.kind;
     }
-
     // Essential position buffer for the showing
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(...self.square);
-    gl.viewport(...self.shape);
     gl.useProgram(link);
 
     // The webgl animation

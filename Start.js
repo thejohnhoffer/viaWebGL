@@ -30,14 +30,13 @@ J.Start = function(e) {
             minZoomImageRatio :     0.5,
             maxZoomPixelRatio :     10,
             showNavigationControl : true,
-            animationTime :         0,
-            imageLoaderLimit :      3,
             timeout :               120000,
             tileSources : ts,
             id : laid.id
         },
         // top: Upper layer with webgl or canvas
         {   alpha: 0.6,
+            strip: true,
             debug : ts.debug,
             canvas : ts.canvas,
             shape : [0,0,ts.width,ts.height],
@@ -81,7 +80,10 @@ J.Start.prototype.Lay.prototype.Start = function (sea,top) {
     // Allow webGL offscreen tick function to be joined to canvas by a joiner
     var offscreen = Object.assign(document.createElement('canvas'), top.sizes);
     var tick = sea.tileSources.show.Tick.bind(sea.tileSources.show);
-
+    offscreen.width = 512;
+    offscreen.height = 512;
+    offscreen.style.width = 512;
+    offscreen.style.height = 512;
     // Join the webgl offscreen to the seadragon canvas
     sea.tileSources.show.joiner = new J.Join(low, top, tick, offscreen);
     // Run WebGL joined to the seadragon canvas
@@ -96,8 +98,6 @@ J.Start.prototype.Lay.prototype.getTile = function( level, x, y ) {
     y *= this.tileSize;
     var halves = Math.pow(1/2, level);
     var mip = this.maxLevel - level;
-
-    console.log([x,y,mip,halves]);
 
     var source = "http://" + this.server + "/data/?datapath=" + this.datapath + "&start=" +
                  x + "," + y + "," + this.z + "&mip=" + mip + "&size=" + this.tileSize +

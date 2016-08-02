@@ -6,6 +6,8 @@ J.Join = function(low,top,tick,offscreen) {
     var self = this;
     this.window = top.shape;
     this.shape = top.shape.slice(-2);
+    this.alpha = top.alpha;
+    this.low = low;
 
     this.ready = function(shaders) {
 
@@ -30,27 +32,30 @@ J.Join = function(low,top,tick,offscreen) {
         }
 
         // Actually join source to canvas
-        self.toCanvas(low,top,offscreen);
+        self.ol = self.toCanvas(low,offscreen);
     }
 
 };
 
 // Join a source by canvas overlay to a seadragon
-J.Join.prototype.toCanvas = function(low,top,source) {
+J.Join.prototype.toCanvas = function(low,source) {
 
     var self = this;
-    var Go = function() {
+    self.Go = function() {
         var ctx = this.context2d();
-        ctx.globalAlpha = top.alpha;
-        ctx.drawImage(source || top.image, ...self.window);
+        ctx.globalAlpha = self.alpha;
+        ctx.drawImage(source, ...self.window);
+        this.onRedraw = self.Go;
     }
 
-    low.canvasOverlay({onRedraw: Go});
+    return low.canvasOverlay({onRedraw: self.Go});
 };
 
 // Set the shape
-J.Join.prototype.setShape = function(x,y,h) {
+J.Join.prototype.setShape = function(source,x,y,h) {
 
     var hw = this.shape.map(s=>s*h);
+    if (hw[0] !== 2048) return;
     this.window = [x,y,...hw];
+    console.log(this.window);
 };
