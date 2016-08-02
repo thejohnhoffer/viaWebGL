@@ -1,21 +1,15 @@
 var J = J || {};
 
-J.Show = function(low,top) {
+J.Show = function() {
 
-    // Allow for webGL or canvas fallback
-    this.offscreen = Object.assign(document.createElement('canvas'), top.sizes);
-    this.joiner = new J.Join(low, top, this.Go.bind(this), this.offscreen);
-    if (top.canvas) return this.joiner.ready(0);
-
-    // Run WebGL if possible
-    this.GL(top);
 
 };
 
-J.Show.prototype.GL = function(top) {
+// Begins the rendering of WebGL
+J.Show.prototype.GL = function(top,offscreen) {
 
     var shady = top.shaders.map(Timing);
-    var context = (s) => this.offscreen.getContext(s,top.context_keys);
+    var context = (s) => offscreen.getContext(s,top.context_keys);
     var gl = context('webgl') || context('experimental-webgl');
 
     // Begin all needed for WebGL
@@ -34,7 +28,7 @@ J.Show.prototype.GL = function(top) {
         tex: gl.TEXTURE_2D,
     };
     k.square_static = [k.ab, k.box, gl.STATIC_DRAW];
-    k.tiler = [k.tex, 0, ...k.color, top.image];
+    k.tiler = [k.tex, 0, ...k.color, null];
     k.near_min = [k.tex, k.min, gl.NEAREST];
     k.near_mag = [k.tex, k.mag, gl.NEAREST];
 
@@ -48,12 +42,20 @@ J.Show.prototype.GL = function(top) {
     this.tiler = k.tiler;
     this.spot = spot;
     this.gl = gl;
+    this.ok = 0;
 
     Promise.all(shady).then(this.joiner.ready);
 }
 
+J.Show.prototype.setTile = function(img,x,y,m) {
+
+    this.joiner.setShape(x,y,m);
+    this.tiler.fill(img,-1);
+    this.ok = 1;
+}
+
 // Link up the Show with the shaders
-J.Show.prototype.Go = function(shaders) {
+J.Show.prototype.Tick = function(shaders) {
 
     var self = this;
     var gl = self.gl;
@@ -74,6 +76,8 @@ J.Show.prototype.Go = function(shaders) {
 
     // The webgl animation
     return function(){
+
+        if (!self.ok) return 0;
 
         // Set pointers for GLSL
         for (var where in self.spot) {
