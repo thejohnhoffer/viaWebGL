@@ -55,7 +55,7 @@ J.Join.prototype.toCanvas = function(low,source) {
 J.Join.prototype.setShape = function(source,x,y,h) {
 
     var hw = this.shape.map(s=>s*h);
-    if (hw[0] !== 2048) return;
+//    if (hw[0] !== 2048) return;
     this.window = [x,y,...hw];
     console.log(this.window);
 };
