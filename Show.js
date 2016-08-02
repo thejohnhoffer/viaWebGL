@@ -51,9 +51,8 @@ J.Show.prototype.GL = function(top,offscreen) {
 
 J.Show.prototype.setTile = function(img,x,y,m) {
 
-    this.joiner.setShape(img,x,y,m);
+    this.joiner.setShape(img,x,y,m,this);
     this.tiler.fill(img,-1);
-    this.ok = 1;
 }
 
 // Link up the Show with the shaders

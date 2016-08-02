@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aec0796f-8147-42f6-be98-6fd451581b40" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Join.js" afterPath="$PROJECT_DIR$/Join.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Show.js" afterPath="$PROJECT_DIR$/Show.js" />
     </list>
     <ignored path="waymesh.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,8 +48,8 @@
       <file leaf-file-name="Start.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Start.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.1923075">
-              <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+            <state vertical-scroll-proportion="-16.846153">
+              <caret line="106" column="21" selection-start-line="106" selection-start-column="21" selection-end-line="106" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -56,8 +58,8 @@
       <file leaf-file-name="Show.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Show.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.0">
-              <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+            <state vertical-scroll-proportion="-22.423077">
+              <caret line="53" column="39" selection-start-line="53" selection-start-column="39" selection-end-line="53" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -66,8 +68,8 @@
       <file leaf-file-name="Join.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Join.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8530612">
-              <caret line="57" column="0" selection-start-line="57" selection-start-column="2" selection-end-line="57" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.8979592">
+              <caret line="60" column="4" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -772,24 +774,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Start.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.1923075">
-          <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+        <state vertical-scroll-proportion="-16.846153">
+          <caret line="106" column="21" selection-start-line="106" selection-start-column="21" selection-end-line="106" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Show.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.0">
-          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+        <state vertical-scroll-proportion="-22.423077">
+          <caret line="53" column="39" selection-start-line="53" selection-start-column="39" selection-end-line="53" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Join.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8530612">
-          <caret line="57" column="0" selection-start-line="57" selection-start-column="2" selection-end-line="57" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.8979592">
+          <caret line="60" column="4" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="4" />
           <folding />
         </state>
       </provider>

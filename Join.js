@@ -52,10 +52,11 @@ J.Join.prototype.toCanvas = function(low,source) {
 };
 
 // Set the shape
-J.Join.prototype.setShape = function(source,x,y,h) {
+J.Join.prototype.setShape = function(source,x,y,h,show) {
 
     var hw = this.shape.map(s=>s*h);
 //    if (hw[0] !== 2048) return;
     this.window = [x,y,...hw];
     console.log(this.window);
+    show.ok = 1;
 };
