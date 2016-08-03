@@ -8,7 +8,7 @@
 
 J.Start = function(e) {
     // Terms to Lay the lower layer
-    var laid = new this.Lay({
+    var ts = this.Lay({
         server :   'localhost:2001',
         datapath : '/Volumes/NeuroData/mojo',
         debug  :   false,
@@ -20,7 +20,6 @@ J.Start = function(e) {
         minLevel : 0,
         mip : 1
     });
-    var ts = laid.tileSources;
 
     // Output of the Tilesource Layout
     var layout = [
@@ -32,9 +31,9 @@ J.Start = function(e) {
             showNavigationControl : true,
             timeout :               120000,
             tileSources : ts,
-            id : laid.id
+            id : ts.id
         },
-        // top: Upper layer with webgl or canvas
+        // top: Upper layer with webgl
         {   alpha: 0.6,
             strip: true,
             debug : ts.debug,
@@ -45,7 +44,7 @@ J.Start = function(e) {
             shaders : ['shaders/former.glsl','shaders/latter.glsl']
         }
     ];
-    laid.Start(...layout);
+    this.Start(...layout);
 }
 
 //-----------------------------------
@@ -55,64 +54,49 @@ J.Start = function(e) {
 //-----------------------------------
 J.Start.prototype.Lay = function(preterms) {
 
-    // Change the inputs if passed as url terms
     var ts = {};
-    ts.show = new J.Show();
+    // Change the inputs if passed as url terms
     var terms = this.fixTerms( preterms, decodeURI(document.location.search.substring(1)) );
     Object.keys(preterms).forEach((term) => ts[term] = terms[term] || preterms[term]);
     ts.maxLevel = Math.min(ts.mip, Math.ceil(Math.log2(ts.width/ts.tileSize)));
 
     // put a section in the DOM
-    this.id = 'seer_' + preterms.z;
+    ts.id = 'seer_' + preterms.z;
     idiv = document.createElement('div');
-    Object.assign(idiv,{className:'seer', id: this.id});
+    Object.assign(idiv,{className:'seer', id: ts.id});
     document.body.appendChild(idiv);
-    this.tileSources = ts;
+    return ts;
 };
 
-J.Start.prototype.Lay.prototype.Start = function (sea,top) {
+J.Start.prototype.Start = function (sea,top) {
 
     // Make a image downloading call for the seadragon tilesource
-    sea.tileSources.getTileUrl = this.getTile.bind(sea.tileSources);
+    sea.tileSources.getTileUrl = this.getTile(sea.tileSources);
     // Cover the Seadragon with colors
-    var low = new OpenSeadragon(sea);
+    var portal = new OpenSeadragon(sea);
 
     // Allow webGL offscreen tick function to be joined to canvas by a joiner
     var offscreen = Object.assign(document.createElement('canvas'), top.sizes);
-    var tick = sea.tileSources.show.Tick.bind(sea.tileSources.show);
-    offscreen.width = 512;
-    offscreen.height = 512;
-    offscreen.style.width = 512;
-    offscreen.style.height = 512;
-    // Join the webgl offscreen to the seadragon canvas
-    sea.tileSources.show.joiner = new J.Join(low, top, tick, offscreen);
-    // Run WebGL joined to the seadragon canvas
-    sea.tileSources.show.GL(top,offscreen);
-
 };
 
 
-J.Start.prototype.Lay.prototype.getTile = function( level, x, y ) {
+J.Start.prototype.getTile = function(tile) {
 
-    x *= this.tileSize;
-    y *= this.tileSize;
-    var halves = Math.pow(1/2, level);
-    var mip = this.maxLevel - level;
+    // makes image url for either tilesource
+    return function( level, x, y ) {
 
-    var source = "http://" + this.server + "/data/?datapath=" + this.datapath + "&start=" +
-                 x + "," + y + "," + this.z + "&mip=" + mip + "&size=" + this.tileSize +
-                 "," + this.tileSize + ","+this.depth;
+        x *= tile.tileSize;
+        y *= tile.tileSize;
+        level = tile.maxLevel - level;
 
-    Timing(source+"&segmentation=y&segcolor=y",'arraybuffer').then(ab => {
-        // Make high layer
-        this.show.ok = 0;
-        this.show.setTile(new Uint8Array(ab),x,y,halves);
-    });
+        return "http://" + tile.server + "/data/?datapath=" + tile.datapath + "&start=" +
+                     x + "," + y + "," + tile.z + "&mip=" + level + "&size=" + tile.tileSize +
+                     "," + tile.tileSize + ","+tile.depth;
+    };
 
-    return source;
-};
+}
 
-J.Start.prototype.Lay.prototype.fixTerms = function( before, after ) {
+J.Start.prototype.fixTerms = function( before, after ) {
 
     // return a string if preset is string and int if preset is int
     var clean = text => text ? text.replace(new RegExp('\/$'),'') : true;
