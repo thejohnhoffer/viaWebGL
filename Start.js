@@ -87,22 +87,19 @@ J.Start.prototype.tileTerms = function(preterms) {
     }
 
     var fixTerms = function( before, after ) {
-        // remove any trailing backslash
-        var clean = new RegExp('\/$');
+        // read as bool, string, or int
         var read = function(ask) {
+            if (!ask[1]) return true;
+            var clean = new RegExp('\/$');
             var isString = typeof before[ask[0]] === 'string';
             if (isString) return ask[1].replace(clean,'');
             return parseInt(ask[1],10);
         }
-        // See if it isn't a true/false flag
-        var assign = function (obj, ask) {
-            obj[ask[0]] = true;
-            if (ask[1]) obj[ask[0]] = read(ask);
-            return obj;
-        }
         // Assign each term to a key
         var deal = function(obj, str){
-            return assign(obj,str.split('='));
+            var ask = str.split('=');
+            obj[ask[0]] = read(ask);
+            return obj;
         }
         // Deal the terms into a single object
         return after.split('&').reduce(deal,{});
