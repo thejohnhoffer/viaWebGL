@@ -5,10 +5,10 @@
 // ----------------------------------
 
 function Timing(where, what) {
-    return new Promise((done) => {
+    return new Promise(function(done){
         var bid = new XMLHttpRequest();
-        var cry = () => console.log("A bug on the web");
-        var win = () => bid.status == 200 ? done(bid.response) : cry();
+        var cry = function(){console.log("A bug on the web")};
+        var win = function(){bid.status == 200 ? done(bid.response) : cry()};
         bid.open('GET', where, true);
         if (what) bid.responseType = what;
         bid.onerror = cry;
@@ -45,7 +45,11 @@ function Shading(files, gl) {
 
   if (gl.getProgramParameter(shaderWork, gl.LINK_STATUS)) return shaderWork;
 
-  files.map((f) => console.log(gl.getShaderInfoLog(f)));
+  var logger = function(f) {
+    console.log(gl.getShaderInfoLog(f));
+  }
+
+  files.map(logger);
   console.log(gl.getProgramInfoLog(shaderWork));
   return console.log("Could not start shaders");
 };
