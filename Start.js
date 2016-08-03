@@ -103,12 +103,11 @@ J.Start.prototype.Lay.prototype.getTile = function( level, x, y ) {
                  x + "," + y + "," + this.z + "&mip=" + mip + "&size=" + this.tileSize +
                  "," + this.tileSize + ","+this.depth;
 
-    // Make high layer
-    this.show.ok = 0;
-    var overlay = new Image();
-    overlay.crossOrigin = "anonymous";
-    overlay.src = source+"&segmentation=y&segcolor=y";
-    overlay.onload = this.show.setTile(overlay,x,y,halves);
+    Timing(source+"&segmentation=y&segcolor=y",'arraybuffer').then(ab => {
+        // Make high layer
+        this.show.ok = 0;
+        this.show.setTile(new Uint8Array(ab),x,y,halves);
+    });
 
     return source;
 };

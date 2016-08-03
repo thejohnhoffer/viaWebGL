@@ -14,12 +14,11 @@ J.Join = function(low,top,tick,offscreen) {
         // Link the shaders
         var link = tick(shaders);
         var moveloop = function(){
-
             // Speedy rendering call forever
-            window.requestAnimationFrame(moveloop);
-            link();
+            link.then(moveloop);
+            console.log('looped');
         };
-        moveloop();
+//        moveloop();
 
         // If debug webGL
         if (top.debug) {
@@ -52,11 +51,8 @@ J.Join.prototype.toCanvas = function(low,source) {
 };
 
 // Set the shape
-J.Join.prototype.setShape = function(source,x,y,h,show) {
+J.Join.prototype.setShape = function(x,y,h,show) {
 
     var hw = this.shape.map(s=>s*h);
-//    if (hw[0] !== 2048) return;
     this.window = [x,y,...hw];
-    console.log(this.window);
-    show.ok = 1;
 };

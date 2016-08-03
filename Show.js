@@ -53,6 +53,7 @@ J.Show.prototype.setTile = function(img,x,y,m) {
 
     this.joiner.setShape(img,x,y,m,this);
     this.tiler.fill(img,-1);
+    this.ok = 1;
 }
 
 // Link up the Show with the shaders
@@ -74,9 +75,7 @@ J.Show.prototype.Tick = function(shaders) {
     gl.useProgram(link);
 
     // The webgl animation
-    return function(){
-
-        if (!self.ok) return 0;
+    return new Promise(done =>{
 
         // Set pointers for GLSL
         for (var where in self.spot) {
@@ -91,9 +90,15 @@ J.Show.prototype.Tick = function(shaders) {
         self.scale.map(x => gl.texParameteri(...x));
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
 
-        // Upload the image into the texture.
-        gl.texImage2D(...self.tiler);
-        // Draw everything needed to canvas
-        gl.drawArrays(...self.plan);
-    }
+        var finish = () => {
+            // Upload the image into the texture.
+            gl.texImage2D(...self.tiler);
+            // Draw everything needed to canvas
+            gl.drawArrays(...self.plan);
+            // Request that animation frame
+            window.requestAnimationFrame(done);
+        }
+        // Request that animation frame
+        if (self.ok) finish();
+    });
 }
