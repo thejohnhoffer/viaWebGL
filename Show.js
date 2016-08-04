@@ -29,13 +29,15 @@ J.Show = function(top) {
     };
     k.box = top.strip? k.box_strip: k.box_tri;
     k.square_static = [k.ab, k.box, gl.STATIC_DRAW];
-    k.tiler = [k.tex, 0, ...k.color, null];
+    k.clamp_T = [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE];
+    k.clamp_S = [gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE];
     k.near_min = [k.tex, k.min, gl.NEAREST];
     k.near_mag = [k.tex, k.mag, gl.NEAREST];
+    k.tiler = [k.tex, 0, ...k.color, null];
 
     // put together needed bits for webGL
     this.plan = top.strip? k.square_strip: k.square_tri;
-    this.scale = [ k.near_min, k.near_mag ];
+    this.scale = [ k.near_min, k.near_mag, k.clamp_S, k.clamp_T];
     this.square = k.square_static;
     this.shape = top.shape;
     this.alpha = top.alpha;
@@ -65,13 +67,21 @@ J.Show.prototype.Ready = function(shaders) {
     gl.useProgram(link);
 };
 
-J.Show.prototype.processImage = function(tile) {
+J.Show.prototype.shadeCanvas = function(ctx) {
+
+    var tile = ctx.getImageData(0,0,512,512);
+    // put the tile in the tiler
+    this.tiler.fill(tile,-1);
+    // output the canvas
+    this.TickTock();
+
+    return this.gl.canvas;
+};
+
+J.Show.prototype.shadeImage = function(tile) {
 
     // put the tile in the tiler
     this.tiler.fill(tile,-1);
-    // Request an animation frame
-//    var callback = this.TickTock.bind(this);
-//    window.requestAnimationFrame(callback);
     // output the canvas
     this.TickTock();
     return this.gl.canvas.toDataURL();
@@ -100,5 +110,3 @@ J.Show.prototype.TickTock = function() {
     // Draw everything needed to canvas
     gl.drawArrays(...this.plan);
 };
-
-var lib = new J.Show(hi);
