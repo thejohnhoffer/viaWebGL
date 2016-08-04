@@ -8,7 +8,7 @@ J.Show = function(top) {
         return top.offscreen.getContext(s,top.context_keys);
     }
     var gl = context('webgl') || context('experimental-webgl');
-    var shady = top.shaders.map(Timing);
+    var shady = top.shaders.map(this.Getting);
 
     // Begin all needed for WebGL
     var spot = {
@@ -53,7 +53,9 @@ J.Show = function(top) {
 J.Show.prototype.Ready = function(shaders) {
 
     var gl = this.gl;
-    var link = Shading(shaders,gl);
+    var shader0 = [shaders[0],gl.VERTEX_SHADER];
+    var shader1 = [shaders[1],gl.FRAGMENT_SHADER];
+    var link = this.Shading([shader0,shader1],gl);
     this.tex = gl.createTexture();
 
     // Find glsl spotwise attributes
@@ -109,4 +111,60 @@ J.Show.prototype.TickTock = function() {
     gl.texImage2D(...this.tiler);
     // Draw everything needed to canvas
     gl.drawArrays(...this.plan);
+};
+
+// ----------------------------------
+//
+// Promise to get a file
+//
+// ----------------------------------
+J.Show.prototype.Getting = function(where) {
+    return new Promise(function(done){
+        var bid = new XMLHttpRequest();
+        var win = function(){
+            if (bid.status == 200) {
+                done(bid.response);
+                return 0;
+            }
+            console.log("A bug on the web");
+        };
+        bid.open('GET', where, true);
+        bid.onerror = win;
+        bid.onload = win;
+        bid.send();
+    });
+}
+
+// ----------------------------------
+//
+// Make one vertex shader and one fragment shader
+//
+// ----------------------------------
+
+J.Show.prototype.Shading = function(files, gl) {
+
+  var shaderWork = gl.createProgram();
+  var make = function(given) {
+
+    var shader = gl.createShader(given[1]);
+    gl.shaderSource(shader, given[0]);
+    gl.compileShader(shader);
+    gl.attachShader(shaderWork, shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
+        console.log(gl.getShaderInfoLog(shader));
+    }
+  };
+
+  files.map(make);
+  gl.linkProgram(shaderWork);
+
+  if (gl.getProgramParameter(shaderWork, gl.LINK_STATUS)) return shaderWork;
+
+  var logger = function(f) {
+    console.log(gl.getShaderInfoLog(f));
+  }
+
+  files.map(logger);
+  console.log(gl.getProgramInfoLog(shaderWork));
+  return console.log("Could not start shaders");
 };
