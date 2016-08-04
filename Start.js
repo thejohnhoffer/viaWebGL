@@ -13,7 +13,6 @@ J.Start = function(e) {
         {
             server :   'localhost:2001',
             datapath : '/Volumes/NeuroData/mojo',
-            debug  :   false,
             height :   1024,
             width :    1024,
             tileSize : 512,
@@ -26,39 +25,54 @@ J.Start = function(e) {
             endText : '&segmentation=y&segcolor=y'
         }
     ];
-    var ts = this.Lay(...layIn);
+    var tile = this.Lay(...layIn);
 
     // Output of the Tilesource Layout
-    var layout = [
+    var layOut = [
         // lo: Lower layer in Seadragon
         {   prefixUrl :             "lib/images/",
+            crossOriginPolicy : 'Anonymous',
+            timeout :               120000,
+            showNavigationControl : true,
             navigatorSizeRatio :    0.25,
             minZoomImageRatio :     0.5,
             maxZoomPixelRatio :     10,
-            showNavigationControl : true,
-            timeout :               120000,
-            tileSources : ts,
-            id : ts[0].id
+            tileSources : tile.source,
+            id : tile.id
         },
         // hi: webgl
         {   alpha: 0.6,
             strip: true,
+            debug : tile.source[0].debug,
+            canvas : tile.source[0].canvas,
             context_keys : {preserveDrawingBuffer:true},
-            shaders : ['shaders/former.glsl','shaders/latter.glsl']
+            shape : [0,0,tile.source[0].width, tile.source[0].height],
+            sizes : {width: tile.source[0].tileSize, height: tile.source[0].tileSize},
+            shaders : ['shaders/former.glsl','shaders/latter.glsl'],
+            offscreen: document.createElement('canvas')
         }
     ];
-    this.Start(...layout);
+    this.Start(...layOut);
 }
 
 J.Start.prototype.Start = function (lo,hi) {
 
-    // Begin the magic
-    var begin = function(e) {
+    // After loading all tiles
+    var onOpen = function(e) {
         e.eventSource.world.getItemAt(1).setOpacity(hi.alpha);
     }
-    // Cover the Seadragon with colors
+    // Before drawing each tile
+    var onDraw = function(e) {
+          e.image.src = library.processImage(e.image);
+          e.image.onload = e.getCompletionCallback;
+    }
+    // Open a dragon with two layers
     var portal = OpenSeadragon(lo);
-    portal.addHandler('open', begin);
+    var handlers = [['open', onOpen],['tile-loaded',onDraw]];
+    var handle = function(handler){
+        portal.addHandler(...handler);
+    }
+    handlers.map(handle);
 
 };
 
@@ -68,11 +82,11 @@ J.Start.prototype.Lay = function(lo,hi) {
     var ts = [lo,Object.assign({},lo,hi)].map(this.tileTerms);
 
     // put a section in the DOM
-    ts[0].id = 'seer_' + ts[0].z;
-    idiv = document.createElement('div');
-    Object.assign(idiv,{className:'seer', id: ts[0].id});
-    document.body.appendChild(idiv);
-    return ts;
+    var id = 'seer_' + ts[0].z;
+    var idiv = {className:'seer', id: id};
+    var div = document.createElement('div');
+    document.body.appendChild(Object.assign(div,idiv));
+    return {source: ts, id: id};
 };
 
 J.Start.prototype.tileTerms = function(preterms) {
@@ -86,17 +100,22 @@ J.Start.prototype.tileTerms = function(preterms) {
         };
     }
 
+    // Change any preset terms set in input address
     var fixTerms = function( before, after ) {
         // read as bool, string, or int
         var read = function(ask) {
-            if (!ask[1]) return true;
-            var clean = new RegExp('\/$');
-            var isString = typeof before[ask[0]] === 'string';
-            if (isString) return ask[1].replace(clean,'');
+            if (!ask[1]) {
+                return true;
+            }
+            // read as string if the preset is a string
+            if (typeof before[ask[0]] === 'string') {
+                var clean = new RegExp('\/$');
+                return ask[1].replace(clean,'');
+            }
             return parseInt(ask[1],10);
         }
         // Assign each term to a key
-        var deal = function(obj, str){
+        var deal = function(obj, str) {
             var ask = str.split('=');
             obj[ask[0]] = read(ask);
             return obj;
@@ -114,4 +133,6 @@ J.Start.prototype.tileTerms = function(preterms) {
     return ts;
 };
 
-window.onload = function(e){new J.Start(e)};
+window.onload = function(e){
+    new J.Start(e);
+};

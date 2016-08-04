@@ -1,16 +1,14 @@
 var J = J || {};
 
-J.Show = function() {
-
-
-};
-
 // Begins the rendering of WebGL
-J.Show.prototype.GL = function(top,offscreen) {
+J.Show = function(top) {
 
-    var shady = top.shaders.map((s) => Timing(s));
-    var context = (s) => offscreen.getContext(s,top.context_keys);
+    var context = function(s){
+        Object.assign(top.offscreen, top.sizes);
+        return top.offscreen.getContext(s,top.context_keys);
+    }
     var gl = context('webgl') || context('experimental-webgl');
+    var shady = top.shaders.map(Timing);
 
     // Begin all needed for WebGL
     var spot = {
@@ -39,66 +37,68 @@ J.Show.prototype.GL = function(top,offscreen) {
     this.plan = top.strip? k.square_strip: k.square_tri;
     this.scale = [ k.near_min, k.near_mag ];
     this.square = k.square_static;
+    this.shape = top.shape;
     this.alpha = top.alpha;
     this.kind = k.floating;
     this.tiler = k.tiler;
     this.spot = spot;
     this.gl = gl;
-    this.ok = 0;
 
-    Promise.all(shady).then(this.joiner.ready);
-}
-
-J.Show.prototype.setTile = function(img,x,y,m) {
-
-    this.joiner.setShape(img,x,y,m,this);
-    this.tiler.fill(img,-1);
-    this.ok = 1;
-}
+    Promise.all(shady).then(this.Ready.bind(this));
+};
 
 // Link up the Show with the shaders
-J.Show.prototype.Tick = function(shaders) {
+J.Show.prototype.Ready = function(shaders) {
 
-    var self = this;
-    var gl = self.gl;
+    var gl = this.gl;
     var link = Shading(shaders,gl);
-    var overlay = gl.createTexture();
+    this.tex = gl.createTexture();
 
     // Find glsl spotwise attributes
-    for (var where in self.spot) {
-      self.spot[where].id = gl.getAttribLocation(link,where);
-      self.spot[where].kind = self.kind;
+    for (var where in this.spot) {
+      this.spot[where].id = gl.getAttribLocation(link,where);
+      this.spot[where].kind = this.kind;
     }
     // Essential position buffer for the showing
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(...self.square);
+    gl.bufferData(...this.square);
     gl.useProgram(link);
+};
 
-    // The webgl animation
-    return new Promise(done =>{
+J.Show.prototype.processImage = function(tile) {
 
-        // Set pointers for GLSL
-        for (var where in self.spot) {
-          var id = self.spot[where].id;
-          var kind = self.spot[where].kind;
-          gl.vertexAttribPointer(id,...kind);
-          gl.enableVertexAttribArray(id);
-        }
+    // put the tile in the tiler
+    this.tiler.fill(tile,-1);
+    // Request an animation frame
+//    var callback = this.TickTock.bind(this);
+//    window.requestAnimationFrame(callback);
+    // output the canvas
+    this.TickTock();
+    return this.gl.canvas.toDataURL();
+};
 
-        // Needed to update the colored tiling
-        gl.bindTexture(gl.TEXTURE_2D, overlay);
-        self.scale.map(x => gl.texParameteri(...x));
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
 
-        var finish = () => {
-            // Upload the image into the texture.
-            gl.texImage2D(...self.tiler);
-            // Draw everything needed to canvas
-            gl.drawArrays(...self.plan);
-            // Request that animation frame
-            window.requestAnimationFrame(done);
-        }
-        // Request that animation frame
-        if (self.ok) finish();
-    });
-}
+// The webgl animation
+J.Show.prototype.TickTock = function() {
+
+    var gl = this.gl;
+    // Set pointers for GLSL
+    for (var where in this.spot) {
+      var id = this.spot[where].id;
+      var kind = this.spot[where].kind;
+      gl.vertexAttribPointer(id,...kind);
+      gl.enableVertexAttribArray(id);
+    }
+
+    // Needed to update the colored tiling
+    gl.bindTexture(gl.TEXTURE_2D, this.tex);
+    this.scale.map(x => gl.texParameteri(...x));
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
+
+    // Upload the image into the texture.
+    gl.texImage2D(...this.tiler);
+    // Draw everything needed to canvas
+    gl.drawArrays(...this.plan);
+};
+
+var lib = new J.Show(hi);

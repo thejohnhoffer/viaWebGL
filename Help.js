@@ -4,16 +4,20 @@
 //
 // ----------------------------------
 
-function Timing(where, what) {
+function Timing(where) {
     return new Promise(function(done){
         var bid = new XMLHttpRequest();
-        var cry = function(){console.log("A bug on the web")};
-        var win = function(){bid.status == 200 ? done(bid.response) : cry()};
+        var win = function(){
+            if (bid.status == 200) {
+                done(bid.response);
+                return 0;
+            }
+            console.log("A bug on the web");
+        };
         bid.open('GET', where, true);
-        if (what) bid.responseType = what;
-        bid.onerror = cry;
+        bid.onerror = win;
         bid.onload = win;
-        bid.send(what);
+        bid.send();
     });
 }
 
