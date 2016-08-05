@@ -1,7 +1,7 @@
 var J = J || {};
 
 // Begins the rendering of WebGL
-J.Show = function(top) {
+J.viaWebGL = function(top) {
 
     var context = function(s){
         Object.assign(top.offscreen, top.sizes);
@@ -49,8 +49,8 @@ J.Show = function(top) {
     Promise.all(shady).then(this.Ready.bind(this));
 };
 
-// Link up the Show with the shaders
-J.Show.prototype.Ready = function(shaders) {
+// Link up the viaWebGL with the shaders
+J.viaWebGL.prototype.Ready = function(shaders) {
 
     var gl = this.gl;
     var shader0 = [shaders[0],gl.VERTEX_SHADER];
@@ -63,35 +63,41 @@ J.Show.prototype.Ready = function(shaders) {
       this.spot[where].id = gl.getAttribLocation(link,where);
       this.spot[where].kind = this.kind;
     }
-    // Essential position buffer for the showing
+    // Essential position buffer for the viaWebGLing
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(...this.square);
     gl.useProgram(link);
 };
 
-J.Show.prototype.shadeCanvas = function(ctx) {
+J.viaWebGL.prototype.passCanvas = function(e) {
 
-    var tile = ctx.getImageData(0,0,512,512);
     // put the tile in the tiler
-    this.tiler.fill(tile,-1);
-    // output the canvas
+    this.tiler.fill(e.rendered.canvas,-1);
+    // render the canvas
     this.TickTock();
 
-    return this.gl.canvas;
+    // draw the image
+    var canv = this.gl.canvas;
+    e.rendered.drawImage(canv, 0,0);
 };
 
-J.Show.prototype.shadeImage = function(tile) {
+J.viaWebGL.prototype.passImage = function(e) {
 
     // put the tile in the tiler
-    this.tiler.fill(tile,-1);
-    // output the canvas
+    this.tiler.fill(e.image,-1);
+    // render the canvas
     this.TickTock();
-    return this.gl.canvas.toDataURL();
+
+    // draw the image
+    var canv = this.gl.canvas;
+    e.image.src = canv.toDataURL();
+    // allow for the callback to happen
+    e.image.onload = e.getCompletionCallback;
 };
 
 
 // The webgl animation
-J.Show.prototype.TickTock = function() {
+J.viaWebGL.prototype.TickTock = function() {
 
     var gl = this.gl;
     // Set pointers for GLSL
@@ -118,7 +124,7 @@ J.Show.prototype.TickTock = function() {
 // Promise to get a file
 //
 // ----------------------------------
-J.Show.prototype.Getting = function(where) {
+J.viaWebGL.prototype.Getting = function(where) {
     return new Promise(function(done){
         var bid = new XMLHttpRequest();
         var win = function(){
@@ -141,7 +147,7 @@ J.Show.prototype.Getting = function(where) {
 //
 // ----------------------------------
 
-J.Show.prototype.Shading = function(files, gl) {
+J.viaWebGL.prototype.Shading = function(files, gl) {
 
   var shaderWork = gl.createProgram();
   var make = function(given) {

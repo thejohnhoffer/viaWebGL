@@ -13,33 +13,32 @@ J.Start = function(e) {
 J.Start.prototype.Start = function (lo,hi) {
 
 
-    var lib = new J.Show(hi);
+    var via = new J.viaWebGL(hi);
     // After loading all tiles
     var onOpen = function(e) {
         e.eventSource.world.getItemAt(1).setOpacity(hi.alpha);
     }
-    // Before drawing each tile
+
+    // After Loading each tile
     var onLoad = function(e) {
         if (e.tiledImage.source.layer ==1) {
-            e.image.src = lib.shadeImage(e.image);
-            e.image.onload = e.getCompletionCallback;
+            // Change the image via webGL
+            via.passImage(e);
         }
     }
-
+    // Before Drawing each tile
     var onDraw = function(e) {
-
         if (e.tiledImage.source.layer ==1 && e.tile.shaded !== 1) {
-            var ctx = e.rendered;
-            var a = lib.shadeCanvas(ctx);
-            ctx.drawImage(a, 0,0);
+            // Change the context via webGL
+            via.passCanvas(e);
             e.tile.shaded = 1;
         }
     }
 
     // Open a dragon with two layers
     var portal = OpenSeadragon(lo);
-//    var handlers = [['open', onOpen],['tile-loaded',onLoad],['tile-drawing',onDrawing]];
-    var handlers = [['open', onOpen],['tile-drawing',onDraw]];
+    var handlers = [['open', onOpen],['tile-loaded',onLoad]];
+//    var handlers = [['open', onOpen],['tile-drawing',onDraw]];
     var handle = function(handler){
         portal.addHandler(...handler);
     }
