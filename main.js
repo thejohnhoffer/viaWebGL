@@ -7,66 +7,59 @@ var J = J || {};
 //
 //-----------------------------------
 
-J.Start = function(e) {
-}
-
-J.Start.prototype.Start = function (lo,hi) {
+J.Start = function (lo,hi) {
 
 
-    var via = new J.viaWebGL(hi);
-    // After loading all tiles
-    var onOpen = function(e) {
-        e.eventSource.world.getItemAt(1).setOpacity(hi.alpha);
-    }
+    // Open a dragon with two layers
+    var portal = OpenSeadragon(lo);
+    // Give the settings for webGL
+    var via = new viaWebGL(hi);
 
     // After Loading each tile
     var onLoad = function(e) {
+
         if (e.tiledImage.source.layer ==1) {
+            // Make the entire top tile transparent
+            e.tiledImage.setOpacity(hi.alpha);
             // Change the image via webGL
             via.passImage(e);
         }
     }
     // Before Drawing each tile
     var onDraw = function(e) {
+
         if (e.tiledImage.source.layer ==1 && e.tile.shaded !== 1) {
+            // Make the entire top tile transparent
+            e.tiledImage.setOpacity(hi.alpha);
             // Change the context via webGL
             via.passCanvas(e);
             e.tile.shaded = 1;
         }
     }
 
-    // Open a dragon with two layers
-    var portal = OpenSeadragon(lo);
-    var handlers = [['open', onOpen],['tile-loaded',onLoad]];
-//    var handlers = [['open', onOpen],['tile-drawing',onDraw]];
-    var handle = function(handler){
-        portal.addHandler(...handler);
-    }
-    handlers.map(handle);
+//    portal.addHandler('tile-loaded',onLoad);
+    portal.addHandler('tile-drawing',onDraw);
 
 };
 
-J.Start.prototype.Lay = function(sea_set) {
-
-//    var tiles =
-    // Creat tileSources, changing the inputs if passed as url terms
-    var ts = [sea_set,sea_set].map(this.tileSet);
+J.Lay = function(tile_set) {
 
     // put a section in the DOM
-    var id = 'seer_' + ts[0].z;
-    var idiv = {className:'seer', id: id};
     var div = document.createElement('div');
+    var idiv = {className:tile_set.class, id: tile_set.id};
     document.body.appendChild(Object.assign(div,idiv));
-    return {source: ts, id: id};
+
+    // Create tileSources
+    return [tile_set,tile_set].map(this.tileSet);
 };
 
-J.Start.prototype.tileSet = function(settings,i) {
+J.Lay.prototype.tileSet = function(settings,i) {
 
+    // Give each layer its own name
     ts = Object.assign({layer: i},settings);
-
-    // set the lower bounds on halvings and set the source for the tiles
+    // Set the lower bounds on halvings and set the source for the tiles
     ts.maxLevel = Math.min(ts.mip, Math.ceil(Math.log2(ts.width/ts.tileSize)));
-
+    // Set how to ask the server for a tile
     ts.getTileUrl = function( level, x, y ) {
             return "http://" + ts.server + "/data/?datapath=" + ts.datapath + "&start=" + x*ts.tileSize +
                 "," + y*ts.tileSize + "," + ts.z + "&mip=" + (ts.maxLevel - level) + "&size=" +
@@ -77,10 +70,11 @@ J.Start.prototype.tileSet = function(settings,i) {
 
 window.onload = function(e){
 
-    self = new J.Start();
-    // Give default tilesource
-    var sea_settings = {
+    // Basic tilesource
+    var set_tile = {
         shaded : 0,
+        class : 'seer',
+        id : 'viaWebGL',
         server :   'localhost:2001',
         datapath : '/Volumes/NeuroData/mojo',
         height :   1024,
@@ -92,32 +86,35 @@ window.onload = function(e){
         mip : 1
     }
 
-    var tile = self.Lay(getInput(sea_settings));
+    // Update the tilesources with input
+    var tile_set = getInput(set_tile);
+    var tile_sources = new J.Lay(tile_set);
 
-    // Output of the Tilesource Layout
-    var layOut = [
-        // lo: Lower layer in Seadragon
-        {   prefixUrl :             "lib/images/",
+
+    // All the terms for openSeaDragon
+    var seaStart = {
+            prefixUrl :             "lib/images/",
             crossOriginPolicy : 'Anonymous',
             timeout :               120000,
             showNavigationControl : true,
             navigatorSizeRatio :    0.25,
             minZoomImageRatio :     0.5,
             maxZoomPixelRatio :     10,
-            tileSources : tile.source,
-            id : tile.id
-        },
-        // hi: webgl
-        {   alpha: 0.6,
-            strip: true,
-            debug : tile.source[0].debug,
-            canvas : tile.source[0].canvas,
+            tileSources : tile_sources,
+            id : tile_set.id,
+            shaded : 0
+    }
+
+    // All the terms for viaWebGL
+    var viaStart = {
+            alpha: 0.6,
+            canvas : tile_set.canvas,
             context_keys : {preserveDrawingBuffer:true},
-            shape : [0,0,tile.source[0].width, tile.source[0].height],
-            sizes : {width: tile.source[0].tileSize, height: tile.source[0].tileSize},
+            shape : [0,0,tile_set.width, tile_set.height],
+            sizes : {width: tile_set.tileSize, height: tile_set.tileSize},
             shaders : ['shaders/former.glsl','shaders/latter.glsl'],
             offscreen: document.createElement('canvas')
-        }
-    ];
-    self.Start(...layOut);
+    }
+
+    new J.Start(seaStart,viaStart);
 };

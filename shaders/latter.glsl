@@ -1,6 +1,6 @@
 precision mediump float;
-uniform sampler2D u_tiler;
-varying vec2 v_tile_pos;
+uniform sampler2D u_tile;
+varying vec2 v_where_in_tile;
 
 //
 // FLOAT COMPARE FUNCTIONS WITH DELTA
@@ -38,5 +38,5 @@ vec4 borders(sampler2D sam, vec2 pos) {
 
 
 void main() {
-  gl_FragColor = borders(u_tiler, v_tile_pos);
+  gl_FragColor = borders(u_tile, v_where_in_tile);
 }

@@ -1,5 +1,6 @@
 // Change any preset terms set in input address
 function getInput( before ) {
+    // Take the requested file as input
     var after = decodeURI(document.location.search.substring(1));
     // read as bool, string, or int
     var read = function(ask) {
