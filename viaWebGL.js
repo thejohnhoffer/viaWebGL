@@ -2,140 +2,75 @@
 // Begins the rendering of WebGL
 viaWebGL = function(top) {
 
+    // Update the default with any matching incoming context attribute
+    var basic = { context_keys: {preserveDrawingBuffer:true} };
+    top.context_keys = top.context_keys || basic.context_keys;
+    // Define the webGL context
     var context = function(s){
-        Object.assign(top.offscreen, top.sizes);
-        return top.offscreen.getContext(s,top.context_keys);
+        var hide = Object.assign(document.createElement('canvas'), top.sizes);
+        return hide.getContext(s,top.context_keys);
     }
+    // Actually get the context and set the shaders
     var gl = context('webgl') || context('experimental-webgl');
-    var shady = top.shaders.map(this.Getting);
+    var shaders = [top.vShader, top.fShader].map(this.Getting);
 
-    // WebGL constants
+    // WebGL Shorthand
     var k = {
-        square_tri: [gl.TRIANGLES, 0, 6],
+        png : [0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
+        box: Float32Array.from('001001011011'),
         float: [2, gl.FLOAT, false, 0, 0],
-        box_tri: Float32Array.from('001001011011'),
-        image : [gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
-        min: gl.TEXTURE_MIN_FILTER,
-        mag: gl.TEXTURE_MAG_FILTER,
+        method: [gl.TRIANGLES, 0, 6],
+        wrap : gl.CLAMP_TO_EDGE,
+        filter : gl.NEAREST,
         ab : gl.ARRAY_BUFFER,
         tex: gl.TEXTURE_2D
     };
-    k.square_static = [k.ab, k.box_tri, gl.STATIC_DRAW];
-    k.clamp_T = [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE];
-    k.clamp_S = [gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE];
-    k.near_mag = [k.tex, k.mag, gl.NEAREST];
-    k.near_min = [k.tex, k.min, gl.NEAREST];
-    k.tiler = [k.tex, 0, ...k.image, null];
+    k.background = [k.ab, k.box, gl.STATIC_DRAW];
+    k.wrap_T = [k.tex, gl.TEXTURE_WRAP_T, k.wrap];
+    k.wrap_S = [k.tex, gl.TEXTURE_WRAP_S, k.wrap];
+    k.fill_mag = [k.tex, gl.TEXTURE_MAG_FILTER, k.filter];
+    k.fill_min = [k.tex, gl.TEXTURE_MIN_FILTER, k.filter];
 
     // Set the attributes
-    this.attributes = ['a_where','a_where_in_tile'].map(function(n){
+    this.attributes = top.attributes.map(function(n){
         return {name : n};
     });
 
     // Make the textures
     this.textures = [0].map(function(n){
         return {
-            buffer: gl.createTexture(),
-            scale: [ k.near_min, k.near_mag, k.clamp_S, k.clamp_T]
+            kind: k.float,
+            source: [k.tex, ...k.png],
+            buffer: [k.tex, gl.createTexture()],
+            pixMode: [gl.UNPACK_FLIP_Y_WEBGL, 1],
+            params: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
         };
     });
 
-    // put together needed bits for webGL
-    this.square = k.square_static;
-    this.plan = k.square_tri;
-    this.shape = top.shape;
-    this.alpha = top.alpha;
-    this.tiler = k.tiler;
-    this.kind = k.float;
+    // Once loaded, Link shaders to viaWebGL
+    var ready = function(k,shaders) {
+
+        var link = this.Shading(shaders,gl);
+
+        // Find glsl locations of attributes
+        for (let which of this.attributes) {
+          which.id = gl.getAttribLocation(link,which.name);
+          which.kind = which.kind || k.float;
+        }
+        // Essential position buffer for the viaWebGLing
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(...k.background);
+        gl.useProgram(link);
+    };
+
+    Promise.all(shaders).then(ready.bind(this,k));
+
+    // save the context and the core drawing method
+    this.method = k.method;
     this.gl = gl;
-
-    Promise.all(shady).then(this.Ready.bind(this));
 };
 
-// Link up the viaWebGL with the shaders
-viaWebGL.prototype.Ready = function(shaders) {
-
-    var gl = this.gl;
-    var link = this.Shading(shaders,gl);
-
-    // Find glsl lovagions of attributes
-    for (let which of this.attributes) {
-      which.id = gl.getAttribLocation(link,which.name);
-      which.kind = this.kind;
-    }
-    // Essential position buffer for the viaWebGLing
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(...this.square);
-    gl.useProgram(link);
-};
-
-// Takes in an Image and gives back a Data URL
-viaWebGL.prototype.Image = function(image) {
-
-    // render the image
-    this.TickTock(image);
-    // return the image
-    var canv = this.gl.canvas;
-    return canv.toDataURL();
-};
-
-// Takes in a Canvas and gives back a Canvas
-viaWebGL.prototype.Canvas = function(canvas) {
-
-    // render the canvas
-    this.TickTock(canvas);
-    // return the canvas
-    return this.gl.canvas;
-};
-
-viaWebGL.prototype.passImage = function(e) {
-
-    // Set the imageSource as a data URL
-    e.image.src = this.Image(e.image);
-    // allow for the callback to happen
-    e.image.onload = e.getCompletionCallback;
-};
-
-viaWebGL.prototype.passCanvas = function(e) {
-
-    // Get a webGL canvas from the input canvas
-    var canv = this.Canvas(e.rendered.canvas);
-    // Render that canvas to the input context
-    e.rendered.drawImage(canv, 0,0);
-};
-
-
-// The webgl animation
-viaWebGL.prototype.TickTock = function(image) {
-
-    var gl = this.gl;
-    this.tiler.fill(image,-1);
-
-    // Set Attributes for GLSL
-    for (const which of this.attributes) {
-
-        gl.vertexAttribPointer(which.id,...which.kind);
-        gl.enableVertexAttribArray(which.id);
-    }
-    // Set Textures for GLSL
-    for (const which of this.textures) {
-
-        gl.bindTexture(gl.TEXTURE_2D, which.buffer);
-        which.scale.map(x => gl.texParameteri(...x));
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
-    }
-
-    // Upload the image into the texture.
-    gl.texImage2D(...this.tiler);
-    // Draw everything needed to canvas
-    gl.drawArrays(...this.plan);
-};
-
-// ----------------------------------
-//
 // Promise to get a file
-//
-// ----------------------------------
 viaWebGL.prototype.Getting = function(where) {
     return new Promise(function(done){
         var bid = new XMLHttpRequest();
@@ -153,12 +88,7 @@ viaWebGL.prototype.Getting = function(where) {
     });
 }
 
-// ----------------------------------
-//
 // Make one vertex shader and one fragment shader
-//
-// ----------------------------------
-
 viaWebGL.prototype.Shading = function(files, gl) {
 
     var kinds = [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER];
@@ -184,3 +114,73 @@ viaWebGL.prototype.Shading = function(files, gl) {
     }
     return shaderWork;
 };
+
+// The webgl animation
+viaWebGL.prototype.TickTock = function(image) {
+
+    var gl = this.gl;
+
+    // Set Attributes for GLSL
+    this.attributes.forEach(function(which){
+
+        gl.vertexAttribPointer(which.id,...which.kind);
+        gl.enableVertexAttribArray(which.id);
+    });
+
+    // Set Textures for GLSL
+    this.textures.forEach(function(which) {
+
+        gl.bindTexture(...which.buffer);
+        gl.pixelStorei(...which.pixMode);
+
+        // Apply texture parameters
+        which.params.map(function(x){
+            gl.texParameteri(...x);
+        });
+        // Send the image into the texture.
+        gl.texImage2D(...which.source,image);
+    });
+
+    // Draw everything needed to canvas
+    gl.drawArrays(...this.method);
+};
+
+/* * * * * * * * * * * *
+  Start of the API calls
+*/
+
+// Takes in an image or canvas and gives back a canvas
+viaWebGL.prototype.getCanvas = function(tile) {
+
+    // render the tile
+    this.TickTock(tile);
+    // return the canvas
+    return this.gl.canvas;
+};
+
+// Takes in an image and gives back a rendered source
+viaWebGL.prototype.getSource = function(image) {
+
+    // Render the image into a data source
+    return this.getCanvas(image).toDataURL();
+};
+
+viaWebGL.prototype.passImage = function(e) {
+
+    // Set the imageSource as a data URL
+    e.image.src = this.getSource(e.image);
+    // allow for the callback to happen
+    e.image.onload = e.getCompletionCallback;
+};
+
+viaWebGL.prototype.passCanvas = function(e) {
+
+    // Get a webGL canvas from the input canvas
+    var canv = this.getCanvas(e.rendered.canvas);
+    // Render that canvas to the input context
+    e.rendered.drawImage(canv, 0,0);
+};
+
+/*
+* End of the API calls
+* * * * * * * * * * */
