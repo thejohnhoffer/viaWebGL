@@ -21,5 +21,5 @@ function getInput( before ) {
         return obj;
     }
     // Deal the terms into a single object
-    return Object.assign( before, after.split('&').reduce(deal,{}) );
+    return after.split('&').reduce(deal,before);
 };
