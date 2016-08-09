@@ -31,21 +31,28 @@ viaWebGL = function(top) {
     k.fill_mag = [k.tex, gl.TEXTURE_MAG_FILTER, k.filter];
     k.fill_min = [k.tex, gl.TEXTURE_MIN_FILTER, k.filter];
 
-    // Set the attributes
-    this.attributes = top.attributes.map(function(n){
-        return {name : n};
-    });
+    // Set the basic attributes and textures
+    var attribute = top.attribute || {kind: k.float};
+    var texture = top.texture || {
+        kind: k.float,
+        source: [k.tex, ...k.png],
+        buffer: [k.tex, gl.createTexture()],
+        pixMode: [gl.UNPACK_FLIP_Y_WEBGL, 1],
+        params: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
+    };
 
-    // Make the textures
-    this.textures = [0].map(function(n){
-        return {
-            kind: k.float,
-            source: [k.tex, ...k.png],
-            buffer: [k.tex, gl.createTexture()],
-            pixMode: [gl.UNPACK_FLIP_Y_WEBGL, 1],
-            params: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
-        };
-    });
+    this.attributes = top.attributes || [{}];
+    this.textures = top.textures || [{}];
+
+    // Apply broad presets to each attribute
+    for (var n in this.attributes) {
+        Object.assign(this.attributes[n], attribute);
+    }
+
+    // Apply broad presets to each texture
+    for (var n in this.textures) {
+        Object.assign(this.textures[n], texture);
+    }
 
     // Once loaded, Link shaders to viaWebGL
     var ready = function(k,shaders) {
@@ -70,7 +77,7 @@ viaWebGL = function(top) {
     this.gl = gl;
 };
 
-// Promise to get a file
+// Promise to get a file then be done
 viaWebGL.prototype.Getting = function(where) {
     return new Promise(function(done){
         var bid = new XMLHttpRequest();
@@ -115,37 +122,6 @@ viaWebGL.prototype.Shading = function(files, gl) {
     return shaderWork;
 };
 
-// The webgl animation
-viaWebGL.prototype.TickTock = function(image) {
-
-    var gl = this.gl;
-
-    // Set Attributes for GLSL
-    this.attributes.forEach(function(which){
-
-        var ok = [which.id, ...which.kind];
-        gl.vertexAttribPointer(...ok);
-        gl.enableVertexAttribArray(which.id);
-    });
-
-    // Set Textures for GLSL
-    this.textures.forEach(function(which) {
-
-        gl.bindTexture(...which.buffer);
-        gl.pixelStorei(...which.pixMode);
-
-        // Apply texture parameters
-        which.params.map(function(x){
-            gl.texParameteri(...x);
-        });
-        // Send the image into the texture.
-        gl.texImage2D(...[...which.source,image]);
-    });
-
-    // Draw everything needed to canvas
-    gl.drawArrays(...this.method);
-};
-
 /* * * * * * * * * * * *
   Start of the API calls
 */
@@ -185,3 +161,34 @@ viaWebGL.prototype.passCanvas = function(e) {
 /*
 * End of the API calls
 * * * * * * * * * * */
+
+// The webgl animation
+viaWebGL.prototype.TickTock = function(image) {
+
+    var gl = this.gl;
+
+    // Set Attributes for GLSL
+    this.attributes.forEach(function(which){
+
+        var ok = [which.id, ...which.kind];
+        gl.vertexAttribPointer(...ok);
+        gl.enableVertexAttribArray(which.id);
+    });
+
+    // Set Textures for GLSL
+    this.textures.forEach(function(which) {
+
+        gl.bindTexture(...which.buffer);
+        gl.pixelStorei(...which.pixMode);
+
+        // Apply texture parameters
+        which.params.map(function(x){
+            gl.texParameteri(...x);
+        });
+        // Send the image into the texture.
+        gl.texImage2D(...[...which.source,image]);
+    });
+
+    // Draw everything needed to canvas
+    gl.drawArrays(...this.method);
+};
