@@ -66,19 +66,6 @@ J.Viewer.prototype.start = function() {
     var via = new viaWebGL({
         vShader : 'shaders/former.glsl',
         fShader : 'shaders/latter.glsl',
-        textures : [
-            {
-                name: '0'
-            }
-        ],
-        attributes : [
-            {
-                name:'a_where'
-            },
-            {
-                name:'a_where_tile'
-            }
-        ],
         sizes : {width: this.tile.tileSize, height: this.tile.tileSize},
         shape : [0,0,this.tile.width, this.tile.height]
     });

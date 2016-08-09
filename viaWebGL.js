@@ -40,34 +40,37 @@ viaWebGL.prototype.Start = function(top,shaders,gl) {
     k.wrap_S = [k.tex, gl.TEXTURE_WRAP_S, k.wrap];
     k.fill_mag = [k.tex, gl.TEXTURE_MAG_FILTER, k.filter];
     k.fill_min = [k.tex, gl.TEXTURE_MIN_FILTER, k.filter];
-    k.tile_pointer = k.float.concat([k.stride*2]);
     k.where_pointer = k.float.concat([k.stride*0]);
+    k.tile_pointer = k.float.concat([k.stride*2]);
 
     // Preset attributes and textures
-    k.attributes = top.attribute || {
-        kind: k.float,
-        name:'a_position'
+    k.preset = {
+        attributes: {
+            kind: k.float,
+            name:'a_position'
+        },
+        textures: {
+            name: '0',
+            texImage2D: [k.tex, ...k.format],
+            bindTexture: [k.tex, gl.createTexture()],
+            pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1],
+            texParameteri: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
+        }
     };
-    k.textures = top.texture || {
-        texImage2D: [k.tex, ...k.format],
-        bindTexture: [k.tex, gl.createTexture()],
-        pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1],
-        texParameteri: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
-    };
-
+    k.set = [
+        {name:'a_where', pointer: k.where_pointer},
+        {name:'a_where_tile', pointer: k.tile_pointer}
+    ]
+    // Overwrite the presets with specifics
     var assign = function(str) {
-        return (top[str] || [{}]).map(function(each) {
-            return Object.assign(Object.assign({},k[str]), each);
+        return k.set.map(function(each) {
+            return Object.assign(Object.assign({},k.preset[str]), each);
         });
     }
 
     // Apply broad presets to each texture
     this.attributes = assign('attributes');
-    this.textures = assign('textures');
-
-
-    //TODO Hacky
-    this.attributes[1].pointer = k.tile_pointer;
+    this.textures = [k.preset.textures];
 
     // Once loaded, Link shaders to viaWebGL
     var ready = function(k,shaders) {
