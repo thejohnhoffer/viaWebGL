@@ -16,10 +16,10 @@ viaWebGL = function(top) {
 
     // WebGL Shorthand
     var k = {
+        box: new Float32Array(Array.from('00100111').map(Number)),
         png : [0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
-        box: Float32Array.from('001001011011'),
         float: [2, gl.FLOAT, false, 0, 0],
-        method: [gl.TRIANGLES, 0, 6],
+        method: [gl.TRIANGLE_STRIP, 0, 4],
         wrap : gl.CLAMP_TO_EDGE,
         filter : gl.NEAREST,
         ab : gl.ARRAY_BUFFER,
@@ -53,7 +53,7 @@ viaWebGL = function(top) {
         var link = this.Shading(shaders,gl);
 
         // Find glsl locations of attributes
-        for (let which of this.attributes) {
+        for (var which of this.attributes) {
           which.id = gl.getAttribLocation(link,which.name);
           which.kind = which.kind || k.float;
         }
@@ -123,7 +123,8 @@ viaWebGL.prototype.TickTock = function(image) {
     // Set Attributes for GLSL
     this.attributes.forEach(function(which){
 
-        gl.vertexAttribPointer(which.id,...which.kind);
+        var ok = [which.id, ...which.kind];
+        gl.vertexAttribPointer(...ok);
         gl.enableVertexAttribArray(which.id);
     });
 
@@ -138,7 +139,7 @@ viaWebGL.prototype.TickTock = function(image) {
             gl.texParameteri(...x);
         });
         // Send the image into the texture.
-        gl.texImage2D(...which.source,image);
+        gl.texImage2D(...[...which.source,image]);
     });
 
     // Draw everything needed to canvas

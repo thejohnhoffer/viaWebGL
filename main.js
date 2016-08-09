@@ -7,8 +7,7 @@ window.onload = function(e){
 
     // View by passing any new div name
     var view = new J.Viewer('viaWebGL');
-    // Write over presets
-    getInput(view.tile);
+    view.getInput(document.location.search);
 
     // Add more needed openSeaDragon properties to all the viewer's tiles
     var max_max = Math.ceil(Math.log2(view.tile.width/view.tile.size));

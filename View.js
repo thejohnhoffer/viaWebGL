@@ -72,6 +72,41 @@ J.Viewer.prototype.start = function() {
     this.handle(open,via);
 }
 
+// Change any preset terms set in input address
+J.Viewer.prototype.getInput = function( input ) {
+
+    var tile = this.tile;
+    // read as bool, string, or int
+    var read = function(ask) {
+        if (ask[1]) {
+            // read as string if the preset is a string
+            if (typeof tile[ask[0]] === 'string') {
+                var clean = new RegExp('\/$');
+                return ask[1].replace(clean,'');
+            }
+            return parseInt(ask[1],10);
+        }
+        return true;
+    }
+    // Assign each term to a key
+    var deal = function(obj, str) {
+        var ask = decodeURI(str).split('=');
+        obj[ask[0]] = read(ask);
+        return obj;
+    }
+    // Deal the terms into a single object
+    input.slice(1).split('&').reduce(deal,tile);
+};
+
+J.Viewer.prototype.tiler = function() {
+
+    // Apply general presets to each tile
+    for (var n in this.eachTile) {
+        Object.assign(this.eachTile[n], this.tile);
+    }
+    return this.eachTile;
+};
+
 J.Viewer.prototype.handle = function(open,via) {
 
     // After Loading each tile
@@ -98,12 +133,3 @@ J.Viewer.prototype.handle = function(open,via) {
 //    open.addHandler('tile-loaded',onLoad);
     open.addHandler('tile-drawing',onDraw);
 }
-
-J.Viewer.prototype.tiler = function() {
-
-    // Apply general presets to each tile
-    for (var n in this.eachTile) {
-        Object.assign(this.eachTile[n], this.tile);
-    }
-    return this.eachTile;
-};
