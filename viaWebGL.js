@@ -1,5 +1,5 @@
 
-// Begins the rendering of WebGL
+// Set up the rendering of WebGL
 viaWebGL = function(top) {
 
     // Update the default with any matching incoming context attribute
@@ -14,68 +14,81 @@ viaWebGL = function(top) {
     var gl = context('webgl') || context('experimental-webgl');
     var shaders = [top.vShader, top.fShader].map(this.Getting);
 
+    this.Start(top,shaders,gl);
+
+};
+
+viaWebGL.prototype.Start = function(top,shaders,gl) {
+
     // WebGL Shorthand
     var k = {
-        box: new Float32Array(Array.from('00100111').map(Number)),
-        png : [0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
-        float: [2, gl.FLOAT, false, 0, 0],
-        method: [gl.TRIANGLE_STRIP, 0, 4],
+        box: new Float32Array([-1, 1, 0, 1,
+                               -1,-1, 0, 0,
+                                1, 1, 1, 1,
+                                1,-1, 1, 0]),
+        format : [0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
+        drawArrays: [gl.TRIANGLE_STRIP, 0, 4],
         wrap : gl.CLAMP_TO_EDGE,
         filter : gl.NEAREST,
         ab : gl.ARRAY_BUFFER,
         tex: gl.TEXTURE_2D
     };
-    k.background = [k.ab, k.box, gl.STATIC_DRAW];
+    k.stride = k.box.BYTES_PER_ELEMENT;
+    k.float = [2, gl.FLOAT, false, k.stride*4];
+    k.bufferData = [k.ab, k.box, gl.STATIC_DRAW];
     k.wrap_T = [k.tex, gl.TEXTURE_WRAP_T, k.wrap];
     k.wrap_S = [k.tex, gl.TEXTURE_WRAP_S, k.wrap];
     k.fill_mag = [k.tex, gl.TEXTURE_MAG_FILTER, k.filter];
     k.fill_min = [k.tex, gl.TEXTURE_MIN_FILTER, k.filter];
+    k.tile_pointer = k.float.concat([k.stride*2]);
+    k.where_pointer = k.float.concat([0]);
 
-    // Set the basic attributes and textures
-    var attribute = top.attribute || {kind: k.float};
-    var texture = top.texture || {
-        kind: k.float,
-        source: [k.tex, ...k.png],
-        buffer: [k.tex, gl.createTexture()],
-        pixMode: [gl.UNPACK_FLIP_Y_WEBGL, 1],
-        params: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
+    // Preset attributes and textures
+    k.attributes = top.attribute || {
+        kind: k.float
+    };
+    k.textures = top.texture || {
+        texImage2D: [k.tex, ...k.format],
+        bindTexture: [k.tex, gl.createTexture()],
+        pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1],
+        texParameteri: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
     };
 
-    this.attributes = top.attributes || [{}];
-    this.textures = top.textures || [{}];
-
-    // Apply broad presets to each attribute
-    for (var n in this.attributes) {
-        Object.assign(this.attributes[n], attribute);
+    var assign = function(str) {
+        return (top[str] || [{}]).map(function(x) {
+            return Object.assign(Object.assign({},k[str]), x);
+        });
     }
 
     // Apply broad presets to each texture
-    for (var n in this.textures) {
-        Object.assign(this.textures[n], texture);
-    }
+    this.attributes = assign('attributes')
+    this.textures = assign('textures')
 
     // Once loaded, Link shaders to viaWebGL
     var ready = function(k,shaders) {
 
         var link = this.Shading(shaders,gl);
 
+        //TODO Hacky
+        this.attributes[1].pointer = k.tile_pointer;
+
         // Find glsl locations of attributes
         for (var which of this.attributes) {
-          which.id = gl.getAttribLocation(link,which.name);
-          which.kind = which.kind || k.float;
+          which.name = gl.getAttribLocation(link,which.name);
+          which.pointer = which.pointer || k.where_pointer;
         }
         // Essential position buffer for the viaWebGLing
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(...k.background);
+        gl.bindBuffer(k.ab, gl.createBuffer());
+        gl.bufferData(...k.bufferData);
         gl.useProgram(link);
     };
 
     Promise.all(shaders).then(ready.bind(this,k));
 
     // save the context and the core drawing method
-    this.method = k.method;
+    this.drawArrays = k.drawArrays;
     this.gl = gl;
-};
+}
 
 // Promise to get a file then be done
 viaWebGL.prototype.Getting = function(where) {
@@ -130,7 +143,7 @@ viaWebGL.prototype.Shading = function(files, gl) {
 viaWebGL.prototype.getCanvas = function(tile) {
 
     // render the tile
-    this.TickTock(tile);
+    this.TickTock([tile]);
     // return the canvas
     return this.gl.canvas;
 };
@@ -142,7 +155,7 @@ viaWebGL.prototype.getSource = function(image) {
     return this.getCanvas(image).toDataURL();
 };
 
-viaWebGL.prototype.passImage = function(e) {
+viaWebGL.prototype.viaLoad = function(e) {
 
     // Set the imageSource as a data URL
     e.image.src = this.getSource(e.image);
@@ -150,7 +163,7 @@ viaWebGL.prototype.passImage = function(e) {
     e.image.onload = e.getCompletionCallback;
 };
 
-viaWebGL.prototype.passCanvas = function(e) {
+viaWebGL.prototype.viaDraw = function(e) {
 
     // Get a webGL canvas from the input canvas
     var canv = this.getCanvas(e.rendered.canvas);
@@ -170,25 +183,26 @@ viaWebGL.prototype.TickTock = function(image) {
     // Set Attributes for GLSL
     this.attributes.forEach(function(which){
 
-        var ok = [which.id, ...which.kind];
-        gl.vertexAttribPointer(...ok);
-        gl.enableVertexAttribArray(which.id);
+        var where = [which.name, ...which.pointer];
+        gl.enableVertexAttribArray(which.name);
+        gl.vertexAttribPointer(...where);
     });
 
     // Set Textures for GLSL
     this.textures.forEach(function(which) {
 
-        gl.bindTexture(...which.buffer);
-        gl.pixelStorei(...which.pixMode);
+        gl.activeTexture(gl['TEXTURE'+which.name]);
+        gl.bindTexture(...which.bindTexture);
+        gl.pixelStorei(...which.pixelStorei);
 
         // Apply texture parameters
-        which.params.map(function(x){
+        which.texParameteri.map(function(x){
             gl.texParameteri(...x);
         });
         // Send the image into the texture.
-        gl.texImage2D(...[...which.source,image]);
+        gl.texImage2D(...which.texImage2D.concat(image));
     });
 
     // Draw everything needed to canvas
-    gl.drawArrays(...this.method);
+    gl.drawArrays(...this.drawArrays);
 };

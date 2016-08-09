@@ -45,9 +45,12 @@ J.Viewer = function(name) {
 
 J.Viewer.prototype.start = function() {
 
+    for (var each of this.eachTile) {
+        Object.assign(each,this.tile);
+    }
     // Open a seaDragon with two layers
     var open = OpenSeadragon({
-        tileSources :           this.tiler(),
+        tileSources :           this.eachTile,
         prefixUrl :             'lib/images/',
         crossOriginPolicy :     'Anonymous',
         timeout :               120000,
@@ -65,15 +68,15 @@ J.Viewer.prototype.start = function() {
         fShader : 'shaders/latter.glsl',
         textures : [
             {
-                pixMode: [37440, 1]
+                name: '0'
             }
         ],
         attributes : [
             {
-                name:'a_where',
+                name:'a_where'
             },
             {
-                name:'a_where_in_tile'
+                name:'a_where_tile'
             }
         ],
         sizes : {width: this.tile.tileSize, height: this.tile.tileSize},
@@ -82,6 +85,40 @@ J.Viewer.prototype.start = function() {
 
     // Bind the event handlers
     this.handle(open,via);
+}
+
+J.Viewer.prototype.tiler = function() {
+
+    return this.eachTile.map(function(each){
+        return Object.assign(each,this.tile);
+    },this);
+};
+
+J.Viewer.prototype.handle = function(open,via) {
+
+    // After Loading each tile
+    var onLoad = function(e) {
+
+        if (e.tiledImage.source.layer == 1) {
+            // Make the entire top tile transparent
+            e.tiledImage.setOpacity(e.tiledImage.source.alpha);
+            // Change the image via webGL
+            via.viaLoad(e);
+        }
+    }
+    // Before Drawing each tile
+    var onDraw = function(e) {
+
+        if (e.tiledImage.source.layer == 1 && e.tile.loaded !==1) {
+            // Make the entire top tile transparent
+            e.tiledImage.setOpacity(e.tiledImage.source.alpha);
+            // Change the context via webGL
+            via.viaDraw(e);
+            e.tile.loaded = 1;
+        }
+    }
+//    open.addHandler('tile-loaded',onLoad);
+    open.addHandler('tile-drawing',onDraw);
 }
 
 // Change any preset terms set in input address
@@ -109,39 +146,3 @@ J.Viewer.prototype.getInput = function( input ) {
     // Deal the terms into a single object
     input.slice(1).split('&').reduce(deal,tile);
 };
-
-J.Viewer.prototype.tiler = function() {
-
-    // Apply general presets to each tile
-    for (var n in this.eachTile) {
-        Object.assign(this.eachTile[n], this.tile);
-    }
-    return this.eachTile;
-};
-
-J.Viewer.prototype.handle = function(open,via) {
-
-    // After Loading each tile
-    var onLoad = function(e) {
-
-        if (e.tiledImage.source.layer == 1) {
-            // Make the entire top tile transparent
-            e.tiledImage.setOpacity(e.tiledImage.source.alpha);
-            // Change the image via webGL
-            via.passImage(e);
-        }
-    }
-    // Before Drawing each tile
-    var onDraw = function(e) {
-
-        if (e.tiledImage.source.layer == 1 && e.tile.loaded !==1) {
-            // Make the entire top tile transparent
-            e.tiledImage.setOpacity(e.tiledImage.source.alpha);
-            // Change the context via webGL
-            via.passCanvas(e);
-            e.tile.loaded = 1;
-        }
-    }
-//    open.addHandler('tile-loaded',onLoad);
-    open.addHandler('tile-drawing',onDraw);
-}
