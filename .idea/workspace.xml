@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aec0796f-8147-42f6-be98-6fd451581b40" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/View.js" afterPath="$PROJECT_DIR$/View.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shaders/former.glsl" afterPath="$PROJECT_DIR$/shaders/former.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shaders/latter.glsl" afterPath="$PROJECT_DIR$/shaders/latter.glsl" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/viaWebGL.js" afterPath="$PROJECT_DIR$/viaWebGL.js" />
     </list>
     <ignored path="waymesh.iws" />
@@ -49,8 +46,8 @@
       <file leaf-file-name="View.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/View.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-19.076923">
-              <caret line="81" column="72" selection-start-line="81" selection-start-column="72" selection-end-line="81" selection-end-column="72" />
+            <state vertical-scroll-proportion="-16.076923">
+              <caret line="75" column="16" selection-start-line="75" selection-start-column="16" selection-end-line="75" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -59,8 +56,8 @@
       <file leaf-file-name="viaWebGL.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/viaWebGL.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5265363">
-              <caret line="58" column="62" selection-start-line="58" selection-start-column="62" selection-end-line="58" selection-end-column="62" />
+            <state vertical-scroll-proportion="0.46438548">
+              <caret line="77" column="44" selection-start-line="77" selection-start-column="44" selection-end-line="77" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -115,7 +112,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="1440" />
     <option name="y" value="-1010" />
-    <option name="width" value="1280" />
+    <option name="width" value="2320" />
     <option name="height" value="1573" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -364,10 +361,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1440" y="-1010" width="1280" height="1573" extended-state="0" />
+    <frame x="1440" y="-1010" width="2320" height="1573" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15645161" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08508772" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32883188" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -375,7 +372,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39785713" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21622807" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -723,14 +720,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/View.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-19.076923">
-          <caret line="81" column="72" selection-start-line="81" selection-start-column="72" selection-end-line="81" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shaders/former.glsl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.76">
@@ -739,10 +728,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/View.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.076923">
+          <caret line="75" column="16" selection-start-line="75" selection-start-column="16" selection-end-line="75" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/viaWebGL.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5265363">
-          <caret line="58" column="62" selection-start-line="58" selection-start-column="62" selection-end-line="58" selection-end-column="62" />
+        <state vertical-scroll-proportion="0.46438548">
+          <caret line="77" column="44" selection-start-line="77" selection-start-column="44" selection-end-line="77" selection-end-column="44" />
           <folding />
         </state>
       </provider>

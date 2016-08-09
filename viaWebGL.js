@@ -41,11 +41,12 @@ viaWebGL.prototype.Start = function(top,shaders,gl) {
     k.fill_mag = [k.tex, gl.TEXTURE_MAG_FILTER, k.filter];
     k.fill_min = [k.tex, gl.TEXTURE_MIN_FILTER, k.filter];
     k.tile_pointer = k.float.concat([k.stride*2]);
-    k.where_pointer = k.float.concat([0]);
+    k.where_pointer = k.float.concat([k.stride*0]);
 
     // Preset attributes and textures
     k.attributes = top.attribute || {
-        kind: k.float
+        kind: k.float,
+        name:'a_position'
     };
     k.textures = top.texture || {
         texImage2D: [k.tex, ...k.format],
@@ -55,29 +56,30 @@ viaWebGL.prototype.Start = function(top,shaders,gl) {
     };
 
     var assign = function(str) {
-        return (top[str] || [{}]).map(function(x) {
-            return Object.assign(Object.assign({},k[str]), x);
+        return (top[str] || [{}]).map(function(each) {
+            return Object.assign(Object.assign({},k[str]), each);
         });
     }
 
     // Apply broad presets to each texture
-    this.attributes = assign('attributes')
-    this.textures = assign('textures')
+    this.attributes = assign('attributes');
+    this.textures = assign('textures');
+
+
+    //TODO Hacky
+    this.attributes[1].pointer = k.tile_pointer;
 
     // Once loaded, Link shaders to viaWebGL
     var ready = function(k,shaders) {
 
         var link = this.Shading(shaders,gl);
 
-        //TODO Hacky
-        this.attributes[1].pointer = k.tile_pointer;
-
         // Find glsl locations of attributes
         for (var which of this.attributes) {
           which.name = gl.getAttribLocation(link,which.name);
           which.pointer = which.pointer || k.where_pointer;
         }
-        // Essential position buffer for the viaWebGLing
+        // Essential position buffer for viaWebGL
         gl.bindBuffer(k.ab, gl.createBuffer());
         gl.bufferData(...k.bufferData);
         gl.useProgram(link);
