@@ -63,27 +63,33 @@ J.Viewer.prototype.init = function() {
         loaded : false
     });
 
-    var event = 'tile-loaded';
-//    var event = 'tile-drawing';
-    open.addHandler(event,{
-        'tile-loaded': function(e) {
+var loaded = function(e,callback) {
 
             if (e.tiledImage.source.layer == 1) {
                 // Make the entire top tile transparent
                 e.tiledImage.setOpacity(e.tiledImage.source.alpha);
-                // Change the image via webGL
-                via.viaLoad(e);
+                // via webGL
+                callback(e);
             }
-        },
-        'tile-drawing': function(e) {
+        }
+var drawing = function(e,callback) {
 
             if (e.tiledImage.source.layer == 1 && e.tile.loaded !==1) {
                 // Make the entire top tile transparent
                 e.tiledImage.setOpacity(e.tiledImage.source.alpha);
-                // Change the context via webGL
-                via.viaDraw(e);
+                // via webGL
+                callback(e);
                 e.tile.loaded = 1;
             }
         }
-    }[event]);
+
+       var handles = {
+          'tile-loaded': loaded,
+          'tile-drawing': drawing,
+       }
+
+    var event = 'tile-loaded';
+//    var event = 'tile-drawing';
+    var action = via.seaDragon(event,handles);
+    open.addHandler(event,action);
 }

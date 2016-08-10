@@ -2,6 +2,10 @@
 // Set up the rendering of WebGL
 ViaWebGL = function(top) {
 
+    this.standard = function(e) {
+        return e;
+    }
+
     // Update the default with any matching incoming context attribute
     top.kwargs = top.context || {preserveDrawingBuffer:true};
     // Define the webGL context
@@ -179,7 +183,17 @@ ViaWebGL.prototype.viaDraw = function(e) {
     e.rendered.drawImage(canv, 0,0);
 };
 
-ViaWebGL.prototype.handle
+ViaWebGL.prototype.seaDragon = function(event,handles) {
+       var callbacks = {
+          'tile-loaded': this.viaLoad.bind(this),
+          'tile-drawing': this.viaDraw.bind(this),
+       }
+       var theirs = handles[event];
+       var ours = callbacks[event];
+       return function(e) {
+            theirs(e,ours);
+       }
+}
 
 
 /*
