@@ -1,24 +1,27 @@
 
 // Set up the rendering of WebGL
-viaWebGL = function(top) {
+ViaWebGL = function(top) {
 
     // Update the default with any matching incoming context attribute
-    var basic = { context_keys: {preserveDrawingBuffer:true} };
-    top.context_keys = top.context_keys || basic.context_keys;
+    top.kwargs = top.context || {preserveDrawingBuffer:true};
     // Define the webGL context
     var context = function(s){
-        var hide = Object.assign(document.createElement('canvas'), top.sizes);
-        return hide.getContext(s,top.context_keys);
+        var hide = document.createElement('canvas');
+        hide = J.copy(hide,{height: top.size, width: top.size});
+        return hide.getContext(s,top.kwargs);
     }
     // Actually get the context and set the shaders
     var gl = context('webgl') || context('experimental-webgl');
     var shaders = [top.vShader, top.fShader].map(this.Getting);
 
-    this.Start(top,shaders,gl);
-
+    J.copy(this, {top: top, shaders: shaders, gl: gl});
 };
 
-viaWebGL.prototype.Start = function(top,shaders,gl) {
+ViaWebGL.prototype.init = function(top,shaders,gl) {
+
+    var gl = this.gl;
+    var top = this.top;
+    var shaders = this.shaders;
 
     // WebGL Shorthand
     var k = {
@@ -72,7 +75,7 @@ viaWebGL.prototype.Start = function(top,shaders,gl) {
     this.attributes = assign('attributes');
     this.textures = [k.preset.textures];
 
-    // Once loaded, Link shaders to viaWebGL
+    // Once loaded, Link shaders to ViaWebGL
     var ready = function(k,shaders) {
 
         var link = this.Shading(shaders,gl);
@@ -82,7 +85,7 @@ viaWebGL.prototype.Start = function(top,shaders,gl) {
           which.name = gl.getAttribLocation(link,which.name);
           which.pointer = which.pointer || k.where_pointer;
         }
-        // Essential position buffer for viaWebGL
+        // Essential position buffer for ViaWebGL
         gl.bindBuffer(k.ab, gl.createBuffer());
         gl.bufferData(...k.bufferData);
         gl.useProgram(link);
@@ -96,7 +99,7 @@ viaWebGL.prototype.Start = function(top,shaders,gl) {
 }
 
 // Promise to get a file then be done
-viaWebGL.prototype.Getting = function(where) {
+ViaWebGL.prototype.Getting = function(where) {
     return new Promise(function(done){
         var bid = new XMLHttpRequest();
         var win = function(){
@@ -114,7 +117,7 @@ viaWebGL.prototype.Getting = function(where) {
 }
 
 // Make one vertex shader and one fragment shader
-viaWebGL.prototype.Shading = function(files, gl) {
+ViaWebGL.prototype.Shading = function(files, gl) {
 
     var kinds = [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER];
     var shaderWork = gl.createProgram();
@@ -145,7 +148,7 @@ viaWebGL.prototype.Shading = function(files, gl) {
 */
 
 // Takes in an image or canvas and gives back a canvas
-viaWebGL.prototype.getCanvas = function(tile) {
+ViaWebGL.prototype.getCanvas = function(tile) {
 
     // render the tile
     this.TickTock([tile]);
@@ -154,13 +157,13 @@ viaWebGL.prototype.getCanvas = function(tile) {
 };
 
 // Takes in an image and gives back a rendered source
-viaWebGL.prototype.getSource = function(image) {
+ViaWebGL.prototype.getSource = function(image) {
 
     // Render the image into a data source
     return this.getCanvas(image).toDataURL();
 };
 
-viaWebGL.prototype.viaLoad = function(e) {
+ViaWebGL.prototype.viaLoad = function(e) {
 
     // Set the imageSource as a data URL
     e.image.src = this.getSource(e.image);
@@ -168,7 +171,7 @@ viaWebGL.prototype.viaLoad = function(e) {
     e.image.onload = e.getCompletionCallback;
 };
 
-viaWebGL.prototype.viaDraw = function(e) {
+ViaWebGL.prototype.viaDraw = function(e) {
 
     // Get a webGL canvas from the input canvas
     var canv = this.getCanvas(e.rendered.canvas);
@@ -176,12 +179,15 @@ viaWebGL.prototype.viaDraw = function(e) {
     e.rendered.drawImage(canv, 0,0);
 };
 
+ViaWebGL.prototype.handle
+
+
 /*
 * End of the API calls
 * * * * * * * * * * */
 
 // The webgl animation
-viaWebGL.prototype.TickTock = function(image) {
+ViaWebGL.prototype.TickTock = function(image) {
 
     var gl = this.gl;
 
