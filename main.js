@@ -28,8 +28,8 @@ J.parse = function( input, output = {}) {
 };
 
 J.copy = function(target, source) {
-    for(var k in source) {
-        target[k] = source[k];
+    for(var key in source) {
+        target[key] = source[key];
     }
     return target;
 }
