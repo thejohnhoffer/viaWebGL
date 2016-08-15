@@ -30,7 +30,7 @@ J.parse = function( input, output) {
 
 J.copy = function(target, source) {
     for(var key in source) {
-        target[key] = source[key];
+        target[key] = target[key] || source[key];
     }
     return target;
 }

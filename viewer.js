@@ -5,10 +5,10 @@ var J = J || {};
 //
 //-----------------------------------
 
-J.Viewer = function(parsed) {
+J.Viewer = function(baseLayer) {
 
     // preset tile source
-    var lowLayer = J.copy({
+    J.copy(baseLayer, {
         getTileUrl : function( level, x, y ) {
             return 'http://' + this.server + '/data/?datapath=' + this.datapath + '&start=' +
                 x*this.size + ',' + y*this.size + ',' + this.z + '&mip=' + (this.maxLevel - level) +
@@ -23,20 +23,19 @@ J.Viewer = function(parsed) {
         z :        0,
         segment : '',
         alpha: 0.6,
-        shaded : 0,
         size : 512,
         layer : 0,
         mip : 1
-    }, parsed);
+    });
     // Add more needed openSeaDragon properties to each layer's tiles
-    var max_max = Math.ceil(Math.log2(lowLayer.width/lowLayer.size));
-    lowLayer.maxLevel = Math.min(lowLayer.mip, max_max);
-    lowLayer.tileSize = lowLayer.size;
+    var max_max = Math.ceil(Math.log2(baseLayer.width/baseLayer.size));
+    baseLayer.maxLevel = Math.min(baseLayer.mip, max_max);
+    baseLayer.tileSize = baseLayer.size;
 
-    var topLayer = J.copy({},lowLayer);
-    this.layers = [lowLayer, topLayer];
+    // More for top Layer
+    var topLayer = J.copy({layer: 1}, baseLayer);
     topLayer.segment = '&segmentation=y&segcolor=y';
-    topLayer.layer ++;
+    this.layers = [baseLayer, topLayer];
 }
 
 J.Viewer.prototype.init = function() {
@@ -47,7 +46,6 @@ J.Viewer.prototype.init = function() {
         fShader : 'shaders/latter.glsl',
         size : this.layers[0].tileSize
     });
-    via.init();
 
     // Open a seaDragon with two layers
     var open = OpenSeadragon({
@@ -82,7 +80,8 @@ J.Viewer.prototype.init = function() {
         }
     }
 
-    var drawing = via.bind('tile-drawing', draw);
-    var loaded = via.bind('tile-loaded', load);
+    via.init();
+    var drawing = via.event('tile-drawing', draw);
+    var loaded = via.event('tile-loaded', load);
     open.addHandler.apply(open,drawing);
 }
