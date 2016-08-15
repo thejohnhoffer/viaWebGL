@@ -28,7 +28,7 @@ J.parse = function( input, output) {
     return output;
 };
 
-J.copy = function(target, source) {
+J.copy = function(source, target) {
     for(var key in source) {
         target[key] = target[key] || source[key];
     }

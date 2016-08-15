@@ -8,7 +8,7 @@ var J = J || {};
 J.Viewer = function(baseLayer) {
 
     // preset tile source
-    J.copy(baseLayer, {
+    J.copy({
         getTileUrl : function( level, x, y ) {
             return 'http://' + this.server + '/data/?datapath=' + this.datapath + '&start=' +
                 x*this.size + ',' + y*this.size + ',' + this.z + '&mip=' + (this.maxLevel - level) +
@@ -26,14 +26,14 @@ J.Viewer = function(baseLayer) {
         size : 512,
         layer : 0,
         mip : 1
-    });
+    }, baseLayer);
     // Add more needed openSeaDragon properties to each layer's tiles
     var max_max = Math.ceil(Math.log2(baseLayer.width/baseLayer.size));
     baseLayer.maxLevel = Math.min(baseLayer.mip, max_max);
     baseLayer.tileSize = baseLayer.size;
 
     // More for top Layer
-    var topLayer = J.copy({layer: 1}, baseLayer);
+    var topLayer = J.copy(baseLayer, {layer: 1});
     topLayer.segment = '&segmentation=y&segcolor=y';
     this.layers = [baseLayer, topLayer];
 }

@@ -14,7 +14,7 @@ ViaWebGL = function(top) {
     var gl = hide.getContext('webgl') || hide.getContext('experimental-webgl');
     var shaders = [top.vShader, top.fShader].map(this.Getting);
 
-    J.copy(this, {top: top, shaders: shaders, gl: gl});
+    J.copy({top: top, shaders: shaders, gl: gl}, this);
 };
 
 ViaWebGL.prototype.init = function(top,shaders,gl) {
@@ -29,11 +29,11 @@ ViaWebGL.prototype.init = function(top,shaders,gl) {
                                -1,-1, 0, 0,
                                 1, 1, 1, 1,
                                 1,-1, 1, 0]),
-        format : [0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
+        format: [0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
         drawArrays: [gl.TRIANGLE_STRIP, 0, 4],
-        wrap : gl.CLAMP_TO_EDGE,
-        filter : gl.NEAREST,
-        ab : gl.ARRAY_BUFFER,
+        wrap: gl.CLAMP_TO_EDGE,
+        filter: gl.NEAREST,
+        ab: gl.ARRAY_BUFFER,
         tex: gl.TEXTURE_2D
     };
     k.stride = k.box.BYTES_PER_ELEMENT;
@@ -47,23 +47,17 @@ ViaWebGL.prototype.init = function(top,shaders,gl) {
     k.tile_pointer = k.float.concat([k.stride*2]);
 
     // Preset attributes and texture
-    k.preset = {
+    k.preset = J.copy.bind(null, {
         kind: k.float,
-        name:'a_position'
-    };
-    k.set = [
-        {name:'a_where', pointer: k.where_pointer},
-        {name:'a_where_tile', pointer: k.tile_pointer}
-    ]
+        name: 'a_position'
+    });
     // Overwrite the presets with specifics
-    var assign = function(str) {
-        return k.set.map(function(each) {
-            return J.copy(each,k.preset);
-        });
-    }
+    this.attributes = [
+        {name: 'a_pos', pointer: k.where_pointer},
+        {name: 'a_tile_pos', pointer: k.tile_pointer}
+    ];
 
-    // Apply broad presets to each texture
-    this.attributes = assign('attributes');
+    this.attributes.forEach(k.preset);
     this.texture = {
         drawArrays: k.drawArrays,
         texImage2D: [k.tex].concat(k.format),
