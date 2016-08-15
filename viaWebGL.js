@@ -58,7 +58,7 @@ ViaWebGL.prototype.init = function(top,shaders,gl) {
         },
         textures: {
             name: '0',
-            texImage2D: [k.tex, ...k.format],
+            texImage2D: [k.tex].concat(k.format),
             bindTexture: [k.tex, gl.createTexture()],
             pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1],
             texParameteri: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
@@ -91,7 +91,7 @@ ViaWebGL.prototype.init = function(top,shaders,gl) {
         }
         // Essential position buffer for ViaWebGL
         gl.bindBuffer(k.ab, gl.createBuffer());
-        gl.bufferData(...k.bufferData);
+        gl.bufferData.apply(gl, k.bufferData);
         gl.useProgram(link);
     };
 
@@ -207,26 +207,26 @@ ViaWebGL.prototype.TickTock = function(image) {
     // Set Attributes for GLSL
     this.attributes.forEach(function(which){
 
-        var where = [which.name, ...which.pointer];
+        var where = [which.name].concat(which.pointer);
         gl.enableVertexAttribArray(which.name);
-        gl.vertexAttribPointer(...where);
+        gl.vertexAttribPointer.apply(gl, where);
     });
 
     // Set Textures for GLSL
     this.textures.forEach(function(which) {
 
         gl.activeTexture(gl['TEXTURE'+which.name]);
-        gl.bindTexture(...which.bindTexture);
-        gl.pixelStorei(...which.pixelStorei);
+        gl.bindTexture.apply(gl, which.bindTexture);
+        gl.pixelStorei.apply(gl, which.pixelStorei);
 
         // Apply texture parameters
         which.texParameteri.map(function(x){
-            gl.texParameteri(...x);
+            gl.texParameteri.apply(gl, x);
         });
         // Send the image into the texture.
-        gl.texImage2D(...which.texImage2D.concat(image));
+        gl.texImage2D.apply(gl, which.texImage2D.concat(image));
     });
 
     // Draw everything needed to canvas
-    gl.drawArrays(...this.drawArrays);
+    gl.drawArrays.apply(gl, this.drawArrays);
 };
