@@ -12,7 +12,8 @@ window.onload = function(e){
 };
 
 // Change any preset terms set in input address
-J.parse = function( input, output = {}) {
+J.parse = function( input, output) {
+    var output = output || {};
     var string = decodeURI(input).slice(1);
     // read as bool, string, or int
     string.split('&').map(function(pair) {

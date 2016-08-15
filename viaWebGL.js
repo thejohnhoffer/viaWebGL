@@ -183,18 +183,17 @@ ViaWebGL.prototype.viaDraw = function(e) {
     e.rendered.drawImage(canv, 0,0);
 };
 
-ViaWebGL.prototype.seaDragon = function(event,handles) {
-       var callbacks = {
-          'tile-loaded': this.viaLoad.bind(this),
-          'tile-drawing': this.viaDraw.bind(this),
-       }
-       var theirs = handles[event];
-       var ours = callbacks[event];
-       return function(e) {
-            theirs(e,ours);
-       }
-}
+ViaWebGL.prototype.bind = function(event,custom) {
 
+    var callbacks = {
+      'tile-loaded': this.viaLoad.bind(this),
+      'tile-drawing': this.viaDraw.bind(this),
+    }
+    var call = function(e) {
+        custom(e,callbacks[event]);
+    }
+    return [event, call];
+}
 
 /*
 * End of the API calls

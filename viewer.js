@@ -27,7 +27,7 @@ J.Viewer = function(parsed) {
         size : 512,
         layer : 0,
         mip : 1
-    },parsed);
+    }, parsed);
     // Add more needed openSeaDragon properties to each layer's tiles
     var max_max = Math.ceil(Math.log2(lowLayer.width/lowLayer.size));
     lowLayer.maxLevel = Math.min(lowLayer.mip, max_max);
@@ -35,8 +35,8 @@ J.Viewer = function(parsed) {
 
     var topLayer = J.copy({},lowLayer);
     this.layers = [lowLayer, topLayer];
-    this.layers[1].segment = '&segmentation=y&segcolor=y';
-    this.layers[1].layer ++;
+    topLayer.segment = '&segmentation=y&segcolor=y';
+    topLayer.layer ++;
 }
 
 J.Viewer.prototype.init = function() {
@@ -63,33 +63,26 @@ J.Viewer.prototype.init = function() {
         loaded : false
     });
 
-var loaded = function(e,callback) {
+    var load = function(e,callback) {
 
-            if (e.tiledImage.source.layer == 1) {
-                // Make the entire top tile transparent
-                e.tiledImage.setOpacity(e.tiledImage.source.alpha);
-                // via webGL
-                callback(e);
-            }
+        var source = e.tiledImage.source;
+        if (source.layer == 1) {
+            // Make the entire top tile transparent
+            e.tiledImage.setOpacity(source.alpha);
+            // via webGL
+            callback(e);
         }
-var drawing = function(e,callback) {
+    }
 
-            if (e.tiledImage.source.layer == 1 && e.tile.loaded !==1) {
-                // Make the entire top tile transparent
-                e.tiledImage.setOpacity(e.tiledImage.source.alpha);
-                // via webGL
-                callback(e);
-                e.tile.loaded = 1;
-            }
+    var draw = function(e,callback) {
+
+        if (e.tile.loaded !==1) {
+            load(e,callback);
+            e.tile.loaded = 1;
         }
+    }
 
-       var handles = {
-          'tile-loaded': loaded,
-          'tile-drawing': drawing,
-       }
-
-    var event = 'tile-loaded';
-//    var event = 'tile-drawing';
-    var action = via.seaDragon(event,handles);
-    open.addHandler(event,action);
+    var drawing = via.bind('tile-drawing', draw);
+    var loaded = via.bind('tile-loaded', load);
+    open.addHandler.apply(open,drawing);
 }
