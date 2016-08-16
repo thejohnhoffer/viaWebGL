@@ -87,11 +87,11 @@ J.Viewer.prototype.init = function() {
     }
 
     seaGL.onDraw = function(gl,image) {
-        console.log(image);
+//        console.log(image);
     }
 
     seaGL.attributes = ['a_pos', 'a_tile_pos'];
     seaGL.event('tile-drawing', draw);
-    seaGL.event('tile-loaded', load);
+//    seaGL.event('tile-loaded', load);
     seaGL.init(openSD);
 }

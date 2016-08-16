@@ -20,57 +20,54 @@ ViaWebGL = function(top) {
 ViaWebGL.prototype.init = function() {
 
     var gl = this.gl;
-    // WebGL Shorthand
-    var k = {
-        array: new Float32Array([-1, 1, 0, 1,
-                                 -1,-1, 0, 0,
-                                  1, 1, 1, 1,
-                                  1,-1, 1, 0]),
-        format: [0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
-        drawArrays: [gl.TRIANGLE_STRIP, 0, 4],
-        wrap: this.wrap || gl.CLAMP_TO_EDGE,
-        filter: this.filter || gl.NEAREST,
-        ab: gl.ARRAY_BUFFER,
-        tex: gl.TEXTURE_2D
-    };
+    var vector = this.vector || 2;
+    var filter = this.filter || gl.NEAREST;
+    var wrap = this.wrap || gl.CLAMP_TO_EDGE;
 
-    k.stride = k.array.BYTES_PER_ELEMENT;
-    k.bufferData = [k.ab, k.array, gl.STATIC_DRAW];
-
-    k.wrap_T = [k.tex, gl.TEXTURE_WRAP_T, k.wrap];
-    k.wrap_S = [k.tex, gl.TEXTURE_WRAP_S, k.wrap];
-    k.fill_mag = [k.tex, gl.TEXTURE_MAG_FILTER, k.filter];
-    k.fill_min = [k.tex, gl.TEXTURE_MIN_FILTER, k.filter];
+    var box_a = [-1, 1,-1,-1, 1, 1, 1,-1];
+    var box_b = [ 0, 1, 0, 0, 1, 1, 1, 0];
+    var data = new Float32Array(this.data || box_a.concat(box_b));
+    var count = this.count || box_a.length/vector;
+    var stride = vector*data.BYTES_PER_ELEMENT;
+    var boxes = data.length/(count*vector)-1;
 
     // fixed texture terms
     this.texture = {
-        drawArrays: k.drawArrays,
-        texImage2D: [k.tex].concat(k.format),
-        bindTexture: [k.tex, gl.createTexture()],
-        pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1],
-        texParameteri: [k.fill_min, k.fill_mag, k.wrap_S, k.wrap_T]
+        texParameteri: [
+            [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap],
+            [gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap],
+            [gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter],
+            [gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter]
+        ],
+        texImage2D: [gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
+        bindTexture: [gl.TEXTURE_2D, gl.createTexture()],
+        drawArrays: [gl.TRIANGLE_STRIP, 0, count],
+        pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1]
     };
 
     // Once loaded, Link shaders to ViaWebGL
-    var ready = function(k,shaders) {
+    var ready = function(shaders) {
 
+        // Find shader attribute locations
         var program = this.shader(shaders,gl);
-        // Find glsl locations of attributes
-        var join = gl.getAttribLocation.bind(gl,program);
+
         this.attributes = this.attributes.map(function(a,i) {
-            return [join(a), 2, gl.FLOAT, false, k.stride*4, k.stride*2*i];
+
+            var offset = count*stride*Math.min(i,boxes);
+            var vertex = gl.getAttribLocation(program,a);
+            return [vertex, vector, gl.FLOAT, false, stride, offset];
         });
 
         // Allow for custom loading in webGL
         this.onLoad.call(this, gl, program);
 
         // Essential position buffer for ViaWebGL
-        gl.bindBuffer(k.ab, gl.createBuffer());
-        gl.bufferData.apply(gl, k.bufferData);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
         gl.useProgram(program);
     };
     // Load the shaders when ready and return the promise
-    return Promise.all(this.promiseShaders).then(ready.bind(this,k));
+    return Promise.all(this.promiseShaders).then(ready.bind(this));
 }
 
 // The webgl animation
