@@ -5,34 +5,60 @@ ViaWebGL = function(top) {
     this.standard = function(e) {
         return e;
     }
-    this.onLoad = this.standard;
-    this.onDraw = this.standard;
-
-    var hide = document.createElement('canvas');
-    hide.height = hide.width = top.size;
-
-    // Actually get the context and set the shaders
-    this.gl = hide.getContext('webgl') || hide.getContext('experimental-webgl');
-    this.promiseShaders = [top.vShader, top.fShader].map(this.getter);
-    this.attributes = ['a_pos', 'a_tile_pos'];
+    this['gl-loaded'] = this.standard;
+    this['gl-drawing'] = this.standard;
+    this.vShader = 'vShader.glsl';
+    this.fShader = 'fShader.glsl';
+    // Assign from the top
+    for (var key in top) {
+        this[key] = top[key];
+    }
 };
 
 ViaWebGL.prototype.init = function() {
 
+    var hidden = document.createElement('canvas');
+    hidden.width = this.width || this.size || 512;
+    hidden.height = this.height || this.size || 512;
+    var gl = hidden.getContext('experimental-webgl');
+    this.gl = gl || hidden.getContext('webgl');
+
+    // Load the shaders when ready and return the promise
+    var promised = [this.vShader, this.fShader].map(this.getter);
+    Promise.all(promised).then(this.is('shader')).then(this.is('loader'));
+}
+
+// Once loaded, Link shaders to ViaWebGL
+ViaWebGL.prototype.loader = function(program) {
+
+    // Allow for custom loading
+    this['gl-loaded'].call(this, program);
+
+    // input terms
+    var count = 4;
     var gl = this.gl;
-    var vector = this.vector || 2;
+    var pos = this.pos || 'a_pos';
     var filter = this.filter || gl.NEAREST;
     var wrap = this.wrap || gl.CLAMP_TO_EDGE;
+    var tile_pos = this.tile_pos || 'a_tile_pos';
 
-    var box_a = [-1, 1,-1,-1, 1, 1, 1,-1];
-    var box_b = [ 0, 1, 0, 0, 1, 1, 1, 0];
-    var data = new Float32Array(this.data || box_a.concat(box_b));
-    var count = this.count || box_a.length/vector;
-    var stride = vector*data.BYTES_PER_ELEMENT;
-    var boxes = data.length/(count*vector)-1;
+    // fixed terms exclusively for position attributes
+    var boxes = [[-1, 1,-1,-1, 1, 1, 1,-1], [0, 1, 0, 0, 1, 1, 1, 0]];
+    var buffer = new Float32Array([].concat.apply([], boxes));
+    var bytes = buffer.BYTES_PER_ELEMENT;
+
+    // Find shader attribute locations in the position buffer
+    this.att = [pos, tile_pos].map(function(a,i) {
+
+        var index = Math.min(i,boxes.length-1);
+        var vertex = gl.getAttribLocation(program,a);
+        var vec = Math.floor(boxes[index].length/count);
+
+        return [vertex, vec, gl.FLOAT, false, vec*bytes, count*index*vec*bytes];
+    });
 
     // fixed texture terms
-    this.texture = {
+    this.tex = {
         texParameteri: [
             [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap],
             [gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap],
@@ -45,42 +71,27 @@ ViaWebGL.prototype.init = function() {
         pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1]
     };
 
-    // Once loaded, Link shaders to ViaWebGL
-    var ready = function(shaders) {
-
-        // Find shader attribute locations
-        var program = this.shader(shaders,gl);
-
-        this.attributes = this.attributes.map(function(a,i) {
-
-            var offset = count*stride*Math.min(i,boxes);
-            var vertex = gl.getAttribLocation(program,a);
-            return [vertex, vector, gl.FLOAT, false, stride, offset];
-        });
-
-        // Allow for custom loading in webGL
-        this.onLoad.call(this, gl, program);
-
-        // Essential position buffer for ViaWebGL
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-        gl.useProgram(program);
-    };
-    // Load the shaders when ready and return the promise
-    return Promise.all(this.promiseShaders).then(ready.bind(this));
-}
+    // Essential position buffer code for ViaWebGL
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
+    gl.useProgram(program);
+};
 
 // The webgl animation
 ViaWebGL.prototype.drawer = function(tile) {
 
+    // Allow for custom drawing in webGL
+    this['gl-drawing'].call(this,tile);
+
     var gl = this.gl;
-    var tex = this.texture;
+    var att = this.att;
+    var tex = this.tex;
 
     // Set Attributes for GLSL
-    this.attributes.forEach(function(which){
+    att.map(function(x){
 
-        gl.enableVertexAttribArray(which.slice(0,1));
-        gl.vertexAttribPointer.apply(gl, which);
+        gl.enableVertexAttribArray(x.slice(0,1));
+        gl.vertexAttribPointer.apply(gl, x);
     });
 
     // Set Texture for GLSL
@@ -95,9 +106,6 @@ ViaWebGL.prototype.drawer = function(tile) {
     // Send the tile into the texture.
     var output = tex.texImage2D.concat([tile]);
     gl.texImage2D.apply(gl, output);
-
-    // Allow for custom drawing in webGL
-    this.onDraw.call(this, gl, tile);
 
     // Draw everything needed to canvas
     gl.drawArrays.apply(gl, tex.drawArrays);
@@ -144,25 +152,30 @@ ViaWebGL.prototype.getter = function(where) {
 }
 
 // Make one vertex shader and one fragment shader
-ViaWebGL.prototype.shader = function(files, gl) {
+ViaWebGL.prototype.shader = function(files) {
 
-    var shaderWork = gl.createProgram();
+    var gl = this.gl;
+    var program = gl.createProgram();
+    var err = function(kind,status,value,sh) {
+        if (!gl['get'+kind+'Parameter'](value, gl[status+'_STATUS'])){
+            console.log((sh||'LINK')+':\n'+gl['get'+kind+'InfoLog'](value));
+        }
+        return value;
+    }
     files.map(function(given,i) {
         // Make first file shade vertex and second shade fragments
-        var kinds = [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER];
-        var shader = gl.createShader(kinds[i]);
+        var sh = ['VERTEX_SHADER', 'FRAGMENT_SHADER'][i];
+        var shader = gl.createShader(gl[sh]);
         gl.shaderSource(shader, given);
         gl.compileShader(shader);
-        gl.attachShader(shaderWork, shader);
-        // Shoot out any compiling errors
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
-            console.log(gl.getShaderInfoLog(shader));
-        }
+        gl.attachShader(program, shader);
+        err('Shader','COMPILE',shader,sh);
     });
-    gl.linkProgram(shaderWork);
-    // Shoot out any linking errors
-    if (!gl.getProgramParameter(shaderWork, gl.LINK_STATUS)) {
-        console.log(gl.getProgramInfoLog(shaderWork));
-    }
-    return shaderWork;
+    gl.linkProgram(program);
+    return err('Program','LINK',program);
 };
+
+// Bind a method strongly to this object
+ViaWebGL.prototype.is = function(method){
+    return this[method].bind(this);
+}
