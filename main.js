@@ -5,15 +5,19 @@
 //-----------------------------------
 window.onload = function(e){
 
-    var parsed = J.parse(document.location.search);
+    var kwargs = J.parse();
     M = {
-        view: new J.Viewer(parsed).init()
+        view: new J.Viewer(kwargs)
     };
+    M.view.vShader = 'shaders/former.glsl';
+    M.view.fShader = 'shaders/latter.glsl';
+    M.view.init();
 };
 
 // Change any preset terms set in input address
 J.parse = function( input, output) {
     var output = output || {};
+    var input = input || document.location.search;
     var string = decodeURI(input).slice(1);
     // read as bool, string, or int
     string.split('&').map(function(pair) {

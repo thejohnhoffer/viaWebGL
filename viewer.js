@@ -8,7 +8,7 @@ var J = J || {};
 J.Viewer = function(baseLayer) {
 
     // preset tile source
-    J.copy({
+    this.baseLayer = J.copy({
         getTileUrl : function( level, x, y ) {
             return 'http://' + this.server + '/data/?datapath=' + this.datapath + '&start=' +
                 x*this.size + ',' + y*this.size + ',' + this.z + '&mip=' + (this.maxLevel - level) +
@@ -27,38 +27,44 @@ J.Viewer = function(baseLayer) {
         layer : 0,
         mip : 1
     }, baseLayer);
-    // Add more needed openSeaDragon properties to each layer's tiles
-    var max_max = Math.ceil(Math.log2(baseLayer.width/baseLayer.size));
-    baseLayer.maxLevel = Math.min(baseLayer.mip, max_max);
-    baseLayer.tileSize = baseLayer.size;
-
-    // More for top Layer
-    var topLayer = J.copy(baseLayer, {layer: 1});
-    topLayer.segment = '&segmentation=y&segcolor=y';
-    this.layers = [baseLayer, topLayer];
 }
 
 J.Viewer.prototype.init = function() {
 
+    var lowLayer = {};
+    for (var key in this.baseLayer){
+        // Use any values from this if applicable to layers
+        lowLayer[key] = this[key] || this.baseLayer[key];
+    }
+
+    // Add more needed openSeaDragon properties to each layer's tiles
+    var max_max = Math.ceil(Math.log2(lowLayer.width/lowLayer.size));
+    lowLayer.maxLevel = Math.min(lowLayer.mip, max_max);
+    lowLayer.tileSize = lowLayer.size;
+
+    // More for top Layer
+    var topLayer = J.copy(lowLayer, {layer: 1});
+    topLayer.segment = '&segmentation=y&segcolor=y';
+
     // Make a link to webGL
-    var via = new ViaWebGL({
-        vShader : 'shaders/former.glsl',
-        fShader : 'shaders/latter.glsl',
-        size : this.layers[0].tileSize
+    var seaGL = new SeaDragonGL({
+        vShader: this.vShader || 'shaders/vertex.glsl',
+        fShader: this.fShader || 'shaders/fragment.glsl',
+        size: lowLayer.tileSize
     });
 
     // Open a seaDragon with two layers
-    var open = OpenSeadragon({
-        tileSources :           this.layers,
-        prefixUrl :             'lib/images/',
-        crossOriginPolicy :     'Anonymous',
-        timeout :               120000,
-        showNavigationControl : true,
-        navigatorSizeRatio :    0.25,
-        minZoomImageRatio :     0.5,
-        maxZoomPixelRatio :     10,
-        id : 'viaWebGL',
-        loaded : false
+    var openSD = OpenSeadragon({
+        tileSources: [lowLayer, topLayer],
+        id: this.container || 'viaWebGL',
+        crossOriginPolicy: 'Anonymous',
+        showNavigationControl: true,
+        navigatorSizeRatio: 0.25,
+        prefixUrl: 'lib/images/',
+        minZoomImageRatio: 0.5,
+        maxZoomPixelRatio: 10,
+        timeout: 120000,
+        loaded: false
     });
 
     var load = function(e,callback) {
@@ -80,8 +86,12 @@ J.Viewer.prototype.init = function() {
         }
     }
 
-    via.init();
-    var drawing = via.event('tile-drawing', draw);
-    var loaded = via.event('tile-loaded', load);
-    open.addHandler.apply(open,drawing);
+    seaGL.onDraw = function(gl,image) {
+        console.log(image);
+    }
+
+    seaGL.attributes = ['a_pos', 'a_tile_pos'];
+    seaGL.event('tile-drawing', draw);
+    seaGL.event('tile-loaded', load);
+    seaGL.init(openSD);
 }

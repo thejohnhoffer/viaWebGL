@@ -5,59 +5,44 @@ ViaWebGL = function(top) {
     this.standard = function(e) {
         return e;
     }
+    this.onLoad = this.standard;
+    this.onDraw = this.standard;
 
     var hide = document.createElement('canvas');
-    hide.height = top.size;
-    hide.width = top.size;
+    hide.height = hide.width = top.size;
 
     // Actually get the context and set the shaders
-    var gl = hide.getContext('webgl') || hide.getContext('experimental-webgl');
-    var shaders = [top.vShader, top.fShader].map(this.Getting);
-
-    J.copy({top: top, shaders: shaders, gl: gl}, this);
+    this.gl = hide.getContext('webgl') || hide.getContext('experimental-webgl');
+    this.promiseShaders = [top.vShader, top.fShader].map(this.getter);
+    this.attributes = ['a_pos', 'a_tile_pos'];
 };
 
-ViaWebGL.prototype.init = function(top,shaders,gl) {
+ViaWebGL.prototype.init = function() {
 
     var gl = this.gl;
-    var top = this.top;
-    var shaders = this.shaders;
-
     // WebGL Shorthand
     var k = {
-        box: new Float32Array([-1, 1, 0, 1,
-                               -1,-1, 0, 0,
-                                1, 1, 1, 1,
-                                1,-1, 1, 0]),
+        array: new Float32Array([-1, 1, 0, 1,
+                                 -1,-1, 0, 0,
+                                  1, 1, 1, 1,
+                                  1,-1, 1, 0]),
         format: [0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
         drawArrays: [gl.TRIANGLE_STRIP, 0, 4],
-        wrap: gl.CLAMP_TO_EDGE,
-        filter: gl.NEAREST,
+        wrap: this.wrap || gl.CLAMP_TO_EDGE,
+        filter: this.filter || gl.NEAREST,
         ab: gl.ARRAY_BUFFER,
         tex: gl.TEXTURE_2D
     };
-    k.stride = k.box.BYTES_PER_ELEMENT;
-    k.float = [2, gl.FLOAT, false, k.stride*4];
-    k.bufferData = [k.ab, k.box, gl.STATIC_DRAW];
+
+    k.stride = k.array.BYTES_PER_ELEMENT;
+    k.bufferData = [k.ab, k.array, gl.STATIC_DRAW];
+
     k.wrap_T = [k.tex, gl.TEXTURE_WRAP_T, k.wrap];
     k.wrap_S = [k.tex, gl.TEXTURE_WRAP_S, k.wrap];
     k.fill_mag = [k.tex, gl.TEXTURE_MAG_FILTER, k.filter];
     k.fill_min = [k.tex, gl.TEXTURE_MIN_FILTER, k.filter];
-    k.where_pointer = k.float.concat([k.stride*0]);
-    k.tile_pointer = k.float.concat([k.stride*2]);
 
-    // Preset attributes and texture
-    k.preset = J.copy.bind(null, {
-        kind: k.float,
-        name: 'a_position'
-    });
-    // Overwrite the presets with specifics
-    this.attributes = [
-        {name: 'a_pos', pointer: k.where_pointer},
-        {name: 'a_tile_pos', pointer: k.tile_pointer}
-    ];
-
-    this.attributes.forEach(k.preset);
+    // fixed texture terms
     this.texture = {
         drawArrays: k.drawArrays,
         texImage2D: [k.tex].concat(k.format),
@@ -69,98 +54,100 @@ ViaWebGL.prototype.init = function(top,shaders,gl) {
     // Once loaded, Link shaders to ViaWebGL
     var ready = function(k,shaders) {
 
-        var link = this.Shading(shaders,gl);
-
+        var program = this.shader(shaders,gl);
         // Find glsl locations of attributes
-        for (var which of this.attributes) {
-          which.name = gl.getAttribLocation(link,which.name);
-          which.pointer = which.pointer || k.where_pointer;
-        }
+        var join = gl.getAttribLocation.bind(gl,program);
+        this.attributes = this.attributes.map(function(a,i) {
+            return [join(a), 2, gl.FLOAT, false, k.stride*4, k.stride*2*i];
+        });
+
+        // Allow for custom loading in webGL
+        this.onLoad.call(this, gl, program);
+
         // Essential position buffer for ViaWebGL
         gl.bindBuffer(k.ab, gl.createBuffer());
         gl.bufferData.apply(gl, k.bufferData);
-        gl.useProgram(link);
+        gl.useProgram(program);
     };
-
-    Promise.all(shaders).then(ready.bind(this,k));
-
-    // save the context and the core drawing method
-    this.drawArrays = k.drawArrays;
-    this.gl = gl;
+    // Load the shaders when ready and return the promise
+    return Promise.all(this.promiseShaders).then(ready.bind(this,k));
 }
+
+// The webgl animation
+ViaWebGL.prototype.drawer = function(tile) {
+
+    var gl = this.gl;
+    var tex = this.texture;
+
+    // Set Attributes for GLSL
+    this.attributes.forEach(function(which){
+
+        gl.enableVertexAttribArray(which.slice(0,1));
+        gl.vertexAttribPointer.apply(gl, which);
+    });
+
+    // Set Texture for GLSL
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture.apply(gl, tex.bindTexture);
+    gl.pixelStorei.apply(gl, tex.pixelStorei);
+
+    // Apply texture parameters
+    tex.texParameteri.map(function(x){
+        gl.texParameteri.apply(gl, x);
+    });
+    // Send the tile into the texture.
+    var output = tex.texImage2D.concat([tile]);
+    gl.texImage2D.apply(gl, output);
+
+    // Allow for custom drawing in webGL
+    this.onDraw.call(this, gl, tile);
+
+    // Draw everything needed to canvas
+    gl.drawArrays.apply(gl, tex.drawArrays);
+};
 
 /* * * * * * * * * * * *
   Start of the API calls
 */
 
-// Takes in an image or canvas and gives back a canvas
+// Turns image or canvas into a rendered canvas
 ViaWebGL.prototype.getCanvas = function(tile) {
 
     // render the tile
-    this.TickTock([tile]);
+    this.drawer(tile);
     // return the canvas
     return this.gl.canvas;
 };
 
-// Takes in an image and gives back a rendered source
+// Turns image or canvas into a rendered source
 ViaWebGL.prototype.getSource = function(image) {
 
     // Render the image into a data source
     return this.getCanvas(image).toDataURL();
 };
 
-ViaWebGL.prototype.viaLoad = function(e) {
-
-    // Set the imageSource as a data URL
-    e.image.src = this.getSource(e.image);
-    // allow for the callback to happen
-    e.image.onload = e.getCompletionCallback;
-};
-
-ViaWebGL.prototype.viaDraw = function(e) {
-
-    // Get a webGL canvas from the input canvas
-    var canv = this.getCanvas(e.rendered.canvas);
-    // Render that canvas to the input context
-    e.rendered.drawImage(canv, 0,0);
-};
-
-ViaWebGL.prototype.event = function(event,custom) {
-
-    var callbacks = {
-      'tile-loaded': this.viaLoad.bind(this),
-      'tile-drawing': this.viaDraw.bind(this),
-    }
-    var call = function(e) {
-        custom(e,callbacks[event]);
-    }
-    return [event, call];
-}
-
 /*
 * End of the API calls
 * * * * * * * * * * */
 
 // Promise to get a file then be done
-ViaWebGL.prototype.Getting = function(where) {
+ViaWebGL.prototype.getter = function(where) {
     return new Promise(function(done){
         var bid = new XMLHttpRequest();
         var win = function(){
             if (bid.status == 200) {
-                done(bid.response);
-                return 0;
+                return done(bid.response);
             }
             console.log("A bug on the web");
         };
         bid.open('GET', where, true);
-        bid.onerror = win;
-        bid.onload = win;
+        bid.onerror = bid.onload = win;
         bid.send();
     });
 }
 
 // Make one vertex shader and one fragment shader
-ViaWebGL.prototype.Shading = function(files, gl) {
+ViaWebGL.prototype.shader = function(files, gl) {
 
     var shaderWork = gl.createProgram();
     files.map(function(given,i) {
@@ -181,35 +168,4 @@ ViaWebGL.prototype.Shading = function(files, gl) {
         console.log(gl.getProgramInfoLog(shaderWork));
     }
     return shaderWork;
-};
-
-// The webgl animation
-ViaWebGL.prototype.TickTock = function(image) {
-
-    var gl = this.gl;
-    var tex = this.texture;
-
-    // Set Attributes for GLSL
-    this.attributes.forEach(function(which){
-
-        var where = [which.name].concat(which.pointer);
-        gl.enableVertexAttribArray(which.name);
-        gl.vertexAttribPointer.apply(gl, where);
-    });
-
-    // Set Texture for GLSL
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture.apply(gl, tex.bindTexture);
-    gl.pixelStorei.apply(gl, tex.pixelStorei);
-
-    // Apply texture parameters
-    tex.texParameteri.map(function(x){
-        gl.texParameteri.apply(gl, x);
-    });
-    // Send the image into the texture.
-    var output = tex.texImage2D.concat(image);
-    gl.texImage2D.apply(gl, output);
-
-    // Draw everything needed to canvas
-    gl.drawArrays.apply(gl, tex.drawArrays);
 };
