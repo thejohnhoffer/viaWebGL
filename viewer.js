@@ -67,7 +67,7 @@ J.Viewer.prototype.init = function() {
         loaded: false
     });
 
-    var load = function(e,callback) {
+    var load = function(callback, e) {
 
         var source = e.tiledImage.source;
         if (source.layer == 1) {
@@ -78,10 +78,10 @@ J.Viewer.prototype.init = function() {
         }
     }
 
-    var draw = function(e,callback) {
+    var draw = function(callback, e) {
 
         if (e.tile.loaded !==1) {
-            load(e,callback);
+            load(callback, e);
             e.tile.loaded = 1;
         }
     }
