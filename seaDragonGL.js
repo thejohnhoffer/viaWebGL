@@ -4,65 +4,58 @@ SeaDragonGL = function(top) {
 
     this.handlers = {};
     this.viaGL = new ViaWebGL(top);
-    this['gl-loaded'] = this['gl-drawing'] = function(e) {
-        return e;
-    };
 };
 
 SeaDragonGL.prototype = {
 
-    // Allow for custom function to load webGL
-    get 'gl-loaded' () {
-        seaGL = this;
-        // Use this from viaWebGL
-        return function(program) {
-            for (var key in seaGL.handlers) {
-                seaGL.openSD.addHandler(key, seaGL.handlers[key]);
-            }
-            seaGL.loader.call(this, program);
-        }
-    },
-
-    set 'gl-loaded' (fun) {
-        this.loader = fun;
-    },
-
-    set 'loaded' (fun) {
-        this.event('tile-loaded',fun);
-    },
-
-    set 'drawing' (fun) {
-        this.event('tile-drawing',fun);
-    },
-
     init: function(openSD) {
 
-        // Give certain properties to viaWebGL
-        this.openSD = openSD;
-        this.viaGL['gl-loaded'] = this['gl-loaded'];
-        this.viaGL['gl-drawing'] = this['gl-drawing'];
-        var input = ['wrap','filter','vShader','fShader','pos','tile_pos','width','height','size'];
-        for (var key of input.filter(this.hasOwnProperty,this)) {
+        for (var key in this.handlers) {
+            openSD.addHandler(key, this.handlers[key]);
+        }
+        // Transfer terms to the viaWebGL machine
+        var terms = ['gl-loaded','gl-drawer','width','height','size'];
+        terms = terms.concat('wrap','filter','vShader','fShader','pos','tile_pos');
+        for (var key of terms.filter(this.hasOwnProperty,this)) {
             this.viaGL[key] = this[key];
         }
-
         // Start the machine
         this.viaGL.init();
+    },
+
+    load: function(openSD) {
+        for (var key in this.handlers) {
+            openSD.addHandler(key, this.handlers[key]);
+        }
+        return this['gl-loaded'];
+    },
+
+    draw: function(openSD) {
+
+        return this['gl-drawing'];
     },
 
     /* * * * * * * * * * * *
       OpenSeaDragon API calls
     */
 
+    set 'tile-loaded' (fun) {
+        this.event('loaded',fun);
+    },
+
+    set 'tile-drawing' (fun) {
+        this.event('drawing',fun);
+    },
+
     event: function(event,custom) {
 
         var callback = this[event].bind(this);
-        this.handlers[event] = function(e) {
+        this.handlers['tile-'+event] = function(e) {
             custom(e, callback);
         }
     },
 
-    'tile-loaded': function(e) {
+    loaded: function(e) {
 
         // Set the imageSource as a data URL
         e.image.src = this.viaGL.getSource(e.image);
@@ -70,7 +63,7 @@ SeaDragonGL.prototype = {
         e.image.onload = e.getCompletionCallback;
     },
 
-    'tile-drawing': function(e) {
+    drawing: function(e) {
 
         // Get a webGL canvas from the input canvas
         var canv = this.viaGL.getCanvas(e.rendered.canvas);

@@ -1,17 +1,15 @@
 
 // Set up the rendering of WebGL
-ViaWebGL = function(top) {
+ViaWebGL = function(incoming) {
 
-    this.standard = function(e) {
+    this['gl-loaded'] = this['gl-drawing'] = function(e) {
         return e;
     }
-    this['gl-loaded'] = this.standard;
-    this['gl-drawing'] = this.standard;
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
     // Assign from the top
-    for (var key in top) {
-        this[key] = top[key];
+    for (var key in incoming) {
+        this[key] = incoming[key];
     }
 };
 

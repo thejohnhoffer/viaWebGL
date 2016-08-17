@@ -87,10 +87,10 @@ J.Viewer.prototype.init = function() {
     }
 
     seaGL['gl-drawing'] = function(e) {
-        console.log(e);
+//        console.log(e);
     }
 
-    seaGL['drawing'] = draw;
+    seaGL['tile-drawing'] = draw;
 
     seaGL.init(openSD);
 }
