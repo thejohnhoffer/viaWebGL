@@ -32,9 +32,11 @@ J.parse = function( input, output) {
     return output;
 };
 
-J.copy = function(source, target) {
-    for(var key in source) {
-        target[key] = target[key] || source[key];
+// Write a stronger class over a weaker one
+J.outclass = function(stronger, weaker) {
+    var out = {};
+    for(var key in weaker) {
+        out[key] = stronger[key] || weaker[key];
     }
-    return target;
+    return out;
 }

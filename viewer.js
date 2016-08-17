@@ -8,7 +8,7 @@ var J = J || {};
 J.Viewer = function(baseLayer) {
 
     // preset tile source
-    this.baseLayer = J.copy({
+    this.baseLayer = J.outclass(baseLayer, {
         getTileUrl : function( level, x, y ) {
             var width = this.getTileWidth(level);
             var height = this.getTileHeight(level);
@@ -28,23 +28,20 @@ J.Viewer = function(baseLayer) {
         alpha: 0.6,
         layer : 0,
         mip : 1
-    }, baseLayer);
+    });
 }
 
 J.Viewer.prototype.init = function() {
 
-    var lowLayer = {};
-    for (var key in this.baseLayer){
-        // Use any values from this if applicable to layers
-        lowLayer[key] = this[key] || this.baseLayer[key];
-    }
+    // Write the terms of this onto one layer
+    var lowLayer = J.outclass(this, this.baseLayer);
 
     // Add more needed openSeaDragon properties to each layer's tiles
     var max_max = Math.ceil(Math.log2(lowLayer.width/lowLayer.tileSize));
     lowLayer.maxLevel = Math.min(lowLayer.mip, max_max);
 
-    // Copy slight changes for top Layer
-    var topLayer = J.copy(lowLayer, {layer: 1});
+    // Write small changes onto the top layer
+    var topLayer = J.outclass({layer: 1}, lowLayer);
     topLayer.segment = '&segmentation=y&segcolor=y';
 
     // Open a seaDragon with two layers
