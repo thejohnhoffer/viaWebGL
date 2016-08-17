@@ -1,44 +1,46 @@
 
 // Set up the rendering of WebGL
-SeaDragonGL = function(top) {
+SeaDragonGL = function(incoming) {
 
-    this.handlers = {};
-    this.viaGL = new ViaWebGL(top);
+    this.terms = {GL:[], SD:[]};
+    this.viaGL = new ViaWebGL(incoming);
+    this.terms.SD.push('tile-loaded','tile-drawing');
+    this.terms.GL.push('gl-loaded','gl-drawing','wrap','filter','tileSize');
+    this.terms.GL.push('width','height','vShader','fShader','pos','tile_pos');
 };
 
 SeaDragonGL.prototype = {
 
     init: function(openSD) {
 
-        // Transfer handlers to openSeaDragon events
-        var fun = ['tile-loaded','tile-drawing'];
-        for (var key of fun.filter(this.hasOwnProperty,this)) {
-            openSD.addHandler(key, this.handle(key));
-        }
-
-        // Transfer terms to the viaWebGL machine
+        // Transfer terms to the viaWebGL machine and the openSeadragon
         this.tileSize = this.tileSize || openSD.tileSources[0].tileSize;
-        var terms = ['gl-loaded','gl-drawing','wrap','filter','width','height'];
-        terms = terms.concat('tileSize','vShader','fShader','pos','tile_pos');
-        for (var key of terms.filter(this.hasOwnProperty,this)) {
-            this.viaGL[key] = this[key];
-        }
+        this.store(this.viaGL,'GL');
+        this.store(openSD,'SD');
+
         // Go via webGL
         this.viaGL.init();
+    },
+
+    link: {
+        SD: function(self,openSD,key) {
+            openSD.addHandler(key, function(e) {
+                self[key].call(this, self.callbacks[key].bind(self), e);
+            });
+        },
+        GL: function(self,viaGL,key) {
+            viaGL[key] = self[key];
+        }
+    },
+
+    store: function(argument,term) {
+        var filtered = this.terms[term].filter(this.hasOwnProperty,this);
+        filtered.map(this.link[term].bind(0,this,argument));
     },
 
     /* * * * * * * * * * * *
       OpenSeaDragon API calls
     */
-
-    handle: function(key) {
-
-        var custom = this[key];
-        var callback = this.callbacks[key].bind(this);
-        return function(e) {
-            custom.call(this, callback, e);
-        }
-    },
 
     callbacks: {
 
