@@ -10,12 +10,15 @@ J.Viewer = function(baseLayer) {
     // preset tile source
     this.baseLayer = J.copy({
         getTileUrl : function( level, x, y ) {
+            var width = this.getTileWidth(level);
+            var height = this.getTileHeight(level);
             return 'http://' + this.server + '/data/?datapath=' + this.datapath + '&start=' +
-                x*this.size + ',' + y*this.size + ',' + this.z + '&mip=' + (this.maxLevel - level) +
-                '&size=' + this.size + ',' + this.size + ',' + this.depth + this.segment
+                x*width + ',' + y*height + ',' + this.z + '&mip=' + (this.maxLevel - level) +
+                '&size=' + width + ',' + height + ',' + this.depth + this.segment
         },
         datapath : '/Volumes/NeuroData/mojo',
         server :   'localhost:2001',
+        tileSize : 512,
         height :   1024,
         width :    1024,
         minLevel : 0,
@@ -23,7 +26,6 @@ J.Viewer = function(baseLayer) {
         z :        0,
         segment : '',
         alpha: 0.6,
-        size : 512,
         layer : 0,
         mip : 1
     }, baseLayer);
@@ -38,20 +40,12 @@ J.Viewer.prototype.init = function() {
     }
 
     // Add more needed openSeaDragon properties to each layer's tiles
-    var max_max = Math.ceil(Math.log2(lowLayer.width/lowLayer.size));
+    var max_max = Math.ceil(Math.log2(lowLayer.width/lowLayer.tileSize));
     lowLayer.maxLevel = Math.min(lowLayer.mip, max_max);
-    lowLayer.tileSize = lowLayer.size;
 
-    // More for top Layer
+    // Copy slight changes for top Layer
     var topLayer = J.copy(lowLayer, {layer: 1});
     topLayer.segment = '&segmentation=y&segcolor=y';
-
-    // Make a link to webGL
-    var seaGL = new SeaDragonGL({
-        vShader: this.vShader || 'shaders/vertex.glsl',
-        fShader: this.fShader || 'shaders/fragment.glsl',
-        size: lowLayer.tileSize
-    });
 
     // Open a seaDragon with two layers
     var openSD = OpenSeadragon({
@@ -66,6 +60,11 @@ J.Viewer.prototype.init = function() {
         timeout: 120000,
         loaded: false
     });
+
+    // Make a link to webGL
+    var seaGL = new SeaDragonGL();
+    seaGL.vShader = this.vShader;
+    seaGL.fShader = this.fShader;
 
     var load = function(callback, e) {
 
@@ -86,9 +85,11 @@ J.Viewer.prototype.init = function() {
         }
     }
 
-    seaGL['gl-drawing'] = function(e) {
-//        console.log(e);
+    var loud = function(e) {
+        console.log(e);
     }
+
+    seaGL['gl-drawing'] = loud;
 
     seaGL['tile-drawing'] = draw;
 

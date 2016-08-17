@@ -10,18 +10,20 @@ SeaDragonGL.prototype = {
 
     init: function(openSD) {
 
+        // Transfer handlers to openSeaDragon events
         var fun = ['tile-loaded','tile-drawing'];
         for (var key of fun.filter(this.hasOwnProperty,this)) {
-            openSD.addHandler(key, this.event(key));
+            openSD.addHandler(key, this.handle(key));
         }
 
         // Transfer terms to the viaWebGL machine
+        this.tileSize = this.tileSize || openSD.tileSources[0].tileSize;
         var terms = ['gl-loaded','gl-drawing','wrap','filter','width','height'];
-        terms = terms.concat('size','vShader','fShader','pos','tile_pos');
+        terms = terms.concat('tileSize','vShader','fShader','pos','tile_pos');
         for (var key of terms.filter(this.hasOwnProperty,this)) {
             this.viaGL[key] = this[key];
         }
-        // Start the machine
+        // Go via webGL
         this.viaGL.init();
     },
 
@@ -29,28 +31,31 @@ SeaDragonGL.prototype = {
       OpenSeaDragon API calls
     */
 
-    event: function(key) {
+    handle: function(key) {
 
         var custom = this[key];
-        var callback = this[key+'-callback'].bind(this);
+        var callback = this.callbacks[key].bind(this);
         return function(e) {
             custom.call(this, callback, e);
         }
     },
 
-    'tile-loaded-callback': function(e) {
+    callbacks: {
 
-        // Set the imageSource as a data URL
-        e.image.src = this.viaGL.getSource(e.image);
-        // allow for the callback to happen
-        e.image.onload = e.getCompletionCallback;
-    },
+        'tile-loaded': function(e) {
 
-    'tile-drawing-callback': function(e) {
+            // Set the imageSource as a data URL
+            e.image.src = this.viaGL.getSource(e.image);
+            // allow for the callback to happen
+            e.image.onload = e.getCompletionCallback;
+        },
 
-        // Get a webGL canvas from the input canvas
-        var canv = this.viaGL.getCanvas(e.rendered.canvas);
-        // Render that canvas to the input context
-        e.rendered.drawImage(canv, 0,0);
+        'tile-drawing': function(e) {
+
+            // Get a webGL canvas from the input canvas
+            var canv = this.viaGL.getCanvas(e.rendered.canvas);
+            // Render that canvas to the input context
+            e.rendered.drawImage(canv, 0,0);
+        }
     }
 }

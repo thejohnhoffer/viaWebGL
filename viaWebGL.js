@@ -16,8 +16,8 @@ ViaWebGL = function(incoming) {
 ViaWebGL.prototype.init = function() {
 
     var hidden = document.createElement('canvas');
-    hidden.width = this.width || this.size || 512;
-    hidden.height = this.height || this.size || 512;
+    hidden.width = this.width || this.tileSize || 512;
+    hidden.height = this.height || this.tileSize || 512;
     var gl = hidden.getContext('experimental-webgl');
     this.gl = gl || hidden.getContext('webgl');
 
