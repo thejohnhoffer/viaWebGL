@@ -60,8 +60,8 @@ J.Viewer.prototype.init = function() {
 
     // Make a link to webGL
     var seaGL = new SeaDragonGL();
-    seaGL.vShader = this.vShader;
-    seaGL.fShader = this.fShader;
+    seaGL.vShader = 'shaders/square.glsl';
+    seaGL.fShader = 'shaders/border.glsl';
 
     var load = function(callback, e) {
 
