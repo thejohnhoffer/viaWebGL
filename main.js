@@ -9,8 +9,6 @@ window.onload = function(e){
     M = {
         view: new J.Viewer(kwargs)
     };
-    M.view.vShader = 'shaders/former.glsl';
-    M.view.fShader = 'shaders/latter.glsl';
     M.view.init();
 };
 
