@@ -1,5 +1,6 @@
 precision mediump float;
 uniform sampler2D u_tile;
+uniform vec2 u_tile_size;
 varying vec2 v_tile_pos;
 
 //
@@ -14,7 +15,7 @@ bool equals4(vec4 id1, vec4 id2) {
 //
 vec4 offset(sampler2D sam, vec2 pos, vec2 off) {
   // calculate the color of sampler at an offset from position
-  return texture2D(sam, vec2(pos.x + off.x/512., pos.y + off.y/512.));
+  return texture2D(sam, vec2(pos.x + off.x/u_tile_size.x, pos.y + off.y/u_tile_size.y));
 }
 
 //

@@ -1,5 +1,6 @@
 precision mediump float;
 uniform sampler2D u_tile;
+uniform vec2 u_tile_size;
 varying vec2 v_tile_pos;
 
 // Sum a vector
@@ -35,10 +36,10 @@ float mono(float dx, float dy) {
 mat3 borders(mat3 kernel) {
   // Get monochrome of nearest pixels
   mat3 nearby;
-  float u = 1./256.;
-  nearby[0] = vec3(mono(-u,-u),mono(0.,-u),mono(+u,-u));
-  nearby[1] = vec3(mono(-u,0.),mono(0.,0.),mono(+u,0.));
-  nearby[2] = vec3(mono(-u,+u),mono(0.,+u),mono(+u,+u));
+  vec2 u = (1./u_tile_size.x, 1./u_tile_size.y);
+  nearby[0] = vec3(mono(-u.x,-u.y),mono(0.0,-u.y),mono(+u.x,-u.y));
+  nearby[1] = vec3(mono(-u.x, 0.0),mono(0.0, 0.0),mono(+u.x, 0.0));
+  nearby[2] = vec3(mono(-u.x,+u.y),mono(0.0,+u.y),mono(+u.x,+u.y));
 
   // convolve the kernel with the nearest pixels
   return matrixCompMult(nearby,kernel);
