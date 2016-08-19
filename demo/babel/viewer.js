@@ -14,7 +14,7 @@ J.Viewer.prototype.init = function() {
     var openSD = OpenSeadragon({
         tileSources: '../zoomable/babel/babel.dzi',
         id: this.container || 'viaWebGL',
-        prefixUrl: '../lib/images/'
+        prefixUrl: '../images/'
     });
 
     // Make a link to webGL
