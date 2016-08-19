@@ -12,15 +12,15 @@ J.Viewer.prototype.init = function() {
 
     // Open a seaDragon with two layers
     var openSD = OpenSeadragon({
-        tileSources: 'zoomable/fractal/fractal.dzi',
+        tileSources: '../zoomable/fractal/fractal.dzi',
         id: this.container || 'viaWebGL',
-        prefixUrl: 'lib/images/'
+        prefixUrl: '../lib/images/'
     });
 
     // Make a link to webGL
     var seaGL = new SeaDragonGL();
-    seaGL.vShader = 'shaders/square.glsl';
-    seaGL.fShader = 'shaders/edge.glsl';
+    seaGL.vShader = '../shaders/square.glsl';
+    seaGL.fShader = '../shaders/edge.glsl';
 
     var load = function(callback, e) {
         // via webGL
