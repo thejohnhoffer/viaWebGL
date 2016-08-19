@@ -36,7 +36,7 @@ float mono(float dx, float dy) {
 mat3 borders(mat3 kernel) {
   // Get monochrome of nearest pixels
   mat3 nearby;
-  vec2 u = (1./u_tile_size.x, 1./u_tile_size.y);
+  vec2 u = vec2(1./u_tile_size.x, 1./u_tile_size.y);
   nearby[0] = vec3(mono(-u.x,-u.y),mono(0.0,-u.y),mono(+u.x,-u.y));
   nearby[1] = vec3(mono(-u.x, 0.0),mono(0.0, 0.0),mono(+u.x, 0.0));
   nearby[2] = vec3(mono(-u.x,+u.y),mono(0.0,+u.y),mono(+u.x,+u.y));
