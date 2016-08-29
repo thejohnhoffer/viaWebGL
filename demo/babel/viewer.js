@@ -14,6 +14,7 @@ J.Viewer.prototype.init = function() {
     var openSD = OpenSeadragon({
         tileSources: 'babel/babel.dzi',
         id: this.container || 'viaWebGL',
+        crossOriginPolicy: 'Anonymous',
         prefixUrl: '../../images/'
     });
 
