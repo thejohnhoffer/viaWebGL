@@ -3,7 +3,6 @@
 
 ## Via your shaders, filter pictures
 
-* [View on GitHub][1]
 * [Download .tar.gz][2]
 * [Download .zip][3]
 
