@@ -21,13 +21,22 @@ J.Viewer.prototype.init = function() {
     var seaGL = new SeaDragonGL();
     seaGL.vShader = '../../shaders/square.glsl';
     seaGL.fShader = '../../shaders/edge.glsl';
+    seaGL.tileSize = 256;
 
     var load = function(callback, e) {
         // via webGL
         callback(e);
     }
 
-    seaGL['tile-loaded'] = load;
+    var draw = function(callback, e) {
+
+        if (e.tile.loaded !==1) {
+            e.tile.loaded = 1;
+            callback(e);
+        }
+    }
+
+    seaGL['tile-drawing'] = draw;
 
     seaGL.init(openSD);
 }

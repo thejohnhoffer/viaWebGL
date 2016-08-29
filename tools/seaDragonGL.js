@@ -14,7 +14,7 @@ SeaDragonGL.prototype = {
     init: function(openSD) {
 
         // Transfer terms to the viaWebGL machine and the openSeadragon
-        this.tileSize = this.tileSize || openSD.tileSources[0].tileSize;
+        this.tileSize = this.tileSize || 512;
         this.store(this.viaGL,'GL');
         this.store(openSD,'SD');
 
