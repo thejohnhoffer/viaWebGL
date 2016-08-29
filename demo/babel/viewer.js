@@ -21,7 +21,7 @@ J.Viewer.prototype.init = function() {
     var seaGL = new SeaDragonGL();
     seaGL.vShader = '../../shaders/square.glsl';
     seaGL.fShader = '../../shaders/edge.glsl';
-    seaGL.tileSize = 256;
+    seaGL.tileSize = 512;
 
     var load = function(callback, e) {
         // via webGL
