@@ -51,7 +51,7 @@ J.Viewer.prototype.init = function() {
         crossOriginPolicy: 'Anonymous',
         showNavigationControl: true,
         navigatorSizeRatio: 0.25,
-        prefixUrl: '../images/',
+        prefixUrl: '../../images/',
         minZoomImageRatio: 0.5,
         maxZoomPixelRatio: 10,
         timeout: 120000,
@@ -60,8 +60,8 @@ J.Viewer.prototype.init = function() {
 
     // Make a link to webGL
     var seaGL = new SeaDragonGL();
-    seaGL.vShader = '../shaders/square.glsl';
-    seaGL.fShader = '../shaders/border.glsl';
+    seaGL.vShader = '../../shaders/square.glsl';
+    seaGL.fShader = '../../shaders/border.glsl';
 
     var load = function(callback, e) {
 
