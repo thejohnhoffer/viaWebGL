@@ -12,7 +12,7 @@ J.Viewer.prototype.init = function() {
 
     // Open a seaDragon with two layers
     var openSD = OpenSeadragon({
-        tileSources: 'babel/babel.dzi',
+        tileSources: '../../sources/babel/babel.dzi',
         id: this.container || 'viaWebGL',
         prefixUrl: '../../images/'
     });
