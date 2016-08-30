@@ -1,11 +1,11 @@
 
 # [ViaWebGL][1]
 
-## GLSL for Images or Canvas [viaWebGL][5]
+## GLSL for Images or Canvas with [viaWebGL][5]
 
 * [Soon][1]
 
-## [GLSL for OpenSeaDragon][6] [viaWebGL][5]
+## [GLSL for OpenSeaDragon][6] with [viaWebGL][5]
 
 * [Sobel filter][4]
 
