@@ -1,19 +1,18 @@
 
-# [ViaWebGL][1] by [John Hoffer][7]
+# [ViaWebGL][1]
 
-## Via your shaders, filter pictures
+## GLSL for Images or Canvas [viaWebGL][5]
+
+* [Soon][1]
+
+## [GLSL for OpenSeaDragon][6] [viaWebGL][5]
+
+* [Sobel filter][4]
+
+## Downloads
 
 * [Download .tar.gz][2]
 * [Download .zip][3]
-
-## Demos
-
-* [Simple DZI via seaDragonGL][4]
-
-## Tools
-
-* [ViaWebGL][5]
-* [seaDragonGL][6]
 
 [1]: https://github.com/thejohnhoffer/viaWebGL
 [2]: https://github.com/thejohnhoffer/viaWebGL/tarball/master
@@ -21,5 +20,4 @@
 [4]: https://thejohnhoffer.github.io/viaWebGL/demo/babel
 [5]: https://github.com/thejohnhoffer/viaWebGL/blob/master/tools/viaWebGL.js
 [6]: https://github.com/thejohnhoffer/viaWebGL/blob/master/tools/seaDragonGL.js
-[7]: https://github.com/thejohnhoffer
   
