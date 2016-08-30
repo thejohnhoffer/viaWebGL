@@ -2,15 +2,38 @@
 // Set up the rendering of WebGL
 ViaWebGL = function(incoming) {
 
-    this['gl-loaded'] = this['gl-drawing'] = function(e) {
-        return e;
-    }
+    var empty = function(e) { return e; }
+    this['gl-loaded'] = this['gl-drawing'] = empty;
+
+    /*~*~*~*~*~*~*~*~*~*~*~*~*~
+    ~ Image or Canvas API calls ~
+    */
+
+    // Turns image or canvas into a rendered canvas
+    this.getCanvas = function(tile) {
+
+        // render the tile
+        this.drawer(tile);
+        // return the canvas
+        return this.gl.canvas;
+    };
+
+    // Turns image or canvas into a rendered source
+    this.getSource = function(image) {
+
+        // Render the image into a data source
+        return this.getCanvas(image).toDataURL();
+    };
+
+    /*~*~*~*~*~*~*~*~*~*~*~*~*/
+
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
     // Assign from the top
     for (var key in incoming) {
         this[key] = incoming[key];
     }
+
 };
 
 ViaWebGL.prototype.init = function() {
@@ -118,30 +141,6 @@ ViaWebGL.prototype.drawer = function(tile) {
     // Draw everything needed to canvas
     gl.drawArrays.apply(gl, tex.drawArrays);
 };
-
-/* * * * * * * * * * * *
-  Start of the API calls
-*/
-
-// Turns image or canvas into a rendered canvas
-ViaWebGL.prototype.getCanvas = function(tile) {
-
-    // render the tile
-    this.drawer(tile);
-    // return the canvas
-    return this.gl.canvas;
-};
-
-// Turns image or canvas into a rendered source
-ViaWebGL.prototype.getSource = function(image) {
-
-    // Render the image into a data source
-    return this.getCanvas(image).toDataURL();
-};
-
-/*
-* End of the API calls
-* * * * * * * * * * */
 
 // Promise to get a file then be done
 ViaWebGL.prototype.getter = function(where) {

@@ -36,7 +36,7 @@ J.Viewer.prototype.init = function() {
         }
     }
 
-    seaGL['tile-drawing'] = draw;
-//    seaGL['tile-loaded'] = load;
+    //seaGL['tile-drawing'] = draw;
+    seaGL['tile-loaded'] = load;
     seaGL.init(openSD);
 }
