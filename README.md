@@ -1,7 +1,7 @@
 
 # [ViaWebGL][1]
 
-## GLSL for Images or Canvas with [viaWebGL][5]
+## GLSL for Image or Canvas with [viaWebGL][5]
 
 * [Soon][1]
 
