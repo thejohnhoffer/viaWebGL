@@ -6,6 +6,9 @@ var J = J || {};
 //-----------------------------------
 
 J.Viewer = function() {
+    // Add an shading button
+    this.shade = new Image();
+    this.shade.id = 'shade';
 }
 
 J.Viewer.prototype.init = function() {
@@ -14,10 +17,17 @@ J.Viewer.prototype.init = function() {
     var openSD = OpenSeadragon({
         tileSources: '../../images/babel/babel.dzi',
         id: this.container || 'viaWebGL',
-        prefixUrl: '../../images/icons/'
+        prefixUrl: '../../images/icons/',
     });
+    console.log(openSD.navImages);
 
-    openSD.addControl();
+    // Add shading to Seadragon
+    this.shade.onload = function(){
+        document.body.appendChild(this.shade);
+        var corner = OpenSeadragon.ControlAnchor.TOP_LEFT;
+        openSD.addControl(this.shade.id,{anchor: corner});
+    }.bind(this);
+    this.shade.src = '../../images/icons/shade_rest.png';
 
     // Make a link to webGL
     var seaGL = new SeaDragonGL();
