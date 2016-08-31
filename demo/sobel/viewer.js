@@ -17,6 +17,8 @@ J.Viewer.prototype.init = function() {
         prefixUrl: '../../images/icons/'
     });
 
+    openSD.addControl();
+
     // Make a link to webGL
     var seaGL = new SeaDragonGL();
     seaGL.vShader = '../../shaders/vertex/square.glsl';
@@ -35,6 +37,7 @@ J.Viewer.prototype.init = function() {
             callback(e);
         }
     }
+
 
 //    seaGL['tile-loaded'] = load;
     seaGL['tile-drawing'] = draw;
