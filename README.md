@@ -1,11 +1,11 @@
 
 # [ViaWebGL][1]
 
-## GLSL for Image or Canvas with [viaWebGL][5]
+## Shaders on Image & Canvas with [viaWebGL][5]
 
 * [Soon][1]
 
-## [GLSL for OpenSeaDragon][6] with [viaWebGL][5]
+## Shaders in [OpenSeaDragon][7] with [seaDragonGL][6] & [viaWebGL][5]
 
 * [Sobel filter][4]
 
@@ -20,4 +20,4 @@
 [4]: https://thejohnhoffer.github.io/viaWebGL/demo/babel
 [5]: https://github.com/thejohnhoffer/viaWebGL/blob/master/tools/viaWebGL.js
 [6]: https://github.com/thejohnhoffer/viaWebGL/blob/master/tools/seaDragonGL.js
-  
+[7]: openseadragon.github.io
