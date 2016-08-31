@@ -16,7 +16,7 @@ SeaDragonGL = function(incoming) {
             e.image.src = this.viaGL.toCanvas(e.image).toDataURL();
             // allow for the callback to happen
             e.image.onload = e.getCompletionCallback;
-        }.bind(this),
+        },
 
         'tile-drawing': function(e) {
 
@@ -25,7 +25,7 @@ SeaDragonGL = function(incoming) {
             var output = this.viaGL.toCanvas(input);
             // Render that canvas to the input context
             e.rendered.drawImage(output, 0, 0, input.width, input.height);
-        }.bind(this)
+        }
     };
 
     /*~*~*~*~*~*~*~*~*~*~*~*~*/
@@ -58,7 +58,7 @@ SeaDragonGL.prototype = {
 
     seaTerm: function(key) {
         var custom = this[key];
-        var interface = this.interface[key];
+        var interface = this.interface[key].bind(this);
         this.openSD.addHandler(key, function(e) {
             custom.call(this, interface, e);
         });
