@@ -63,14 +63,14 @@ ViaWebGL.prototype.loader = function(program) {
     var filter = this.filter || gl.NEAREST;
     var wrap = this.wrap || gl.CLAMP_TO_EDGE;
     var tile_pos = this.tile_pos || 'a_tile_pos';
+    var fixed = this.fixed || {
+        'u_tile_size' : [gl.canvas.height,gl.canvas.width]
+    }
 
     // fixed terms exclusively for position attributes
     var boxes = [[-1, 1,-1,-1, 1, 1, 1,-1], [0, 1, 0, 0, 1, 1, 1, 0]];
     var buffer = new Float32Array([].concat.apply([], boxes));
     var bytes = buffer.BYTES_PER_ELEMENT;
-    var fixed = {
-        'u_tile_size' : [gl.canvas.height,gl.canvas.width]
-    }
 
     // Get uniforms
     this.uni = Object.keys(fixed).map(function(k){
