@@ -2,27 +2,20 @@
 // Set up the rendering of WebGL
 ViaWebGL = function(incoming) {
 
+    /*~*~*~*~*~*~*~*~*~*~*~*~*~
+    ~ Canvas and GL API calls ~
+    */
+
     var empty = function(e) { return e; };
     this['gl-loaded'] = this['gl-drawing'] = empty;
 
-    /*~*~*~*~*~*~*~*~*~*~*~*~*~
-    ~ Image or Canvas API calls ~
-    */
-
     // Turns image or canvas into a rendered canvas
-    this.getCanvas = function(tile) {
+    this.toCanvas = function(tile) {
 
         // render the tile
         this.drawer(tile);
         // return the canvas
         return this.gl.canvas;
-    };
-
-    // Turns image or canvas into a rendered source
-    this.getSource = function(image) {
-
-        // Render the image into a data source
-        return this.getCanvas(image).toDataURL();
     };
 
     /*~*~*~*~*~*~*~*~*~*~*~*~*/
@@ -47,7 +40,7 @@ ViaWebGL.prototype.init = function() {
 
     // Load the shaders when ready and return the promise
     var promised = [this.vShader, this.fShader].map(this.getter);
-    Promise.all(promised).then(this.is('shader')).then(this.is('loader'));
+    Promise.all(promised).then(this.run('shader')).then(this.run('loader'));
 }
 
 // Once loaded, Link shaders to ViaWebGL
@@ -64,33 +57,28 @@ ViaWebGL.prototype.loader = function(program) {
     var filter = this.filter || gl.NEAREST;
     var wrap = this.wrap || gl.CLAMP_TO_EDGE;
     var tile_pos = this.tile_pos || 'a_tile_pos';
-    var uniforms = this.uniforms || {
-        'u_tile_size' : [gl.canvas.height,gl.canvas.width]
-    }
+    var uniform = this.tile_pos || 'u_tile_size';
 
-    // fixed terms exclusively for position attributes
+    // Unchangeable square array buffer fills viewport with texture
     var boxes = [[-1, 1,-1,-1, 1, 1, 1,-1], [0, 1, 0, 0, 1, 1, 1, 0]];
     var buffer = new Float32Array([].concat.apply([], boxes));
     var bytes = buffer.BYTES_PER_ELEMENT;
 
-    // Get uniforms
-    this.uni = Object.keys(uniforms).map(function(k){
-        var where = [gl.getUniformLocation(program, k)].concat(uniforms[k]);
-        gl.uniform2f.apply(gl,where);
+    // Get uniform term
+    uniform = gl.getUniformLocation(program, uniform);
+    gl.uniform2f(uniform, gl.canvas.height, gl.canvas.width);
 
-    });
+    // Get attribute terms
+    this.att = [pos, tile_pos].map(function(name, number) {
 
-    // Find shader attribute locations in the position buffer
-    this.att = [pos, tile_pos].map(function(a,i) {
-
-        var index = Math.min(i,boxes.length-1);
-        var vertex = gl.getAttribLocation(program,a);
+        var index = Math.min(number, boxes.length-1);
         var vec = Math.floor(boxes[index].length/count);
+        var vertex = gl.getAttribLocation(program, name);
 
-        return [vertex, vec, gl.FLOAT, false, vec*bytes, count*index*vec*bytes];
+        return [vertex, vec, gl.FLOAT, 0, vec*bytes, count*index*vec*bytes];
     });
 
-    // fixed texture terms
+    // Get texture
     this.tex = {
         texParameteri: [
             [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap],
@@ -116,11 +104,9 @@ ViaWebGL.prototype.drawer = function(tile) {
     this['gl-drawing'].call(this,tile);
 
     var gl = this.gl;
-    var att = this.att;
-    var tex = this.tex;
 
     // Set Attributes for GLSL
-    att.map(function(x){
+    this.att.map(function(x){
 
         gl.enableVertexAttribArray(x.slice(0,1));
         gl.vertexAttribPointer.apply(gl, x);
@@ -128,20 +114,25 @@ ViaWebGL.prototype.drawer = function(tile) {
 
     // Set Texture for GLSL
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture.apply(gl, tex.bindTexture);
-    gl.pixelStorei.apply(gl, tex.pixelStorei);
+    gl.bindTexture.apply(gl, this.tex.bindTexture);
+    gl.pixelStorei.apply(gl, this.tex.pixelStorei);
 
     // Apply texture parameters
-    tex.texParameteri.map(function(x){
+    this.tex.texParameteri.map(function(x){
         gl.texParameteri.apply(gl, x);
     });
     // Send the tile into the texture.
-    var output = tex.texImage2D.concat([tile]);
+    var output = this.tex.texImage2D.concat([tile]);
     gl.texImage2D.apply(gl, output);
 
     // Draw everything needed to canvas
-    gl.drawArrays.apply(gl, tex.drawArrays);
+    gl.drawArrays.apply(gl, this.tex.drawArrays);
 };
+
+// Bind a method strongly to this object
+ViaWebGL.prototype.run = function(method){
+    return this[method].bind(this);
+}
 
 // Promise to get a file then be done
 ViaWebGL.prototype.getter = function(where) {
@@ -182,8 +173,3 @@ ViaWebGL.prototype.shader = function(files) {
     gl.linkProgram(program);
     return err('Program','LINK',program);
 };
-
-// Bind a method strongly to this object
-ViaWebGL.prototype.is = function(method){
-    return this[method].bind(this);
-}

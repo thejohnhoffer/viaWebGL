@@ -13,7 +13,7 @@ SeaDragonGL = function(incoming) {
         'tile-loaded': function(e) {
 
             // Set the imageSource as a data URL
-            e.image.src = this.viaGL.getSource(e.image);
+            e.image.src = this.viaGL.toCanvas(e.image).toDataURL();
             // allow for the callback to happen
             e.image.onload = e.getCompletionCallback;
         },
@@ -21,7 +21,7 @@ SeaDragonGL = function(incoming) {
 
             var input = e.rendered.canvas;
             // Get a webGL canvas from the input canvas
-            var output = this.viaGL.getCanvas(input);
+            var output = this.viaGL.toCanvas(input);
             // Render that canvas to the input context
             e.rendered.drawImage(output, 0, 0, input.width, input.height);
         }
@@ -40,11 +40,17 @@ SeaDragonGL.prototype = {
 
         // Transfer terms to the viaWebGL machine and the openSeadragon
         this.tileSize = this.tileSize || 512;
-        this.store(this.viaGL,'GL');
-        this.store(openSD,'SD');
+        this.send(this.viaGL, 'GL');
+        this.send(openSD, 'SD');
 
         // Go via webGL
         this.viaGL.init();
+    },
+
+    // Send terms from this to target
+    send: function(target,term) {
+        var filtered = this.terms[term].filter(this.hasOwnProperty,this);
+        filtered.map(this.link[term].bind(0,this,target));
     },
 
     link: {
@@ -56,10 +62,5 @@ SeaDragonGL.prototype = {
         GL: function(self,viaGL,key) {
             viaGL[key] = self[key];
         }
-    },
-
-    store: function(argument,term) {
-        var filtered = this.terms[term].filter(this.hasOwnProperty,this);
-        filtered.map(this.link[term].bind(0,this,argument));
     }
 }
