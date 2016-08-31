@@ -2,7 +2,7 @@
 // Set up the rendering of WebGL
 ViaWebGL = function(incoming) {
 
-    var empty = function(e) { return e; }
+    var empty = function(e) { return e; };
     this['gl-loaded'] = this['gl-drawing'] = empty;
 
     /*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -29,13 +29,14 @@ ViaWebGL = function(incoming) {
 
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
-    // Assign from the top
+    // Assign from incoming terms
     for (var key in incoming) {
         this[key] = incoming[key];
     }
 
 };
 
+// Set up hidden canvas and get shaders
 ViaWebGL.prototype.init = function() {
 
     var hidden = document.createElement('canvas');
@@ -63,7 +64,7 @@ ViaWebGL.prototype.loader = function(program) {
     var filter = this.filter || gl.NEAREST;
     var wrap = this.wrap || gl.CLAMP_TO_EDGE;
     var tile_pos = this.tile_pos || 'a_tile_pos';
-    var fixed = this.fixed || {
+    var uniforms = this.uniforms || {
         'u_tile_size' : [gl.canvas.height,gl.canvas.width]
     }
 
@@ -73,8 +74,8 @@ ViaWebGL.prototype.loader = function(program) {
     var bytes = buffer.BYTES_PER_ELEMENT;
 
     // Get uniforms
-    this.uni = Object.keys(fixed).map(function(k){
-        var where = [gl.getUniformLocation(program, k)].concat(fixed[k]);
+    this.uni = Object.keys(uniforms).map(function(k){
+        var where = [gl.getUniformLocation(program, k)].concat(uniforms[k]);
         gl.uniform2f.apply(gl,where);
 
     });
