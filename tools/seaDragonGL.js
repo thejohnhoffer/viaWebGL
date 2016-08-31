@@ -10,7 +10,6 @@ SeaDragonGL = function(incoming) {
     */
 
     this.callbacks = {
-
         'tile-loaded': function(e) {
 
             // Set the imageSource as a data URL
@@ -18,13 +17,13 @@ SeaDragonGL = function(incoming) {
             // allow for the callback to happen
             e.image.onload = e.getCompletionCallback;
         },
-
         'tile-drawing': function(e) {
 
+            var input = e.rendered.canvas;
             // Get a webGL canvas from the input canvas
-            var canv = this.viaGL.getCanvas(e.rendered.canvas);
+            var output = this.viaGL.getCanvas(input);
             // Render that canvas to the input context
-            e.rendered.drawImage(canv, 0,0);
+            e.rendered.drawImage(output, 0, 0, input.width, input.height);
         }
     };
 
