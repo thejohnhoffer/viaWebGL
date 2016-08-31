@@ -9,14 +9,15 @@ SeaDragonGL = function(incoming) {
     ~ OpenSeaDragon API calls ~
     */
 
-    this.callbacks = {
+    this.interface = {
         'tile-loaded': function(e) {
 
             // Set the imageSource as a data URL
             e.image.src = this.viaGL.toCanvas(e.image).toDataURL();
             // allow for the callback to happen
             e.image.onload = e.getCompletionCallback;
-        },
+        }.bind(this),
+
         'tile-drawing': function(e) {
 
             var input = e.rendered.canvas;
@@ -24,7 +25,7 @@ SeaDragonGL = function(incoming) {
             var output = this.viaGL.toCanvas(input);
             // Render that canvas to the input context
             e.rendered.drawImage(output, 0, 0, input.width, input.height);
-        }
+        }.bind(this)
     };
 
     /*~*~*~*~*~*~*~*~*~*~*~*~*/
@@ -39,28 +40,31 @@ SeaDragonGL.prototype = {
     init: function(openSD) {
 
         // Transfer terms to the viaWebGL machine and the openSeadragon
+        this.openSD = openSD;
         this.tileSize = this.tileSize || 512;
-        this.send(this.viaGL, 'GL');
-        this.send(openSD, 'SD');
+        ['GL','SD'].map(this.send.bind(this));
 
         // Go via webGL
         this.viaGL.init();
     },
 
     // Send terms from this to target
-    send: function(target,term) {
-        var filtered = this.terms[term].filter(this.hasOwnProperty,this);
-        filtered.map(this.link[term].bind(0,this,target));
+    send: function(term, order) {
+
+        var action = order ? this.seaTerm: this.glTerm;
+        var these = this.terms[term].filter(this.hasOwnProperty,this);
+        these.map(action.bind(this));
     },
 
-    link: {
-        SD: function(self,openSD,key) {
-            openSD.addHandler(key, function(e) {
-                self[key].call(this, self.callbacks[key].bind(self), e);
-            });
-        },
-        GL: function(self,viaGL,key) {
-            viaGL[key] = self[key];
-        }
+    seaTerm: function(key) {
+        var custom = this[key];
+        var interface = this.interface[key];
+        this.openSD.addHandler(key, function(e) {
+            custom.call(this, interface, e);
+        });
+    },
+
+    glTerm: function(key) {
+        this.viaGL[key] = this[key];
     }
 }

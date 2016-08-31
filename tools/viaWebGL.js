@@ -10,7 +10,7 @@ ViaWebGL = function(incoming) {
     this['gl-loaded'] = this['gl-drawing'] = empty;
 
     // Turns image or canvas into a rendered canvas
-    this.toCanvas = function(tile) {
+    this['toCanvas'] = function(tile) {
 
         // render the tile
         this.drawer(tile);
