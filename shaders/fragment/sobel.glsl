@@ -13,26 +13,26 @@ float weigh3(mat3 m) {
   return sum3(m[0])+sum3(m[1])+sum3(m[2]);
 }
 
-// calculate the outer product
+// Take the outer product
 mat3 outer3(vec3 c, vec3 r) {
   return mat3(c[0]*r,c[1]*r,c[2]*r);
 }
 
-//
+//*~*~*~*~*~*~*~*~*~*~*~*~*~
+//  Now for the Sobel Program
+//*~
+
 // Sample the color at offset
-//
-vec4 rgba(float dx, float dy) {
+vec4 color(float dx, float dy) {
   // calculate the color of sampler at an offset from position
   return texture2D(u_tile, v_tile_pos+vec2(dx,dy));
 }
 // Sample offset in monochrome
 float mono(float dx, float dy) {
-  return sum3(rgba(dx, dy).rgb);
+  return sum3(color(dx, dy).rgb);
 }
 
-//
-// Check whether nearby positions are the same
-//
+// Compare nearby positions
 mat3 borders(mat3 kernel) {
   // Get monochrome of nearest pixels
   mat3 nearby;
@@ -45,15 +45,17 @@ mat3 borders(mat3 kernel) {
   return matrixCompMult(nearby,kernel);
 }
 
-
 void main() {
+  // Prep work
   vec3 mean = vec3(1,2,1);
   vec3 slope = vec3(-1,0,1);
   mat3 sobelX = outer3(mean,slope);
   mat3 sobelY = outer3(slope,mean);
+
+  // Show the mixed XY contrast
   float edgeX = weigh3(borders(sobelX));
   float edgeY = weigh3(borders(sobelY));
-
   float mixed = length(vec2(edgeX,edgeY));
+
   gl_FragColor = vec4(vec3(mixed),1);
 }
