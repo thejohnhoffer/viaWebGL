@@ -59,7 +59,7 @@ SeaDragonGL.prototype = {
     },
     // Set up OpenSeadragon events
     seadragonHandler: function(key) {
-        var handler = this[key];
+        var handler = this[key].bind(this);
         var interface = this.interface[key].bind(this);
         this.openSD.addHandler(key, function(e) {
             handler.call(this, interface, e);
