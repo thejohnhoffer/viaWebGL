@@ -4,21 +4,11 @@ var SOBEL = {};
 */
 SOBEL.Viewer = function() {
     // Needed constants
-    this.container = 'viaWebGL';
     this.iconPrefix = '../../images/icons/';
     this.source = '../../images/babel/babel.dzi';
     this.vShader = '../../shaders/vertex/square.glsl';
     this.fShader = '../../shaders/fragment/sobel3.glsl';
-    this['tile-loaded'] = function(callback, e) {
-        callback(e);
-    };
-    this['tile-drawing'] = function(callback, e) {
-        if (e.tile.loaded !==1) {
-            e.tile.loaded = 1;
-            callback(e);
-        }
-    };
-    this.mode = 'tile-drawing';
+    this.tile_mode = 'tile-drawing';
 }
 
 SOBEL.Viewer.prototype.init = function() {
@@ -27,15 +17,15 @@ SOBEL.Viewer.prototype.init = function() {
     this.openSD = OpenSeadragon({
         tileSources: this.source,
         prefixUrl: this.iconPrefix,
-        id: this.container
+        id: 'viaWebGL'
     });
 
     // Make a link to webGL
-    var seaGL = new SeaDragonGL();
-    seaGL[this.mode] = this[this.mode];
+    var seaGL = new SeaDragonGL(this.openSD);
+    seaGL.addHandler(this.tile_mode);
     seaGL.vShader = this.vShader;
     seaGL.fShader = this.fShader;
-    seaGL.init(this.openSD);
+    seaGL.init();
 
     // Add a custom button
     seaGL.button({

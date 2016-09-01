@@ -59,7 +59,7 @@ J.Viewer.prototype.init = function() {
     });
 
     // Make a link to webGL
-    var seaGL = new SeaDragonGL();
+    var seaGL = new SeaDragonGL(openSD);
     seaGL.vShader = '../../shaders/vertex/square.glsl';
     seaGL.fShader = '../../shaders/fragment/outLine.glsl';
 
@@ -82,7 +82,7 @@ J.Viewer.prototype.init = function() {
         }
     }
 
-    seaGL['tile-drawing'] = draw;
+    seaGL.addHandler('tile-drawing',draw);
 
-    seaGL.init(openSD);
+    seaGL.init();
 }

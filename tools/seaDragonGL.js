@@ -1,7 +1,7 @@
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 /* SeaDragonGL - Set Shaders in OpenSeaDragon with viaWebGL
 */
-SeaDragonGL = function(incoming) {
+SeaDragonGL = function(openSD) {
 
     /* OpenSeaDragon API calls
     ~*~*~*~*~*~*~*~*~*~*~*~*/
@@ -17,17 +17,22 @@ SeaDragonGL = function(incoming) {
             e.rendered.drawImage(this.viaGL.toCanvas(input), 0, 0, input.width, input.height);
         }
     };
-    // Assign from incoming terms
-    for (var key in incoming) {
-        this[key] = incoming[key];
-    }
+    this['tile-loaded'] = function(callback, e) {
+        callback(e);
+    };
+    this['tile-drawing'] = function(callback, e) {
+        if (e.tile.loaded !==1) {
+            e.tile.loaded = 1;
+            callback(e);
+        }
+    };
+    this.openSD = openSD;
 };
 
 SeaDragonGL.prototype = {
     // Map to viaWebGL and openSeadragon
-    init: function(openSD) {
+    init: function() {
         // Map both objects
-        this.openSD = openSD;
         this.viaGL = new ViaWebGL();
         this.openSD.addHandler('open',this.merge.bind(this));
         return this;
@@ -37,23 +42,27 @@ SeaDragonGL.prototype = {
         // Take GL height and width from OpenSeaDragon
         this.height = this.openSD.source.getTileHeight();
         this.width = this.openSD.source.getTileWidth();
-
-        for (var key in this) {
-            if (['tile-loaded','tile-drawing'].indexOf(key) > 0) {
-                this.seadragonHandler(key);
-            }
-            if (Object.keys(this.viaGL).indexOf(key) > 0) {
-                this.viaGL[key] = this[key];
-            }
+        // Add all ViaWebGL properties shared by this seadragonGL
+        for (var key of Object.keys(this.viaGL).filter(Object.hasOwnProperty,this)) {
+            this.viaGL[key] = this[key];
         }
         this.viaGL.init();
     },
     // Set up OpenSeadragon events
+    addHandler: function(key,custom) {
+        if (['tile-loaded','tile-drawing'].indexOf(key) > 0) {
+            if (typeof custom == 'function') {
+                this[key] = custom;
+            }
+            this.seadragonHandler(key);
+        }
+    },
+    // Set up OpenSeadragon events
     seadragonHandler: function(key) {
-        var custom = this[key];
+        var handler = this[key];
         var interface = this.interface[key].bind(this);
         this.openSD.addHandler(key, function(e) {
-            custom.call(this, interface, e);
+            handler.call(this, interface, e);
         });
     },
     // Add your own button to OSD controls
