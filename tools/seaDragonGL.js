@@ -50,7 +50,7 @@ SeaDragonGL.prototype = {
     },
     // Set up OpenSeadragon events
     addHandler: function(key,custom) {
-        if (['tile-loaded','tile-drawing'].indexOf(key) > 0) {
+        if (['tile-loaded','tile-drawing'].indexOf(key) >= 0) {
             if (typeof custom == 'function') {
                 this[key] = custom;
             }
