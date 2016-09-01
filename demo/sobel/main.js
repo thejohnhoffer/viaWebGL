@@ -10,6 +10,9 @@ window.onload = function(e){
     DEMO.button(DEMO.view.openSD, {
         tooltip: 'Toggle shaders',
         prefix: DEMO.view.iconPrefix,
+        onClick: function() {
+            console.log('hi');
+        },
         name: 'shade'
     });
 };
