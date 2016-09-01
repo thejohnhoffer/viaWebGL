@@ -37,7 +37,7 @@ SeaDragonGL.prototype = {
         this.openSD.addHandler('open',this.merge.bind(this));
         return this;
     },
-    // Merge viaGL and openSeadragon
+    // Merge with viaGL
     merge: function(e) {
         // Take GL height and width from OpenSeaDragon
         this.height = this.openSD.source.getTileHeight();
@@ -50,10 +50,10 @@ SeaDragonGL.prototype = {
     },
     // Set up OpenSeadragon events
     addHandler: function(key,custom) {
+        if (typeof custom == 'function') {
+            this[key] = custom;
+        }
         if (['tile-loaded','tile-drawing'].indexOf(key) >= 0) {
-            if (typeof custom == 'function') {
-                this[key] = custom;
-            }
             this.seadragonHandler(key);
         }
     },

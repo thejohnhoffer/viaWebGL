@@ -4,11 +4,11 @@ var SOBEL = {};
 */
 SOBEL.Viewer = function() {
     // Needed constants
+    this.tile_mode = 'tile-drawing';
     this.iconPrefix = '../../images/icons/';
     this.source = '../../images/babel/babel.dzi';
     this.vShader = '../../shaders/vertex/square.glsl';
     this.fShader = '../../shaders/fragment/sobel3.glsl';
-    this.tile_mode = 'tile-drawing';
 }
 
 SOBEL.Viewer.prototype.init = function() {
@@ -25,7 +25,6 @@ SOBEL.Viewer.prototype.init = function() {
     seaGL.addHandler(this.tile_mode);
     seaGL.vShader = this.vShader;
     seaGL.fShader = this.fShader;
-    seaGL.init();
 
     // Add a custom button
     seaGL.button({
@@ -34,5 +33,7 @@ SOBEL.Viewer.prototype.init = function() {
         prefix: this.iconPrefix,
         name: 'shade'
     });
+
+    seaGL.init();
     return this;
 }
