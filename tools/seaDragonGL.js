@@ -47,5 +47,25 @@ SeaDragonGL.prototype = {
         this.openSD.addHandler(key, function(e) {
             custom.call(this, interface, e);
         });
+    },
+    // Add your own button to OSD controls
+    button: function(terms) {
+
+        var name = terms.name || 'tool';
+        var prefix = terms.prefix || '';
+        terms.srcRest = terms.srcRest || prefix+name+'_rest.png';
+        terms.srcHover = terms.srcHover || prefix+name+'_hover.png';
+        terms.srcDown = terms.srcDown || prefix+name+'_pressed.png';
+        terms.srcGroup = terms.srcGroup || prefix+name+'_grouphover.png';
+        // Replace the current controls with the same controls plus a new button
+        this.openSD.clearControls().buttons.buttons.push(new OpenSeadragon.Button(terms));
+        var toolbar = new OpenSeadragon.ButtonGroup({buttons: this.openSD.buttons.buttons});
+        this.openSD.addControl(toolbar.element,{anchor: OpenSeadragon.ControlAnchor.TOP_LEFT});
+    },
+    // Switch Shaders on or off
+    buttons: {
+        shade: function() {
+            console.log('hi');
+        }
     }
 }

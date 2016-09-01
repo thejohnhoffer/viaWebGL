@@ -14,11 +14,13 @@ SOBEL.Viewer = function() {
         callback(e);
     };
     this['tile-drawing'] = function(callback, e) {
+        console.log(e);
         if (e.tile.loaded !==1) {
             e.tile.loaded = 1;
             callback(e);
         }
-    }
+    };
+    this.mode = 'tile-drawing';
 }
 
 SOBEL.Viewer.prototype.init = function() {
@@ -32,9 +34,17 @@ SOBEL.Viewer.prototype.init = function() {
 
     // Make a link to webGL
     var seaGL = new SeaDragonGL();
-    seaGL['tile-drawing'] = this['tile-drawing'];
+    seaGL[this.mode] = this[this.mode];
     seaGL.vShader = this.vShader;
     seaGL.fShader = this.fShader;
     seaGL.init(this.openSD);
+
+    // Add a custom button
+    seaGL.button({
+        onClick: seaGL.buttons.shade,
+        tooltip: 'Toggle shaders',
+        prefix: this.iconPrefix,
+        name: 'shade'
+    });
     return this;
 }
