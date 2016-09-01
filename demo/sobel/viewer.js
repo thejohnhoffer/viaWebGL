@@ -23,9 +23,6 @@ SOBEL.Viewer = function() {
 
 SOBEL.Viewer.prototype.init = function() {
 
-    // Just get terms from this viewer
-    var terms = JSON.parse(JSON.stringify(this));
-
     // Open a seaDragon with two layers
     var openSD = OpenSeadragon({
         tileSources: this.source,
@@ -41,7 +38,9 @@ SOBEL.Viewer.prototype.init = function() {
     });
 
     // Make a link to webGL
-    var seaGL = new SeaDragonGL(terms);
-    seaGL['tile-drawing'] = this['tile-drawing'];
+    var seaGL = new SeaDragonGL();
+    for (var key of Object.keys(this)) {
+        seaGL[key] = this[key];
+    }
     seaGL.init(openSD);
 }
