@@ -2,9 +2,6 @@
 // Set up the rendering of WebGL
 SeaDragonGL = function(incoming) {
 
-    this.terms = {GL:[], SD:[]};
-    this.viaGL = new ViaWebGL(incoming);
-
     /*~*~*~*~*~*~*~*~*~*~*~*~*~
     ~ OpenSeaDragon API calls ~
     */
@@ -28,43 +25,42 @@ SeaDragonGL = function(incoming) {
         }
     };
 
-    /*~*~*~*~*~*~*~*~*~*~*~*~*/
-
-    this.terms.SD.push('tile-loaded','tile-drawing');
-    this.terms.GL.push('gl-loaded','gl-drawing','wrap','filter','tileSize');
-    this.terms.GL.push('width','height','vShader','fShader','pos','tile_pos');
+    // Defaults
+    this.tileSize = 512;
+    // Assign from incoming terms
+    for (var key in incoming) {
+        this[key] = incoming[key];
+    }
 };
 
 SeaDragonGL.prototype = {
-
+    // Map to viaWebGL and openSeadragon
     init: function(openSD) {
 
-        // Transfer terms to the viaWebGL machine and the openSeadragon
         this.openSD = openSD;
-        this.tileSize = this.tileSize || 512;
-        ['GL','SD'].map(this.send.bind(this));
+        this.viaGL = new ViaWebGL();
 
-        // Go via webGL
+        var GL = ['wrap','filter','tileSize','width','height','pos','tile_pos'];
+        GL.push('gl-loaded','gl-drawing','vShader','fShader');
+        var SD = ['tile-loaded','tile-drawing'];
+
+        for (var key in this) {
+            if (SD.indexOf(key) > 0) {
+                this.seadragonHandler(key);
+            }
+            if (GL.indexOf(key) > 0) {
+                this.viaGL[key] = this[key];
+            }
+        }
+
         this.viaGL.init();
     },
-
-    // Send terms from this to target
-    send: function(term, order) {
-
-        var action = order ? this.seaTerm: this.glTerm;
-        var these = this.terms[term].filter(this.hasOwnProperty,this);
-        these.map(action.bind(this));
-    },
-
-    seaTerm: function(key) {
+    // Set up OpenSeadragon events
+    seadragonHandler: function(key) {
         var custom = this[key];
         var interface = this.interface[key].bind(this);
         this.openSD.addHandler(key, function(e) {
             custom.call(this, interface, e);
         });
-    },
-
-    glTerm: function(key) {
-        this.viaGL[key] = this[key];
     }
 }
