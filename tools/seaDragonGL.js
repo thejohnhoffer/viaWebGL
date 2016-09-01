@@ -5,28 +5,18 @@ SeaDragonGL = function(incoming) {
     /*~*~*~*~*~*~*~*~*~*~*~*~*~
     ~ OpenSeaDragon API calls ~
     */
-
     this.interface = {
         'tile-loaded': function(e) {
-
-            // Set the imageSource as a data URL
+            // Set the imageSource as a data URL and then complete
             e.image.src = this.viaGL.toCanvas(e.image).toDataURL();
-            // allow for the callback to happen
             e.image.onload = e.getCompletionCallback;
         },
-
         'tile-drawing': function(e) {
-
+            // Render a webGL canvas to an input canvas
             var input = e.rendered.canvas;
-            // Get a webGL canvas from the input canvas
-            var output = this.viaGL.toCanvas(input);
-            // Render that canvas to the input context
-            e.rendered.drawImage(output, 0, 0, input.width, input.height);
+            e.rendered.drawImage(this.viaGL.toCanvas(input), 0, 0, input.width, input.height);
         }
     };
-
-    // Defaults
-    this.tileSize = 512;
     // Assign from incoming terms
     for (var key in incoming) {
         this[key] = incoming[key];
@@ -36,23 +26,17 @@ SeaDragonGL = function(incoming) {
 SeaDragonGL.prototype = {
     // Map to viaWebGL and openSeadragon
     init: function(openSD) {
-
+        // Map both objects
         this.openSD = openSD;
         this.viaGL = new ViaWebGL();
-
-        var GL = ['wrap','filter','tileSize','width','height','pos','tile_pos'];
-        GL.push('gl-loaded','gl-drawing','vShader','fShader');
-        var SD = ['tile-loaded','tile-drawing'];
-
         for (var key in this) {
-            if (SD.indexOf(key) > 0) {
+            if (['tile-loaded','tile-drawing'].indexOf(key) > 0) {
                 this.seadragonHandler(key);
             }
-            if (GL.indexOf(key) > 0) {
+            if (Object.keys(this.viaGL).indexOf(key) > 0) {
                 this.viaGL[key] = this[key];
             }
         }
-
         this.viaGL.init();
     },
     // Set up OpenSeadragon events

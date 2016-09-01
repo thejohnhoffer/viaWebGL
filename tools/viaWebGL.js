@@ -11,19 +11,16 @@ ViaWebGL = function(incoming) {
     // Turns image or canvas into a rendered canvas
     this['toCanvas'] = function(tile) {
 
-        // render the tile
         this.drawer(tile);
-        // return the canvas
         return this.gl.canvas;
     };
 
-    // Defaults
-    var gl = this.makeContext();
-    this.tile_pos = 'a_tile_pos';
+    this.tile_size = 'u_tile_size';
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
-    this.tile_size = 'u_tile_size';
     this.wrap = gl.CLAMP_TO_EDGE;
+    this.tile_pos = 'a_tile_pos';
+    var gl = this.makeContext();
     this.filter = gl.NEAREST;
     this.tileSize = 512;
     this.pos = 'a_pos';
@@ -52,14 +49,13 @@ ViaWebGL.prototype = {
         // Allow for custom loading
         this.gl.useProgram(program);
         this['gl-loaded'].call(this, program);
-        // Local Loading
-        var gl = this.gl;
-        var count = 4;
 
         // Unchangeable square array buffer fills viewport with texture
         var boxes = [[-1, 1,-1,-1, 1, 1, 1,-1], [0, 1, 0, 0, 1, 1, 1, 0]];
         var buffer = new Float32Array([].concat.apply([], boxes));
         var bytes = buffer.BYTES_PER_ELEMENT;
+        var gl = this.gl;
+        var count = 4;
 
         // Get uniform term
         this.tile_size = gl.getUniformLocation(program, this.tile_size);
@@ -87,8 +83,7 @@ ViaWebGL.prototype = {
             drawArrays: [gl.TRIANGLE_STRIP, 0, count],
             pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1]
         };
-
-        // Essential position buffer code for ViaWebGL
+        // Build the position and texture buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
     },
@@ -97,7 +92,6 @@ ViaWebGL.prototype = {
 
         // Allow for custom drawing in webGL
         this['gl-drawing'].call(this,tile);
-        // Local drawing
         var gl = this.gl;
 
         // Set Attributes for GLSL
@@ -138,7 +132,7 @@ ViaWebGL.prototype = {
             bid.send();
         });
     },
-    // Make one vertex shader and one fragment shader
+    // Make two shaders from data
     shader: function(files) {
 
         var gl = this.gl;
@@ -149,8 +143,8 @@ ViaWebGL.prototype = {
             }
             return value;
         }
+        // 1st is vertex; 2nd is fragment
         files.map(function(given,i) {
-            // Make first file shade vertex and second shade fragments
             var sh = ['VERTEX_SHADER', 'FRAGMENT_SHADER'][i];
             var shader = gl.createShader(gl[sh]);
             gl.shaderSource(shader, given);
