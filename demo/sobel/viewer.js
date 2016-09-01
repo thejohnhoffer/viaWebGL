@@ -6,34 +6,35 @@ var J = J || {};
 //-----------------------------------
 
 J.Viewer = function() {
-    // Add an shading button
-    this.shade = new Image();
-    this.shade.id = 'shade';
+    this.iconPrefix = '../../images/icons/';
+    this.source = '../../images/babel/babel.dzi';
+    this.vShader = '../../shaders/vertex/square.glsl';
+    this.fShader = '../../shaders/fragment/sobel3.glsl';
+    this.container = 'viaWebGL';
+    this.tileSize = 512;
 }
 
 J.Viewer.prototype.init = function() {
 
     // Open a seaDragon with two layers
     var openSD = OpenSeadragon({
-        tileSources: '../../images/babel/babel.dzi',
-        id: this.container || 'viaWebGL',
-        prefixUrl: '../../images/icons/',
+        tileSources: this.source,
+        prefixUrl: this.iconPrefix,
+        id: this.container
     });
-    console.log(openSD.navImages);
 
-    // Add shading to Seadragon
-    this.shade.onload = function(){
-        document.body.appendChild(this.shade);
-        var corner = OpenSeadragon.ControlAnchor.TOP_LEFT;
-        openSD.addControl(this.shade.id,{anchor: corner});
-    }.bind(this);
-    this.shade.src = '../../images/icons/shade_rest.png';
+    // Add a custom button
+    J.seaButton(openSD, {
+        name: 'shade',
+        tooltip: 'Toggle shaders',
+        prefix: this.iconPrefix
+    });
 
     // Make a link to webGL
     var seaGL = new SeaDragonGL();
-    seaGL.vShader = '../../shaders/vertex/square.glsl';
-    seaGL.fShader = '../../shaders/fragment/sobel3.glsl';
-    seaGL.tileSize = 512;
+    seaGL.vShader = this.vShader;
+    seaGL.fShader = this.fShader;
+    seaGL.tileSize = this.tileSize;
 
     var load = function(callback, e) {
         // via webGL
@@ -47,7 +48,6 @@ J.Viewer.prototype.init = function() {
             callback(e);
         }
     }
-
 
 //    seaGL['tile-loaded'] = load;
     seaGL['tile-drawing'] = draw;
