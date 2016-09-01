@@ -1,11 +1,9 @@
-var J = J || {};
-//-----------------------------------
-//
-// J.Viewer - test webGL overlay atop OpenSeaDragon
-//
-//-----------------------------------
+var SOBEL = {};
+/*~*~*~*~*~*~*~*~*~*~*~*~*~
+// SOBEL Viewer - Set a Sobel Shader for OpenSeaDragon
+*/
 
-J.Viewer = function() {
+SOBEL.Viewer = function() {
     this.tileSize = 512;
     this.container = 'viaWebGL';
     this.iconPrefix = '../../images/icons/';
@@ -23,7 +21,7 @@ J.Viewer = function() {
     }
 }
 
-J.Viewer.prototype.init = function() {
+SOBEL.Viewer.prototype.init = function() {
 
     // Just get terms from this viewer
     var terms = JSON.parse(JSON.stringify(this));
@@ -36,7 +34,7 @@ J.Viewer.prototype.init = function() {
     });
 
     // Add a custom button
-    J.seaButton(openSD, {
+    DEMO.seaButton(openSD, {
         tooltip: 'Toggle shaders',
         prefix: this.iconPrefix,
         name: 'shade'

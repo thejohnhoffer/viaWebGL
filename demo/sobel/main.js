@@ -1,16 +1,16 @@
-var J = J || {};
+var DEMO = {};
 
-//-----------------------------------
+/*~*~*~*~*~*~*~*~*~*~*~*~*~
+// DEMO for a viewer with custom shaders
+*/
 window.onload = function(e){
 
-    M = {
-        view: new J.Viewer()
-    };
-    M.view.init();
+    DEMO.view = new SOBEL.Viewer();
+    DEMO.view.init();
 };
 
 // Add your own button to OSD controls
-J.seaButton = function(osd, terms) {
+DEMO.seaButton = function(osd, terms) {
 
     var name = terms.name || 'tool';
     var prefix = terms.prefix || '';

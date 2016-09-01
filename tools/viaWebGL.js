@@ -14,13 +14,12 @@ ViaWebGL = function(incoming) {
         this.drawer(tile);
         return this.gl.canvas;
     };
-
+    var gl = this.makeContext();
     this.tile_size = 'u_tile_size';
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
     this.wrap = gl.CLAMP_TO_EDGE;
     this.tile_pos = 'a_tile_pos';
-    var gl = this.makeContext();
     this.filter = gl.NEAREST;
     this.tileSize = 512;
     this.pos = 'a_pos';
