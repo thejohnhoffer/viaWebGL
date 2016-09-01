@@ -1,9 +1,9 @@
 var SOBEL = {};
 /*~*~*~*~*~*~*~*~*~*~*~*~*~
-// SOBEL Viewer - Set a Sobel Shader for OpenSeaDragon
+/* SOBEL Viewer - Set a Sobel Shader for OpenSeaDragon
 */
-
 SOBEL.Viewer = function() {
+    // Needed constants
     this.tileSize = 512;
     this.container = 'viaWebGL';
     this.iconPrefix = '../../images/icons/';
@@ -24,23 +24,17 @@ SOBEL.Viewer = function() {
 SOBEL.Viewer.prototype.init = function() {
 
     // Open a seaDragon with two layers
-    var openSD = OpenSeadragon({
+    this.openSD = OpenSeadragon({
         tileSources: this.source,
         prefixUrl: this.iconPrefix,
         id: this.container
     });
 
-    // Add a custom button
-    DEMO.seaButton(openSD, {
-        tooltip: 'Toggle shaders',
-        prefix: this.iconPrefix,
-        name: 'shade'
-    });
-
     // Make a link to webGL
     var seaGL = new SeaDragonGL();
-    for (var key of Object.keys(this)) {
-        seaGL[key] = this[key];
-    }
-    seaGL.init(openSD);
+    seaGL['tile-drawing'] = this['tile-drawing'];
+    seaGL.vShader = this.vShader;
+    seaGL.fShader = this.fShader;
+    seaGL.init(this.openSD);
+    return this;
 }

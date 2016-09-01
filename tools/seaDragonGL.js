@@ -2,9 +2,8 @@
 // Set up the rendering of WebGL
 SeaDragonGL = function(incoming) {
 
-    /*~*~*~*~*~*~*~*~*~*~*~*~*~
-    ~ OpenSeaDragon API calls ~
-    */
+    /* OpenSeaDragon API calls
+    ~*~*~*~*~*~*~*~*~*~*~*~*/
     this.interface = {
         'tile-loaded': function(e) {
             // Set the imageSource as a data URL and then complete
@@ -38,6 +37,7 @@ SeaDragonGL.prototype = {
             }
         }
         this.viaGL.init();
+        return this;
     },
     // Set up OpenSeadragon events
     seadragonHandler: function(key) {

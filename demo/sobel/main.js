@@ -5,12 +5,18 @@ var DEMO = {};
 */
 window.onload = function(e){
 
-    DEMO.view = new SOBEL.Viewer();
-    DEMO.view.init();
+    DEMO.view = new SOBEL.Viewer().init();
+
+    // Add a custom button
+    DEMO.button(DEMO.view.openSD, {
+        tooltip: 'Toggle shaders',
+        prefix: DEMO.view.iconPrefix,
+        name: 'shade'
+    });
 };
 
 // Add your own button to OSD controls
-DEMO.seaButton = function(osd, terms) {
+DEMO.button = function(osd, terms) {
 
     var name = terms.name || 'tool';
     var prefix = terms.prefix || '';

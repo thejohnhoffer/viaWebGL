@@ -2,9 +2,8 @@
 // Set up the rendering of WebGL
 ViaWebGL = function(incoming) {
 
-    /*~*~*~*~*~*~*~*~*~*~*~*~*~
-    ~ Canvas and GL API calls ~
-    */
+    /* Canvas and GL API calls
+    ~*~*~*~*~*~*~*~*~*~*~*~*/
     this['gl-drawing'] = function(e) { return e; };
     this['gl-loaded'] = function(e) { return e; };
 
@@ -41,6 +40,7 @@ ViaWebGL.prototype = {
         var goals = [this.vShader, this.fShader].map(this.getter);
         var goal = [this.shader.bind(this), this.loader.bind(this)];
         Promise.all(goals).then(goal[0]).then(goal[1]);
+        return this;
     },
     // Link the shaders
     loader: function(program) {
