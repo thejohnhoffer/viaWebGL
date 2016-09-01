@@ -15,8 +15,9 @@ ViaWebGL = function(incoming) {
     this.wrap = gl.CLAMP_TO_EDGE;
     this.tile_pos = 'a_tile_pos';
     this.filter = gl.NEAREST;
-    this.tileSize = 512;
     this.pos = 'a_pos';
+    this.height = 128;
+    this.width = 128;
     // Assign from incoming terms
     for (var key in incoming) {
         this[key] = incoming[key];
@@ -26,8 +27,8 @@ ViaWebGL = function(incoming) {
 ViaWebGL.prototype = {
     init: function() {
         this.gl = this.maker({
-            width: this.width || this.tileSize,
-            height: this.height || this.tileSize
+            width: this.width,
+            height: this.height
         });
         // Load the shaders when ready and return the promise
         var goals = [this.vShader, this.fShader].map(this.getter);

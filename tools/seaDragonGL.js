@@ -29,6 +29,15 @@ SeaDragonGL.prototype = {
         // Map both objects
         this.openSD = openSD;
         this.viaGL = new ViaWebGL();
+        this.openSD.addHandler('open',this.merge.bind(this));
+        return this;
+    },
+    // Merge viaGL and openSeadragon
+    merge: function(e) {
+        // Take GL height and width from OpenSeaDragon
+        this.height = this.openSD.source.getTileHeight();
+        this.width = this.openSD.source.getTileWidth();
+
         for (var key in this) {
             if (['tile-loaded','tile-drawing'].indexOf(key) > 0) {
                 this.seadragonHandler(key);
@@ -38,7 +47,6 @@ SeaDragonGL.prototype = {
             }
         }
         this.viaGL.init();
-        return this;
     },
     // Set up OpenSeadragon events
     seadragonHandler: function(key) {
