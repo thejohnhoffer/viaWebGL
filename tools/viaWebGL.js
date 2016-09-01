@@ -1,19 +1,14 @@
-
-// Set up the rendering of WebGL
+/*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+/* viaWebGL - Set shaders on Image or Canvas with WebGL
+*/
 ViaWebGL = function(incoming) {
 
-    /* Canvas and GL API calls
+    /* Custom WebGL API calls
     ~*~*~*~*~*~*~*~*~*~*~*~*/
     this['gl-drawing'] = function(e) { return e; };
     this['gl-loaded'] = function(e) { return e; };
 
-    // Turns image or canvas into a rendered canvas
-    this['toCanvas'] = function(tile) {
-
-        this.drawer(tile);
-        return this.gl.canvas;
-    };
-    var gl = this.makeContext();
+    var gl = this.maker();
     this.tile_size = 'u_tile_size';
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
@@ -29,21 +24,64 @@ ViaWebGL = function(incoming) {
 };
 
 ViaWebGL.prototype = {
-    // Load the shaders
     init: function() {
-
-        this.gl = this.makeContext({
+        this.gl = this.maker({
             width: this.width || this.tileSize,
             height: this.height || this.tileSize
         });
         // Load the shaders when ready and return the promise
         var goals = [this.vShader, this.fShader].map(this.getter);
-        var goal = [this.shader.bind(this), this.loader.bind(this)];
+        var goal = [this.toProgram.bind(this), this.toBuffers.bind(this)];
         Promise.all(goals).then(goal[0]).then(goal[1]);
         return this;
     },
-    // Link the shaders
-    loader: function(program) {
+    // Make a gl rendering context
+    maker: function(options){
+        var a = document.createElement('canvas');
+        for (key in options) {
+            a[key] = options[key];
+        }
+        return a.getContext('experimental-webgl') || a.getContext('webgl');
+    },
+    // Get a file as a promise
+    getter: function(where) {
+        return new Promise(function(done){
+            var bid = new XMLHttpRequest();
+            var win = function(){
+                if (bid.status == 200) {
+                    return done(bid.response);
+                }
+                console.log("A bug on the web");
+            };
+            bid.open('GET', where, true);
+            bid.onerror = bid.onload = win;
+            bid.send();
+        });
+    },
+    // Link shaders from strings
+    toProgram: function(files) {
+        var gl = this.gl;
+        var program = gl.createProgram();
+        var ok = function(kind,status,value,sh) {
+            if (!gl['get'+kind+'Parameter'](value, gl[status+'_STATUS'])){
+                console.log((sh||'LINK')+':\n'+gl['get'+kind+'InfoLog'](value));
+            }
+            return value;
+        }
+        // 1st is vertex; 2nd is fragment
+        files.map(function(given,i) {
+            var sh = ['VERTEX_SHADER', 'FRAGMENT_SHADER'][i];
+            var shader = gl.createShader(gl[sh]);
+            gl.shaderSource(shader, given);
+            gl.compileShader(shader);
+            gl.attachShader(program, shader);
+            ok('Shader','COMPILE',shader,sh);
+        });
+        gl.linkProgram(program);
+        return ok('Program','LINK',program);
+    },
+    // Load data to the buffers
+    toBuffers: function(program) {
 
         // Allow for custom loading
         this.gl.useProgram(program);
@@ -86,8 +124,8 @@ ViaWebGL.prototype = {
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
     },
-    // The webgl draw call
-    drawer: function(tile) {
+    // Turns image or canvas into a rendered canvas
+    toCanvas: function(tile) {
 
         // Allow for custom drawing in webGL
         this['gl-drawing'].call(this,tile);
@@ -115,51 +153,6 @@ ViaWebGL.prototype = {
 
         // Draw everything needed to canvas
         gl.drawArrays.apply(gl, this.tex.drawArrays);
-    },
-    // Promise to get a file then be done
-    getter: function(where) {
-        return new Promise(function(done){
-            var bid = new XMLHttpRequest();
-            var win = function(){
-                if (bid.status == 200) {
-                    return done(bid.response);
-                }
-                console.log("A bug on the web");
-            };
-            bid.open('GET', where, true);
-            bid.onerror = bid.onload = win;
-            bid.send();
-        });
-    },
-    // Make two shaders from data
-    shader: function(files) {
-
-        var gl = this.gl;
-        var program = gl.createProgram();
-        var err = function(kind,status,value,sh) {
-            if (!gl['get'+kind+'Parameter'](value, gl[status+'_STATUS'])){
-                console.log((sh||'LINK')+':\n'+gl['get'+kind+'InfoLog'](value));
-            }
-            return value;
-        }
-        // 1st is vertex; 2nd is fragment
-        files.map(function(given,i) {
-            var sh = ['VERTEX_SHADER', 'FRAGMENT_SHADER'][i];
-            var shader = gl.createShader(gl[sh]);
-            gl.shaderSource(shader, given);
-            gl.compileShader(shader);
-            gl.attachShader(program, shader);
-            err('Shader','COMPILE',shader,sh);
-        });
-        gl.linkProgram(program);
-        return err('Program','LINK',program);
-    },
-    // Return a gl rendering context
-    makeContext: function(options){
-        var a = document.createElement('canvas');
-        for (key in options) {
-            a[key] = options[key];
-        }
-        return a.getContext('experimental-webgl') || a.getContext('webgl');
+        return this.gl.canvas;
     }
 }

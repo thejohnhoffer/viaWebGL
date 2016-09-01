@@ -1,5 +1,6 @@
-
-// Set up the rendering of WebGL
+/*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+/* SeaDragonGL - Set Shaders in OpenSeaDragon with viaWebGL
+*/
 SeaDragonGL = function(incoming) {
 
     /* OpenSeaDragon API calls

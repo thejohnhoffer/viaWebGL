@@ -1,5 +1,5 @@
 var SOBEL = {};
-/*~*~*~*~*~*~*~*~*~*~*~*~*~
+/*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 /* SOBEL Viewer - Set a Sobel Shader for OpenSeaDragon
 */
 SOBEL.Viewer = function() {
