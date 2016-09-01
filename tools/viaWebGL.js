@@ -7,6 +7,7 @@ ViaWebGL = function(incoming) {
     ~*~*~*~*~*~*~*~*~*~*~*~*/
     this['gl-drawing'] = function(e) { return e; };
     this['gl-loaded'] = function(e) { return e; };
+    this.ready = function(e) { return e; };
 
     var gl = this.maker();
     this.tile_size = 'u_tile_size';
@@ -25,16 +26,18 @@ ViaWebGL = function(incoming) {
 };
 
 ViaWebGL.prototype = {
-    init: function() {
+    init: function(source) {
         this.gl = this.maker({
             width: this.width,
             height: this.height
         });
+        if (source) {
+            this.ready = this.toCanvas.bind(this,source);
+        }
         // Load the shaders when ready and return the promise
         var goals = [this.vShader, this.fShader].map(this.getter);
         var goal = [this.toProgram.bind(this), this.toBuffers.bind(this)];
-        Promise.all(goals).then(goal[0]).then(goal[1]);
-        return this;
+        return Promise.all(goals).then(goal[0]).then(goal[1]).then(this.ready);
     },
     // Make a gl rendering context
     maker: function(options){

@@ -32,7 +32,7 @@ vec4 borders(sampler2D sam, vec2 pos) {
 
   // If any are false, return false TODO: optimize
   if (!left || !right || !down || !top) {
-    return vec4(0.0, 0.0, 0.0, 1.0);
+    return vec4(1.0);
   }
   return here_id;
 }
