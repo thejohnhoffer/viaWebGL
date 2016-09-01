@@ -4,6 +4,7 @@ var SOBEL = {};
 */
 SOBEL.Viewer = function() {
     // Needed constants
+    this.container = 'viaWebGL';
     this.iconPrefix = '../../images/icons/';
     this.source = '../../images/babel/babel.dzi';
     this.vShader = '../../shaders/vertex/square.glsl';
@@ -12,7 +13,6 @@ SOBEL.Viewer = function() {
         callback(e);
     };
     this['tile-drawing'] = function(callback, e) {
-//        console.log(e);
         if (e.tile.loaded !==1) {
             e.tile.loaded = 1;
             callback(e);
@@ -26,7 +26,8 @@ SOBEL.Viewer.prototype.init = function() {
     // Open a seaDragon with two layers
     this.openSD = OpenSeadragon({
         tileSources: this.source,
-        prefixUrl: this.iconPrefix
+        prefixUrl: this.iconPrefix,
+        id: this.container
     });
 
     // Make a link to webGL
