@@ -22,7 +22,7 @@ ViaWebGL = function(incoming) {
     this.tile_pos = 'a_tile_pos';
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
-    this.uniform = 'u_tile_size';
+    this.tile_size = 'u_tile_size';
     this.wrap = gl.CLAMP_TO_EDGE;
     this.filter = gl.NEAREST;
     this.tileSize = 512;
@@ -62,8 +62,8 @@ ViaWebGL.prototype = {
         var bytes = buffer.BYTES_PER_ELEMENT;
 
         // Get uniform term
-        this.uniform = gl.getUniformLocation(program, this.uniform);
-        gl.uniform2f(this.uniform, gl.canvas.height, gl.canvas.width);
+        this.tile_size = gl.getUniformLocation(program, this.tile_size);
+        gl.uniform2f(this.tile_size, gl.canvas.height, gl.canvas.width);
 
         // Get attribute terms
         this.att = [this.pos, this.tile_pos].map(function(name, number) {
