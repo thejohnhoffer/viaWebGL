@@ -7,41 +7,39 @@ EDGE.Viewer = function() {
     this.toggle = 0;
     this.img = new Image();
     this.viaGL = new ViaWebGL();
-    this.src = '../../images/mandel/hen.svg';
     this.vShader = '../../shaders/vertex/square.glsl';
     this.container = document.getElementById('viaWebGL');
-    this.container.onclick = this.init.bind(this);
     this.fFiles = ['none.glsl','sobel3.glsl'].map(function(file){
         return '../../shaders/fragment/'+file;
     });
+
+    this.img.onload = this.init.bind(this);
+    this.container.onclick = this.init.bind(this);
+    this.img.src = '../../images/mandel/hen.svg';
 }
 
 EDGE.Viewer.prototype ={
 
     init: function(){
-        this.toggle ++;
+
         this.fShader = this.fFiles[this.toggle%this.fFiles.length];
         this.height = this.container.clientHeight;
         this.width = this.container.clientWidth;
-        this.show(this.container);
+
+        this.viaGL.fShader = this.fShader;
+        this.viaGL.vShader = this.vShader;
+        this.viaGL.height = this.height;
+        this.viaGL.width = this.width;
+
+        this.img.height = this.height;
+        this.img.width = this.width;
+
+        this.viaGL.init(this.img).then(function(e){
+            this.container.innerHTML = '';
+            this.container.appendChild(e);
+        }.bind(this));
+
+        this.toggle ++;
         return this;
-    },
-    show: function(container){
-        var img = this.img;
-        var viaGL = this.viaGL;
-        var container = this.container;
-        viaGL.fShader = this.fShader;
-        viaGL.vShader = this.vShader;
-        viaGL.height = this.height;
-        viaGL.width = this.width;
-        img.onload = function(){
-            viaGL.init(img).then(function(e){
-                container.innerHTML = '';
-                container.appendChild(e);
-            });
-        }
-        img.height = this.height;
-        img.width = this.width;
-        img.src = this.src;
     }
 }
