@@ -4,7 +4,7 @@ var SOBEL = {};
 */
 SOBEL.Viewer = function() {
     // Needed constants
-    this.tile_mode = 'tile-loaded';
+    this.tile_mode = 'tile-drawing';
     this.iconPrefix = '../../images/icons/';
     this.source = '../../images/babel/babel.dzi';
     this.vShader = '../../shaders/vertex/square.glsl';
