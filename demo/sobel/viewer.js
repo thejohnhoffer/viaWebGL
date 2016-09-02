@@ -13,7 +13,7 @@ SOBEL.Viewer = function() {
 
 SOBEL.Viewer.prototype.init = function() {
 
-    // Open a seaDragon with two layers
+    // Open a seadragon with two layers
     this.openSD = OpenSeadragon({
         tileSources: this.source,
         prefixUrl: this.iconPrefix,

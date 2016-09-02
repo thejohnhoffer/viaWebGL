@@ -1,11 +1,11 @@
 
 # [ViaWebGL][1]
 
-## Shaders on Image & Canvas with [viaWebGL][5]
+## Shaders on Image element with [viaWebGL][5]
 
 * [Vector image via Sobel filter][8]
 
-## Shaders in [OpenSeaDragon][7] with [seaDragonGL][6] & [viaWebGL][5]
+## Shaders in [OpenSeadragon][7] with [seadragonGL][6] & [viaWebGL][5]
 
 * [Tiled image via Sobel filter][4]
 
@@ -20,5 +20,5 @@
 [4]: https://thejohnhoffer.github.io/viaWebGL/demo/sobel
 [8]: https://thejohnhoffer.github.io/viaWebGL/demo/outline
 [5]: tools/viaWebGL.js
-[6]: tools/seaDragonGL.js
+[6]: tools/seadragonGL.js
 [7]: https://openseadragon.github.io

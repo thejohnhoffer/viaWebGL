@@ -44,7 +44,7 @@ J.Viewer.prototype.init = function() {
     var topLayer = J.outclass({layer: 1}, lowLayer);
     topLayer.segment = '&segmentation=y&segcolor=y';
 
-    // Open a seaDragon with two layers
+    // Open a seadragon with two layers
     var openSD = OpenSeadragon({
         tileSources: [lowLayer, topLayer],
         id: this.container || 'viaWebGL',
