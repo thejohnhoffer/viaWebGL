@@ -9,7 +9,7 @@ EDGE.Viewer = function() {
     this.viaGL = new ViaWebGL();
     this.img.src = '../../images/mandel/hen.svg';
     this.viaGL.vShader = '../../shaders/vertex/square.glsl';
-    this.fFiles = ['sobel3.glsl','none.glsl'].map(function(file){
+    this.fFiles = ['none.glsl','sobel3.glsl'].map(function(file){
         return '../../shaders/fragment/'+file;
     });
 }
