@@ -19,7 +19,7 @@ EDGE.Viewer.prototype ={
 
     init: function(){
         this.toggle ++;
-        this.container.innerHTML = '';
+        this.container.onclick = this.init.bind(this);
         this.fShader = this.fFiles[this.toggle%this.fFiles.length];
         this.height = this.container.clientHeight;
         this.width = this.container.clientWidth;
@@ -37,6 +37,7 @@ EDGE.Viewer.prototype ={
 
         img.onload = function(){
             viaGL.init(img).then(function(e){
+                container.innerHTML = '';
                 container.appendChild(e);
             });
         }
