@@ -7,7 +7,7 @@ EDGE.Viewer = function() {
     this.toggle = 0;
     this.img = new Image();
     this.viaGL = new ViaWebGL();
-    this.img.src = '../../images/flakes/fractal.svg';
+    this.img.src = '../../images/fractal.svg';
     this.viaGL.vShader = '../../shaders/vertex/square.glsl';
     this.fFiles = ['none.glsl','sobel3.glsl'].map(function(file){
         return '../../shaders/fragment/'+file;
