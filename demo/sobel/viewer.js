@@ -21,7 +21,7 @@ SOBEL.Viewer.prototype.init = function() {
     });
 
     // Make a link to webGL
-    var seaGL = new SeaDragonGL(this.openSD);
+    var seaGL = new SeadragonGL(this.openSD);
     seaGL.addHandler(this.tile_mode);
     seaGL.vShader = this.vShader;
     seaGL.fShader = this.fShader;

@@ -59,7 +59,7 @@ J.Viewer.prototype.init = function() {
     });
 
     // Make a link to webGL
-    var seaGL = new SeaDragonGL(openSD);
+    var seaGL = new SeadragonGL(openSD);
     seaGL.vShader = '../../shaders/vertex/square.glsl';
     seaGL.fShader = '../../shaders/fragment/outLine.glsl';
 

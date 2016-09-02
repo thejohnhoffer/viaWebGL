@@ -1,7 +1,7 @@
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
-/* SeaDragonGL - Set Shaders in OpenSeaDragon with viaWebGL
+/* SeadragonGL - Set Shaders in OpenSeaDragon with viaWebGL
 */
-SeaDragonGL = function(openSD) {
+SeadragonGL = function(openSD) {
 
     /* OpenSeaDragon API calls
     ~*~*~*~*~*~*~*~*~*~*~*~*/
@@ -33,7 +33,7 @@ SeaDragonGL = function(openSD) {
     this.viaGL = new ViaWebGL();
 };
 
-SeaDragonGL.prototype = {
+SeadragonGL.prototype = {
     // Map to viaWebGL and openSeadragon
     init: function() {
         var open = this.merger.bind(this);
