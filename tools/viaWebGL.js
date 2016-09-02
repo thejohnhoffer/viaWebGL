@@ -19,6 +19,7 @@ ViaWebGL = function(incoming) {
     this.pos = 'a_pos';
     this.height = 128;
     this.width = 128;
+    this.gl = gl;
     // Assign from incoming terms
     for (var key in incoming) {
         this[key] = incoming[key];
@@ -26,25 +27,22 @@ ViaWebGL = function(incoming) {
 };
 
 ViaWebGL.prototype = {
+
     init: function(source) {
-        this.gl = this.maker({
-            width: this.width,
-            height: this.height
-        });
-        if (source) {
-            this.ready = this.toCanvas.bind(this,source);
-        }
+        this.gl.canvas.width = this.width;
+        this.gl.canvas.height = this.height;
+        this.gl.viewport(0, 0, this.width, this.height);
         // Load the shaders when ready and return the promise
-        var goals = [this.vShader, this.fShader].map(this.getter);
-        var goal = [this.toProgram.bind(this), this.toBuffers.bind(this)];
-        return Promise.all(goals).then(goal[0]).then(goal[1]).then(this.ready);
+        var step = [[this.vShader, this.fShader].map(this.getter)];
+        step.push(this.toProgram.bind(this), this.toBuffers.bind(this));
+        var ready = source ? this.toCanvas.bind(this,source) : this.ready;
+        return Promise.all(step[0]).then(step[1]).then(step[2]).then(ready);
     },
-    // Make a gl rendering context
+    // Make a canvas
     maker: function(options){
-        var a = document.createElement('canvas');
-        for (key in options) {
-            a[key] = options[key];
-        }
+        return this.context(document.createElement('canvas'));
+    },
+    context: function(a){
         return a.getContext('experimental-webgl') || a.getContext('webgl');
     },
     // Get a file as a promise
@@ -99,8 +97,8 @@ ViaWebGL.prototype = {
         var count = 4;
 
         // Get uniform term
-        this.tile_size = gl.getUniformLocation(program, this.tile_size);
-        gl.uniform2f(this.tile_size, gl.canvas.height, gl.canvas.width);
+        var tile_size = gl.getUniformLocation(program, this.tile_size);
+        gl.uniform2f(tile_size, gl.canvas.height, gl.canvas.width);
 
         // Get attribute terms
         this.att = [this.pos, this.tile_pos].map(function(name, number) {
