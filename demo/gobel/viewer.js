@@ -7,9 +7,10 @@ EDGE.Viewer = function() {
     this.toggle = 0;
     this.img = new Image();
     this.viaGL = new ViaWebGL();
-    this.src = '../../images/mandel/brot.svg';
+    this.src = '../../images/mandel/hen.svg';
     this.vShader = '../../shaders/vertex/square.glsl';
     this.container = document.getElementById('viaWebGL');
+    this.container.onclick = this.init.bind(this);
     this.fFiles = ['none.glsl','sobel3.glsl'].map(function(file){
         return '../../shaders/fragment/'+file;
     });
@@ -19,7 +20,6 @@ EDGE.Viewer.prototype ={
 
     init: function(){
         this.toggle ++;
-        this.container.onclick = this.init.bind(this);
         this.fShader = this.fFiles[this.toggle%this.fFiles.length];
         this.height = this.container.clientHeight;
         this.width = this.container.clientWidth;
@@ -34,13 +34,14 @@ EDGE.Viewer.prototype ={
         viaGL.vShader = this.vShader;
         viaGL.height = this.height;
         viaGL.width = this.width;
-
         img.onload = function(){
             viaGL.init(img).then(function(e){
                 container.innerHTML = '';
                 container.appendChild(e);
             });
         }
+        img.height = this.height;
+        img.width = this.width;
         img.src = this.src;
     }
 }
