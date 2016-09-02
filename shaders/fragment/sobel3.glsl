@@ -15,7 +15,11 @@ float weigh3(mat3 m) {
 
 // Take the outer product
 mat3 outer3(vec3 c, vec3 r) {
-  return mat3(c[0]*r,c[1]*r,c[2]*r);
+  mat3 goal;
+  for (int i =0; i<3; i++) {
+      goal[i] = r*c[i];
+  }
+  return goal;
 }
 
 //*~*~*~*~*~*~*~*~*~*~*~*~*~
