@@ -3,7 +3,7 @@
 
 ## Shaders on Image & Canvas with [viaWebGL][5]
 
-* [Soon][8]
+* [Sobel filter][8]
 
 ## Shaders in [OpenSeaDragon][7] with [seaDragonGL][6] & [viaWebGL][5]
 
