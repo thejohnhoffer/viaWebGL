@@ -8,8 +8,9 @@ SeaDragonGL = function(openSD) {
     this.interface = {
         'tile-loaded': function(e) {
             // Set the imageSource as a data URL and then complete
-            e.image.src = this.viaGL.toCanvas(e.image).toDataURL();
-            e.image.onload = e.getCompletionCallback;
+            var output = this.viaGL.toCanvas(e.image);
+            e.image.onload = e.getCompletionCallback();
+            e.image.src = output.toDataURL();
         },
         'tile-drawing': function(e) {
             // Render a webGL canvas to an input canvas
