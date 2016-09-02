@@ -8,7 +8,6 @@ EDGE.Viewer = function() {
     this.img = new Image();
     this.viaGL = new ViaWebGL();
     this.vShader = '../../shaders/vertex/square.glsl';
-    this.container = document.getElementById('viaWebGL');
     this.fFiles = ['sobel3.glsl','none.glsl'].map(function(file){
         return '../../shaders/fragment/'+file;
     });
@@ -22,9 +21,10 @@ EDGE.Viewer.prototype ={
 
     init: function(){
 
+        var container = document.getElementById('viaWebGL');
         this.fShader = this.fFiles[this.toggle%this.fFiles.length];
-        this.height = this.container.clientHeight;
-        this.width = this.container.clientWidth;
+        this.height = container.clientHeight;
+        this.width = container.clientWidth;
 
         this.viaGL.fShader = this.fShader;
         this.viaGL.vShader = this.vShader;
@@ -35,9 +35,9 @@ EDGE.Viewer.prototype ={
         this.img.width = this.width;
 
         this.viaGL.init(this.img).then(function(e){
-            this.container.innerHTML = '';
-            this.container.appendChild(e);
-        }.bind(this));
+            container.innerHTML = '';
+            container.appendChild(e);
+        });
 
         this.toggle ++;
         return this;
