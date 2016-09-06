@@ -80,6 +80,7 @@ SeadragonGL.prototype = {
 
         var name = terms.name || 'tool';
         var prefix = terms.prefix || '';
+        terms.onClick = terms.onClick.bind(this);
         terms.srcRest = terms.srcRest || prefix+name+'_rest.png';
         terms.srcHover = terms.srcHover || prefix+name+'_hover.png';
         terms.srcDown = terms.srcDown || prefix+name+'_pressed.png';
