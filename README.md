@@ -51,7 +51,7 @@ image.src = '../file.type';
 
 
 #### Coded in affiliation with the [Harvard VCG][14]
-[__Thanks to my code guru Daniel Haehn__][15]
+#### [__With support from the one and only Daniel Haehn__][15]
 
 [1]: https://github.com/thejohnhoffer/viaWebGL
 [4]: https://thejohnhoffer.github.io/viaWebGL/demo/dzi/index.html
