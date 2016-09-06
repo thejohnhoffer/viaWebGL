@@ -54,7 +54,7 @@ image.src = '../file.type';
 [4]: https://thejohnhoffer.github.io/viaWebGL/sobel/dzi/
 [8]: https://thejohnhoffer.github.io/viaWebGL/sobel/svg/
 [5]: tools/viaWebGL.js
-[6]: tools/seadragonGL.js
+[6]: tools/openSeadragonGL.js
 [7]: https://openseadragon.github.io
 [9]: ../master/images/toggle.png?raw=true
 [10]: ../master/images/toggle0.png?raw=true
