@@ -26,8 +26,8 @@ seaGL.addHandler(eventName,handler)
 * handler <optional> function(callback,e)
     - callback must be called to start shading
     - e object with openseadragon properties defined by
-        * ['tile-loaded'][https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-drawing]
-        * ['tile-loaded'][https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded]
+        * ['tile-drawing'][11]
+        * ['tile-loaded'][12]
             
 
 ## Image shaders by pure [viaWebGL][5]
@@ -57,3 +57,5 @@ image.src = '../file.type';
 [7]: https://openseadragon.github.io
 [9]: ../master/images/toggle.png?raw=true
 [10]: ../master/images/toggle0.png?raw=true
+[11]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-drawing
+[12]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded
