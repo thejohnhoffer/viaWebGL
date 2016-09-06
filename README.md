@@ -7,7 +7,7 @@
 
 [![Sobel filter on tiled image][9]][4]
 
-```
+```js
 openSD = OpenSeadragon({
         tileSources: '../tiles.dzi',
         prefixUrl: '../your/icons/',
@@ -20,15 +20,19 @@ seaGL.fShader = '../fileF.glsl';
 seaGL.init();
 ```
 
-seaGL.addHandler(__eventName__, __handler__ \<optional\>)
-    
-* __eventName__ 'tile-drawing' or 'tile-loaded'
-* __handler__ \<optional\> function(callback,e)
-    * __handler__ \<optional\> formal parameters:
-        * __callback()__ starts shading
-        * __e__ given by on __eventName__:
-            * ['tile-drawing'][11]
-            * ['tile-loaded'][12]
+###seaGL.addHandler(_eventName_, _tile-handler_ \<optional\>)
+
+| Parameter        | Type     | About                                    | 
+|------------------|----------|------------------------------------------| 
+| _eventName_      | String   | "tile-drawing" or "tile-loaded"          | 
+| _tile-handler_   | Function | If none— sends each tile to shaders once | 
+
+###_tile-handler_ (_callback_, _event_)
+
+| Parameter  | Type     | About                                                                       | 
+|------------|----------|-----------------------------------------------------------------------------| 
+| _callback_ | Function | use callback(_event_) to use OpenSeadragonGL shaders on the tile in _event_ | 
+| _event_    | Object   | openSeadragon event for ['tile-drawing'][11] or ['tile-loaded'][12]         | 
             
 
 ## Image shaders by [viaWebGL][5]
@@ -37,7 +41,7 @@ seaGL.addHandler(__eventName__, __handler__ \<optional\>)
 
 [![Sobel filter on vector image][10]][8] 
 
-```
+```js
 image = new Image();
 viaGL = new ViaWebGL();
 
