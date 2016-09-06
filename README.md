@@ -8,16 +8,32 @@
 ```
 image = new Image();
 viaGL = new ViaWebGL();
+
 image.onload = function() {
-    viaGL.init(image).then(function(canvas){
-        div.appendChild(canvas);
-    }
+    viaGL.vShader = '../fileV.glsl';
+    viaGL.fShader = '../fileF.glsl';
+    viaGL.init(image);
 }
+image.src = '../file.type';
 ```
 
 ## Shaders in [OpenSeadragon][7] with [viaWebGL][5] + [seadragonGL][6]
 
 * [Sobel filter on Tiled image][4]
+
+```
+openSD = OpenSeadragon({
+        tileSources: '../tiles.dzi',
+        prefixUrl: '../your/icons/',
+        id: 'viaWebGL'
+});
+seaGL = new SeadragonGL(openSD);
+seaGL.addHandler('tile-drawing');
+seaGL.vShader = '../fileV.glsl';
+seaGL.fShader = '../fileF.glsl';
+seaGL.init();
+
+```
 
 ## Downloads
 
