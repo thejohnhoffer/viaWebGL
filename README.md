@@ -1,5 +1,5 @@
 
-[__Get viaWebGL 1.1 + openSeadragonGL 1.1 stable release!__][13] — [See how to use][15]
+[__Get viaWebGL 1.1 + openSeadragonGL 1.1 stable release!__][13] — [See how to use][16]
 ## [OpenSeadragon][7] shaders by [openSeadragonGL][6]
 
 * [Sobel filter on tiled image][4]
@@ -65,7 +65,7 @@ image.src = '../file.type';
 [10]: ../master/images/toggle0.png?raw=true
 [11]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-drawing
 [12]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded
-[15]: https://github.com/thejohnhoffer/viaWebGL/wiki
+[16]: https://github.com/thejohnhoffer/viaWebGL/wiki
 [13]: https://github.com/thejohnhoffer/viaWebGL/releases/tag/v1.0
 [15]: http://vcg.seas.harvard.edu/people/daniel
 [14]: http://vcg.seas.harvard.edu
