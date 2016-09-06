@@ -50,8 +50,8 @@ image.src = '../file.type';
 ```
 
 
-#### Coded in affiliation with the [Harvard VCG][14]
-#### [__With support from the one and only Daniel Haehn__][15]
+__Coded in affiliation with the [Harvard VCG][14]__
+__With support from the one and only [Daniel Haehn][15]__
 
 [1]: https://github.com/thejohnhoffer/viaWebGL
 [4]: https://thejohnhoffer.github.io/viaWebGL/demo/dzi/index.html
