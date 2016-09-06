@@ -20,11 +20,11 @@ seaGL.fShader = '../fileF.glsl';
 seaGL.init();
 ```
 
-seaGL.addHandler(eventName,handler \<optional\>)
+seaGL.addHandler(__eventName__, __handler__ \<optional\>)
     
-* eventName 'tile-drawing' or 'tile-loaded'
-* handler \<optional\> function(callback,e)
-    * optional handler formal parameters:
+* __eventName__ 'tile-drawing' or 'tile-loaded'
+* __handler__ \<optional\> function(callback,e)
+    * __handler__ \<optional\> formal parameters:
         * callback() starts shading
         * e has properties given by:
             * ['tile-drawing'][11]
