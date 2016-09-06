@@ -21,6 +21,16 @@ seaGL.init();
 
 ```
 
+seaGL.addHandler(eventName,handler)
+    
+    * eventName 'tile-drawing' or 'tile-loaded'
+    * handler <optional> function(callback,e)
+            - callback must be called to start shading
+            - e object with openseadragon properties defined by
+                    ['tile-loaded'][https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-drawing]
+                    ['tile-loaded'][https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded]
+            
+
 ## Image shaders by pure [viaWebGL][5]
 
 * [Sobel filter on vector image][8]
