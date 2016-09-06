@@ -20,7 +20,7 @@ seaGL.fShader = '../fileF.glsl';
 seaGL.init();
 ```
 
-###seaGL.addHandler(_eventName_, _tile-handler_ \<optional\>)
+###SeadragonGL.addHandler(_eventName_, _tile-handler_ \<optional\>)
 
 | Parameter        | Type     | About                                    | 
 |------------------|----------|------------------------------------------| 
