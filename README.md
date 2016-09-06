@@ -25,7 +25,7 @@ seaGL.init();
 
 * [Sobel filter on vector image][8]
 
-[![Sobel filter on vector image][10]][8]
+[![Sobel filter on vector image][10]][8] 
 
 ```
 image = new Image();
