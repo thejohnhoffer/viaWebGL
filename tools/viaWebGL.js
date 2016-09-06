@@ -20,7 +20,7 @@ ViaWebGL = function(incoming) {
     this.pos = 'a_pos';
     this.height = 128;
     this.width = 128;
-    this.toggle = 0;
+    this.on = 0;
     this.gl = gl;
     // Assign from incoming terms
     for (var key in incoming) {
@@ -134,7 +134,7 @@ ViaWebGL.prototype = {
     toCanvas: function(tile) {
 
         // Stop Rendering
-        if (this.toggle%2 !== 0) {
+        if (this.on%2 !== 0) {
             if(tile.nodeName == 'IMG') {
                 this.flat.canvas.width = tile.width;
                 this.flat.canvas.height = tile.height;

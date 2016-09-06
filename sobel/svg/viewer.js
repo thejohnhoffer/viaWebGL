@@ -19,15 +19,12 @@ EDGE.Viewer.prototype ={
 
     init: function(){
 
-        var container = this.container;
-        container.onclick = this.init.bind(this);
+        this.container.onclick = this.init.bind(this);
 
         this.viaGL.init(this.img).then(function(e){
-            container.innerHTML = '';
-            container.appendChild(e);
-        });
-
-        this.viaGL.toggle ++;
-        return this;
+            this.container.innerHTML = '';
+            this.container.appendChild(e);
+            this.viaGL.on ++;
+        }.bind(this));
     }
 }
