@@ -1,5 +1,6 @@
 
-# [ViaWebGL + openSeadragonGL][1]
+# [ViaWebGL + openSeadragonGL][13]
+[Get release version 1.0][13]
 
 ## [OpenSeadragon][7] shaders by [openSeadragonGL][6]
 
@@ -60,3 +61,4 @@ image.src = '../file.type';
 [10]: ../master/images/toggle0.png?raw=true
 [11]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-drawing
 [12]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded
+[13]: https://github.com/thejohnhoffer/viaWebGL/releases/tag/v1.0
