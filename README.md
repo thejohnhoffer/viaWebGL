@@ -31,7 +31,7 @@ seaGL.addHandler(__eventName__, __handler__ \<optional\>)
             * ['tile-loaded'][12]
             
 
-## Image shaders by pure [viaWebGL][5]
+## Image shaders by [viaWebGL][5]
 
 * [Sobel filter on vector image][8]
 
