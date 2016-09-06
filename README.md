@@ -25,8 +25,8 @@ seaGL.addHandler(__eventName__, __handler__ \<optional\>)
 * __eventName__ 'tile-drawing' or 'tile-loaded'
 * __handler__ \<optional\> function(callback,e)
     * __handler__ \<optional\> formal parameters:
-        * callback() starts shading
-        * e has properties given by:
+        * __callback()__ starts shading
+        * __e__ has properties given by:
             * ['tile-drawing'][11]
             * ['tile-loaded'][12]
             
