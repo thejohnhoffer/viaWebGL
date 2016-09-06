@@ -5,6 +5,16 @@
 
 * [Sobel filter on Vector image][8]
 
+```
+image = new Image();
+viaGL = new ViaWebGL();
+image.onload = function() {
+    viaGL.init(image).then(function(canvas){
+        div.appendChild(canvas);
+    }
+}
+```
+
 ## Shaders in [OpenSeadragon][7] with [viaWebGL][5] + [seadragonGL][6]
 
 * [Sobel filter on Tiled image][4]

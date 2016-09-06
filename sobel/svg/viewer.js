@@ -10,21 +10,16 @@ EDGE.Viewer = function() {
     this.img.src = '../../images/fractal.svg';
     this.viaGL.vShader = '../../shaders/vertex/square.glsl';
     this.viaGL.fShader = '../../shaders/fragment/sobel3.glsl';
-    this.container = document.getElementById('viaWebGL');
-    this.img.height = this.container.clientHeight;
-    this.img.width = this.container.clientWidth;
+    this.viaGL.container = document.getElementById('viaWebGL');
+    this.img.height = this.viaGL.container.clientHeight;
+    this.img.width = this.viaGL.container.clientWidth;
 }
 
 EDGE.Viewer.prototype ={
 
     init: function(){
 
-        this.container.onclick = this.init.bind(this);
-
-        this.viaGL.init(this.img).then(function(e){
-            this.container.innerHTML = '';
-            this.container.appendChild(e);
-            this.viaGL.on ++;
-        }.bind(this));
+        this.viaGL.onclick = 'toggle';
+        this.viaGL.init(this.img);
     }
 }

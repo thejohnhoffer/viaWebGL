@@ -31,18 +31,25 @@ ViaWebGL = function(incoming) {
 ViaWebGL.prototype = {
 
     init: function(source) {
+        var ready = this.ready;
+        // Allow for mouse actions on click
+        if (this.hasOwnProperty('container') && this.hasOwnProperty('onclick')) {
+            this.container.onclick = this[this.onclick].bind(this);
+        }
         if (source && source.height && source.width) {
+            this.ready = this.toCanvas.bind(this,source);
             this.height = source.height;
             this.width = source.width;
         }
-        this.gl.canvas.height = this.height;
+        this.source = source;
         this.gl.canvas.width = this.width;
+        this.gl.canvas.height = this.height;
         this.gl.viewport(0, 0, this.width, this.height);
         // Load the shaders when ready and return the promise
         var step = [[this.vShader, this.fShader].map(this.getter)];
         step.push(this.toProgram.bind(this), this.toBuffers.bind(this));
-        var ready = source ? this.toCanvas.bind(this,source) : this.ready;
-        return Promise.all(step[0]).then(step[1]).then(step[2]).then(ready);
+        return Promise.all(step[0]).then(step[1]).then(step[2]).then(this.ready);
+
     },
     // Make a canvas
     maker: function(options){
@@ -171,6 +178,17 @@ ViaWebGL.prototype = {
 
         // Draw everything needed to canvas
         gl.drawArrays.apply(gl, this.tex.drawArrays);
+
+        // Apply to container if needed
+        if (this.container) {
+            this.container.appendChild(this.gl.canvas);
+        }
         return this.gl.canvas;
+    },
+    toggle: function() {
+        this.on ++;
+        this.container.innerHTML = '';
+        this.container.appendChild(this.toCanvas(this.source));
+
     }
 }
