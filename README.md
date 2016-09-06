@@ -1,6 +1,5 @@
 
-# [ViaWebGL + openSeadragonGL][13]
-[Get release version 1.0][13]
+# [ViaWebGL + openSeadragonGL (Get stable release)][13]
 
 ## [OpenSeadragon][7] shaders by [openSeadragonGL][6]
 
