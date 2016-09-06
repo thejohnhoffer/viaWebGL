@@ -24,10 +24,11 @@ seaGL.addHandler(eventName,handler \<optional\>)
     
 * eventName 'tile-drawing' or 'tile-loaded'
 * handler \<optional\> function(callback,e)
-    - callback must be called to start shading
-    - e object with openseadragon properties defined by
-        * ['tile-drawing'][11]
-        * ['tile-loaded'][12]
+    * optional handler formal parameters:
+        * callback() starts shading
+        * e has properties given by:
+            * ['tile-drawing'][11]
+            * ['tile-loaded'][12]
             
 
 ## Image shaders by pure [viaWebGL][5]
