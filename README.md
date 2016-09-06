@@ -27,12 +27,12 @@ seaGL.init();
 | _eventName_      | String   | "tile-drawing" or "tile-loaded"          | 
 | _tile-handler_   | Function | If none— sends each tile to shaders once | 
 
-###_tile-handler_ (_callback_, _event_)
+###tile-handler(_callback_, _event_)
 
-| Parameter  | Type     | About                                                                       | 
-|------------|----------|-----------------------------------------------------------------------------| 
-| _callback_ | Function | use callback(_event_) to use OpenSeadragonGL shaders on the tile in _event_ | 
-| _event_    | Object   | openSeadragon event for ['tile-drawing'][11] or ['tile-loaded'][12]         | 
+| Parameter  | Type     | About                                                                | 
+|------------|----------|----------------------------------------------------------------------| 
+| _callback_ | Function | Write _callback_(_event_) to use _seaGL_ shaders on the current tile | 
+| _event_    | Object   | openSeadragon event for ['tile-drawing'][11] or ['tile-loaded'][12]  | 
             
 
 ## Image shaders by [viaWebGL][5]
