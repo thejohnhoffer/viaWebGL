@@ -20,7 +20,8 @@ image.src = '../file.type';
 ## Shaders in [OpenSeadragon][7] with [viaWebGL][5] + [seadragonGL][6]
 
 * [Sobel filter on Tiled image][4]
-[![Image][9]][8]
+
+[![Image][9]][4]
 
 ```
 openSD = OpenSeadragon({
