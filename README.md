@@ -1,7 +1,7 @@
 
-# [ViaWebGL + seadragonGL][1]
+# [ViaWebGL + openSeadragonGL][1]
 
-## [OpenSeadragon][7] shaders by [viaWebGL][5] + [seadragonGL][6]
+## [OpenSeadragon][7] shaders by [openSeadragonGL][6]
 
 * [Sobel filter on tiled image][4]
 
