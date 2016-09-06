@@ -23,7 +23,7 @@ seaGL.init();
 seaGL.addHandler(eventName,handler)
     
 * eventName 'tile-drawing' or 'tile-loaded'
-* handler <optional> function(callback,e)
+* handler \<optional\> function(callback,e)
     - callback must be called to start shading
     - e object with openseadragon properties defined by
         * ['tile-drawing'][11]
