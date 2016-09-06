@@ -49,4 +49,4 @@ seaGL.init();
 [5]: tools/viaWebGL.js
 [6]: tools/seadragonGL.js
 [7]: https://openseadragon.github.io
-[9]: ../blob/master/images/fractal.svg?raw=true
+[9]: ../master/images/fractal.svg?raw=true
