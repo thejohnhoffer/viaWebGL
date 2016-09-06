@@ -50,6 +50,9 @@ image.src = '../file.type';
 ```
 
 
+#### Coded in affiliation with the [Harvard VCG][14]
+[__Thanks to my code guru Daniel Haehn__][15]
+
 [1]: https://github.com/thejohnhoffer/viaWebGL
 [4]: https://thejohnhoffer.github.io/viaWebGL/demo/dzi/index.html
 [8]: https://thejohnhoffer.github.io/viaWebGL/demo/svg/index.html
@@ -61,3 +64,6 @@ image.src = '../file.type';
 [11]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-drawing
 [12]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded
 [13]: https://github.com/thejohnhoffer/viaWebGL/releases/tag/v1.0
+[15]: http://vcg.seas.harvard.edu/people/daniel
+[14]: http://vcg.seas.harvard.edu
+
