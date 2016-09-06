@@ -4,26 +4,22 @@ var EDGE = {};
 */
 EDGE.Viewer = function() {
 
-    this.toggle = 0;
     this.img = new Image();
     this.viaGL = new ViaWebGL();
+    this.img.onload = this.init.bind(this);
     this.img.src = '../../images/fractal.svg';
     this.viaGL.vShader = '../../shaders/vertex/square.glsl';
-    this.fFiles = ['none.glsl','sobel3.glsl'].map(function(file){
-        return '../../shaders/fragment/'+file;
-    });
+    this.viaGL.fShader = '../../shaders/fragment/sobel3.glsl';
+    this.container = document.getElementById('viaWebGL');
+    this.img.height = this.container.clientHeight;
+    this.img.width = this.container.clientWidth;
 }
 
 EDGE.Viewer.prototype ={
 
     init: function(){
 
-        var container = document.getElementById('viaWebGL');
-        this.viaGL.fShader = this.fFiles[this.toggle%this.fFiles.length];
-        this.img.height = this.viaGL.height = container.clientHeight;
-        this.img.width = this.viaGL.width = container.clientWidth;
-
-        this.img.onload = this.init.bind(this);
+        var container = this.container;
         container.onclick = this.init.bind(this);
 
         this.viaGL.init(this.img).then(function(e){
@@ -31,7 +27,7 @@ EDGE.Viewer.prototype ={
             container.appendChild(e);
         });
 
-        this.toggle ++;
+        this.viaGL.toggle ++;
         return this;
     }
 }

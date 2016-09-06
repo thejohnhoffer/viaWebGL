@@ -10,6 +10,7 @@ ViaWebGL = function(incoming) {
     this.ready = function(e) { return e; };
 
     var gl = this.maker();
+    this.flat = document.createElement('canvas').getContext('2d');
     this.tile_size = 'u_tile_size';
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
@@ -19,6 +20,7 @@ ViaWebGL = function(incoming) {
     this.pos = 'a_pos';
     this.height = 128;
     this.width = 128;
+    this.toggle = 0;
     this.gl = gl;
     // Assign from incoming terms
     for (var key in incoming) {
@@ -29,8 +31,10 @@ ViaWebGL = function(incoming) {
 ViaWebGL.prototype = {
 
     init: function(source) {
-        this.gl.canvas.width = this.width;
+        this.height = source.height || this.height;
+        this.width = source.width || this.width;
         this.gl.canvas.height = this.height;
+        this.gl.canvas.width = this.width;
         this.gl.viewport(0, 0, this.width, this.height);
         // Load the shaders when ready and return the promise
         var step = [[this.vShader, this.fShader].map(this.getter)];
@@ -128,6 +132,17 @@ ViaWebGL.prototype = {
     },
     // Turns image or canvas into a rendered canvas
     toCanvas: function(tile) {
+
+        // Stop Rendering
+        if (this.toggle%2 !== 0) {
+            if(tile.nodeName == 'IMG') {
+                this.flat.canvas.width = tile.width;
+                this.flat.canvas.height = tile.height;
+                this.flat.drawImage(tile,0,0,tile.width,tile.height);
+                return this.flat.canvas;
+            }
+            return tile;
+        }
 
         // Allow for custom drawing in webGL
         this['gl-drawing'].call(this,tile);
