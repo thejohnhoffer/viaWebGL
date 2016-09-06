@@ -51,8 +51,8 @@ image.src = '../file.type';
 
 
 [1]: https://github.com/thejohnhoffer/viaWebGL
-[4]: https://thejohnhoffer.github.io/viaWebGL/demo/dzi/
-[8]: https://thejohnhoffer.github.io/viaWebGL/demo/svg/
+[4]: https://thejohnhoffer.github.io/viaWebGL/demo/dzi/index.html
+[8]: https://thejohnhoffer.github.io/viaWebGL/demo/svg/index.html
 [5]: tools/viaWebGL.js
 [6]: tools/openSeadragonGL.js
 [7]: https://openseadragon.github.io
