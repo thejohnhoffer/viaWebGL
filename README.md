@@ -20,6 +20,7 @@ image.src = '../file.type';
 ## Shaders in [OpenSeadragon][7] with [viaWebGL][5] + [seadragonGL][6]
 
 * [Sobel filter on Tiled image][4]
+![Image][9]
 
 ```
 openSD = OpenSeadragon({
@@ -48,3 +49,4 @@ seaGL.init();
 [5]: tools/viaWebGL.js
 [6]: tools/seadragonGL.js
 [7]: https://openseadragon.github.io
+[9]: ../blob/master/images/fractal.svg?raw=true
