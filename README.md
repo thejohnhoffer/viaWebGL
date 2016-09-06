@@ -1,7 +1,5 @@
 
-[__Get viaWebGL 1.1 + openSeadragonGL 1.1 stable release!__][13]
-
-[Read more about how to use this][15]
+[__Get viaWebGL 1.1 + openSeadragonGL 1.1 stable release!__][13] — [See how to use][15]
 ## [OpenSeadragon][7] shaders by [openSeadragonGL][6]
 
 * [Sobel filter on tiled image][4]
