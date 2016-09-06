@@ -47,4 +47,4 @@ image.src = '../file.type';
 [6]: tools/seadragonGL.js
 [7]: https://openseadragon.github.io
 [9]: ../master/images/toggle.png?raw=true
-[10]: ../master/images/click.png?raw=true
+[10]: ../master/images/toggle0.png?raw=true
