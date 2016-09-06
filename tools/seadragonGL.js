@@ -54,6 +54,7 @@ SeadragonGL.prototype = {
         // Take GL height and width from OpenSeaDragon
         this.width = this.openSD.source.getTileWidth();
         this.height = this.openSD.source.getTileHeight();
+        // Add all viaWebGL properties
         for (var key of this.and(this.viaGL)) {
             this.viaGL[key] = this[key];
         }
@@ -64,6 +65,7 @@ SeadragonGL.prototype = {
         for (var key of this.and(this.defaults)) {
             var handler = this[key].bind(this);
             var interface = this.interface[key].bind(this);
+            // Add all openSeadragon event handlers
             this.openSD.addHandler(key, function(e) {
                 handler.call(this, interface, e);
             });
