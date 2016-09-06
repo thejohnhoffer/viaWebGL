@@ -20,7 +20,7 @@ seaGL.fShader = '../fileF.glsl';
 seaGL.init();
 ```
 
-seaGL.addHandler(eventName,handler)
+seaGL.addHandler(eventName,handler \<optional\>)
     
 * eventName 'tile-drawing' or 'tile-loaded'
 * handler \<optional\> function(callback,e)
