@@ -3,7 +3,7 @@
 
 ## [OpenSeadragon][7] shaders by [viaWebGL][5] + [seadragonGL][6]
 
-* [Sobel filter on Tiled image][4]
+* [Sobel filter on tiled image][4]
 
 [![Image][9]][4]
 
@@ -23,7 +23,7 @@ seaGL.init();
 
 ## Image shaders by pure [viaWebGL][5]
 
-* [Sobel filter on Vector image][8]
+* [Sobel filter on vector image][8]
 
 ```
 image = new Image();
