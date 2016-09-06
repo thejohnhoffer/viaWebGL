@@ -13,7 +13,7 @@ openSD = OpenSeadragon({
         prefixUrl: '../your/icons/',
         id: 'viaWebGL'
 });
-seaGL = new SeadragonGL(openSD);
+seaGL = new openSeadragonGL(openSD);
 seaGL.addHandler('tile-drawing');
 seaGL.vShader = '../fileV.glsl';
 seaGL.fShader = '../fileF.glsl';
