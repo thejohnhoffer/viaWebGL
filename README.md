@@ -52,7 +52,7 @@ image.onload = function() {
 }
 image.src = '../file.type';
 ```
-## about this project
+## About this project
 * __Coded in affiliation with the [Harvard VCG][14]__
 * __With support from the one and only [Daniel Haehn][15]__
 
