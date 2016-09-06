@@ -92,7 +92,9 @@ SeadragonGL.prototype = {
     // Switch Shaders on or off
     buttons: {
         shade: function() {
-            console.log('hi');
+
+            this.viaGL.on++;
+            this.openSD.world.resetItems();
         }
     }
 }

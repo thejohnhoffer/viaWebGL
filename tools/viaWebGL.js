@@ -31,8 +31,10 @@ ViaWebGL = function(incoming) {
 ViaWebGL.prototype = {
 
     init: function(source) {
-        this.height = source.height || this.height;
-        this.width = source.width || this.width;
+        if (source && source.height && source.width) {
+            this.height = source.height;
+            this.width = source.width;
+        }
         this.gl.canvas.height = this.height;
         this.gl.canvas.width = this.width;
         this.gl.viewport(0, 0, this.width, this.height);
@@ -132,7 +134,6 @@ ViaWebGL.prototype = {
     },
     // Turns image or canvas into a rendered canvas
     toCanvas: function(tile) {
-
         // Stop Rendering
         if (this.on%2 !== 0) {
             if(tile.nodeName == 'IMG') {
