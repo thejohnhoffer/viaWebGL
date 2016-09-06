@@ -1,23 +1,7 @@
 
 # [ViaWebGL + seadragonGL][1]
 
-## Shaders on Image element with [viaWebGL][5]
-
-* [Sobel filter on Vector image][8]
-
-```
-image = new Image();
-viaGL = new ViaWebGL();
-
-image.onload = function() {
-    viaGL.vShader = '../fileV.glsl';
-    viaGL.fShader = '../fileF.glsl';
-    viaGL.init(image);
-}
-image.src = '../file.type';
-```
-
-## Shaders in [OpenSeadragon][7] with [viaWebGL][5] + [seadragonGL][6]
+## [OpenSeadragon][7] shaders by [viaWebGL][5] + [seadragonGL][6]
 
 * [Sobel filter on Tiled image][4]
 
@@ -37,14 +21,24 @@ seaGL.init();
 
 ```
 
-## Downloads
+## Image shaders by pure [viaWebGL][5]
 
-* [Download .tar.gz][2]
-* [Download .zip][3]
+* [Sobel filter on Vector image][8]
+
+```
+image = new Image();
+viaGL = new ViaWebGL();
+
+image.onload = function() {
+    viaGL.vShader = '../fileV.glsl';
+    viaGL.fShader = '../fileF.glsl';
+    viaGL.init(image);
+}
+image.src = '../file.type';
+```
+
 
 [1]: https://github.com/thejohnhoffer/viaWebGL
-[2]: https://github.com/thejohnhoffer/viaWebGL/tarball/master
-[3]: https://github.com/thejohnhoffer/viaWebGL/zipball/master
 [4]: https://thejohnhoffer.github.io/viaWebGL/sobel/dzi/
 [8]: https://thejohnhoffer.github.io/viaWebGL/sobel/svg/
 [5]: tools/viaWebGL.js
