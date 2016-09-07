@@ -53,7 +53,7 @@ image.src = '../file.type';
 ```
 ## About this project
 <div style="text-align:center" markdown="1">
-![vcg](https://github.com/thejohnhoffer/viaWebGL/raw/master/demo/images/vcg.png?raw=true) __Coded in affiliation with the Harvard VCG__
+<img src='https://github.com/thejohnhoffer/viaWebGL/raw/master/demo/images/vcg.png?raw=true'>
 </div>
 
 [1]: https://github.com/thejohnhoffer/viaWebGL
