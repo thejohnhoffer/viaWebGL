@@ -52,7 +52,9 @@ image.onload = function() {
 image.src = '../file.type';
 ```
 ## About this project
+<div style="text-align:center" markdown="1">
 ![vcg][15] __Coded in affiliation with the [Harvard VCG][14]__
+</div>
 
 [1]: https://github.com/thejohnhoffer/viaWebGL
 [4]: https://thejohnhoffer.github.io/viaWebGL/demo/dzi/index.html
