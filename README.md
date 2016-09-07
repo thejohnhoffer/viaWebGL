@@ -67,6 +67,6 @@ image.src = '../file.type';
 [12]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded
 [16]: https://github.com/thejohnhoffer/viaWebGL/wiki
 [13]: https://github.com/thejohnhoffer/viaWebGL/releases
-[15]: ../master/demo/images/vcg.png?raw=true
+[15]: ../master/demo/images/VCG.png?raw=true
 [14]: http://vcg.seas.harvard.edu
 
