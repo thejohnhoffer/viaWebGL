@@ -19,12 +19,12 @@ seaGL.fShader = '../fileF.glsl';
 seaGL.init();
 ```
 
-###[seaGL.addHandler(_eventName_, _tile-handler_ \<optional\>)][11]
+##[`seaGL.addHandler(eventName, gl-handler)`][11]
 
 | Parameter        | Type     | About                                    | 
 |------------------|----------|------------------------------------------| 
-| _eventName_      | String   | "tile-drawing" or "tile-loaded"          | 
-| _tile-handler_   | Function | If none— sends each tile to shaders once | 
+| `eventName`      | String   | "gl-drawing" or "gl-loaded"              | 
+| `gl-handler`     | Function | Needed for custom access to the webGL API| 
 
 ## Image shaders by [viaWebGL][5]
 
