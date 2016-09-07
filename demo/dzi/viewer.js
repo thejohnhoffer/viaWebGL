@@ -5,10 +5,10 @@ var SOBEL = {};
 SOBEL.Viewer = function() {
     // Needed constants
     this.tile_mode = 'tile-drawing';
-    this.iconPrefix = '../../images/icons/';
-    this.source = '../../images/babel/babel.dzi';
-    this.vShader = '../../shaders/vertex/square.glsl';
-    this.fShader = '../../shaders/fragment/sobel3.glsl';
+    this.iconPrefix = '../images/icons/';
+    this.source = '../images/babel/babel.dzi';
+    this.vShader = '../shaders/vertex/square.glsl';
+    this.fShader = '../shaders/fragment/sobel3.glsl';
 }
 
 SOBEL.Viewer.prototype.init = function() {
