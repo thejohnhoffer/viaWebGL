@@ -28,7 +28,6 @@ SOBEL.Viewer.prototype.init = function() {
 
     // Add a custom button
     seaGL.button({
-        onClick: seaGL.shade,
         tooltip: 'Toggle shaders',
         prefix: this.iconPrefix,
         name: 'shade'
