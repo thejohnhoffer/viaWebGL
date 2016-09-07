@@ -61,8 +61,8 @@ image.src = '../file.type';
 [5]: tools/viaWebGL.js
 [6]: tools/openSeadragonGL.js
 [7]: https://openseadragon.github.io
-[9]: ../master/images/toggle.png?raw=true
-[10]: ../master/images/toggle0.png?raw=true
+[9]: ../master/demo/images/toggle.png?raw=true
+[10]: ../master/demo/images/toggle0.png?raw=true
 [11]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-drawing
 [12]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded
 [16]: https://github.com/thejohnhoffer/viaWebGL/wiki
