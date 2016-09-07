@@ -80,7 +80,7 @@ openSeadragonGL.prototype = {
 
         var name = terms.name || 'tool';
         var prefix = terms.prefix || '';
-        terms.onClick = terms.onClick.bind(this);
+        terms.onClick = terms.onClick.bind(this) || this.shade;
         terms.srcRest = terms.srcRest || prefix+name+'_rest.png';
         terms.srcHover = terms.srcHover || prefix+name+'_hover.png';
         terms.srcDown = terms.srcDown || prefix+name+'_pressed.png';
@@ -91,11 +91,9 @@ openSeadragonGL.prototype = {
         this.openSD.addControl(toolbar.element,{anchor: OpenSeadragon.ControlAnchor.TOP_LEFT});
     },
     // Switch Shaders on or off
-    buttons: {
-        shade: function() {
+    shade: function() {
 
-            this.viaGL.on++;
-            this.openSD.world.resetItems();
-        }
+        this.viaGL.on++;
+        this.openSD.world.resetItems();
     }
 }
