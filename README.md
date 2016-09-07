@@ -53,7 +53,7 @@ image.src = '../file.type';
 ```
 
 ## About this project
-<div style="display: flex; align-items: center;">
+<div style="display:flex;align-items:center">
 <a href='http://vcg.seas.harvard.edu'>
 <img src='https://github.com/thejohnhoffer/viaWebGL/raw/master/demo/images/vcg.png?raw=true'>
 </a> Coded in affiliation with the Harvard VCG
