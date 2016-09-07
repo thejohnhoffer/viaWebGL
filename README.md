@@ -52,7 +52,7 @@ image.onload = function() {
 image.src = '../file.type';
 ```
 ## About this project
-* __Coded in affiliation with the [Harvard VCG][14]__
+![vcg][15] __Coded in affiliation with the [Harvard VCG][14]__
 
 [1]: https://github.com/thejohnhoffer/viaWebGL
 [4]: https://thejohnhoffer.github.io/viaWebGL/demo/dzi/index.html
@@ -66,6 +66,6 @@ image.src = '../file.type';
 [12]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded
 [16]: https://github.com/thejohnhoffer/viaWebGL/wiki
 [13]: https://github.com/thejohnhoffer/viaWebGL/releases
-[15]: http://vcg.seas.harvard.edu/people/daniel
+[15]: ../master/demo/images/vcg.png?raw=true
 [14]: http://vcg.seas.harvard.edu
 
