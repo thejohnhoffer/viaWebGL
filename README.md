@@ -19,20 +19,12 @@ seaGL.fShader = '../fileF.glsl';
 seaGL.init();
 ```
 
-###seaGL.addHandler(_eventName_, _tile-handler_ \<optional\>)
+##[`seaGL.addHandler(eventName, gl-handler)`][11]
 
 | Parameter        | Type     | About                                    | 
 |------------------|----------|------------------------------------------| 
-| _eventName_      | String   | "tile-drawing" or "tile-loaded"          | 
-| _tile-handler_   | Function | If none— sends each tile to shaders once | 
-
-###tile-handler(_callback_, _event_)
-
-| Parameter  | Type     | About                                                                | 
-|------------|----------|----------------------------------------------------------------------| 
-| _callback_ | Function | Write _callback_(_event_) to use _seaGL_ shaders on the current tile | 
-| _event_    | Object   | openSeadragon event for ['tile-drawing'][11] or ['tile-loaded'][12]  | 
-            
+| `eventName`      | String   | "gl-drawing" or "gl-loaded"              | 
+| `gl-handler`     | Function | Needed for custom access to the webGL API| 
 
 ## Image shaders by [viaWebGL][5]
 
@@ -63,8 +55,7 @@ image.src = '../file.type';
 [7]: https://openseadragon.github.io
 [9]: ../master/demo/images/toggle.png?raw=true
 [10]: ../master/demo/images/toggle0.png?raw=true
-[11]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-drawing
-[12]: https://openseadragon.github.io/docs/OpenSeadragon.Viewer.html#.event:tile-loaded
+[11]: https://github.com/thejohnhoffer/viaWebGL/wiki/Guide-to-openSeadragonGL#seagladdhandlereventname-tile-handler
 [16]: https://github.com/thejohnhoffer/viaWebGL/wiki
 [13]: https://github.com/thejohnhoffer/viaWebGL/releases
 [15]: ../master/demo/images/VCG.png?raw=true
