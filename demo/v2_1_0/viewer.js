@@ -14,17 +14,11 @@ DOJO.Viewer = function(terms) {
 DOJO.Viewer.prototype.init = function() {
 
     // Make the two layers
-    var lowLayer = this.base.make({});
-    var topLayer = this.base.make({
-        segment: '&segmentation=y&segcolor=y',
-        alpha: 0.4,
-        layer: 1
-    });
+    var src = '../images/babel/babel.dzi';
 
     // Open a seadragon with two layers
     var openSD = OpenSeadragon({
-        tileSources: [lowLayer, topLayer],
-        smoothTileEdgesMinZoom: Infinity,
+        tileSources: [src, src],
         crossOriginPolicy: 'Anonymous',
         prefixUrl: '../images/icons/',
         id: 'viaWebGL'
@@ -33,14 +27,14 @@ DOJO.Viewer.prototype.init = function() {
     // Make a link to webGL
     var seaGL = new openSeadragonGL(openSD);
     seaGL.vShader = '../shaders/vertex/square.glsl';
-    seaGL.fShader = '../shaders/fragment/outline.glsl';
+    seaGL.fShader = '../shaders/fragment/sobel3.glsl';
 
     var load = function(callback, e) {
 
         var source = e.tiledImage.source;
         if (source.layer == 1) {
             // Make the entire top tile transparent
-            e.tiledImage.setOpacity(source.alpha);
+            e.tiledImage.setOpacity(.4);
             // via webGL
             callback(e);
         }
