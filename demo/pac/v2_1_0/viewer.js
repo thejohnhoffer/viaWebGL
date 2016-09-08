@@ -12,7 +12,7 @@ DOJO.Viewer = function(terms) {
 DOJO.Viewer.prototype.init = function() {
 
     // Make the two layers
-    var src = '../../images/pac/';
+    var src = '../../../images/pac/';
 
     // Open a seadragon with two layers
     var openSD = OpenSeadragon({
@@ -29,7 +29,7 @@ DOJO.Viewer.prototype.init = function() {
             }
         ],
         crossOriginPolicy: 'Anonymous',
-        prefixUrl: '../../images/icons/',
+        prefixUrl: '../../../images/icons/',
         id: 'viaWebGL'
     });
 
