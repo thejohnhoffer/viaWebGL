@@ -24,6 +24,7 @@ DOJO.Viewer.prototype.init = function() {
     // Open a seadragon with two layers
     var openSD = OpenSeadragon({
         tileSources: [lowLayer, topLayer],
+        smoothTileEdgesMinZoom: Infinity,
         crossOriginPolicy: 'Anonymous',
         prefixUrl: '../images/icons/',
         id: 'viaWebGL'
