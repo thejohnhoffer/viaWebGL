@@ -17,7 +17,7 @@ DOJO.Viewer.prototype.init = function() {
     var lowLayer = this.base.make({});
     var topLayer = this.base.make({
         segment: '&segmentation=y&segcolor=y',
-        alpha: 0.6,
+        alpha: 0.4,
         layer: 1
     });
 
