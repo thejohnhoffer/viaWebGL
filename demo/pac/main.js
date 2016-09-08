@@ -1,15 +1,10 @@
-var DOJO = DOJO || {};
+var SCOPE = {};
 //-----------------------------------
 //
-// J.Viewer - test webGL overlay atop OpenSeaDragon
+// http://<host>:<port>/index.html?canvas&server=<...>&datapath=<...>
 //
 //-----------------------------------
-
-DOJO.Viewer = function(terms) {
-
-}
-
-DOJO.Viewer.prototype.init = function() {
+window.onload = function(e){
 
     // Make the two layers
     var src = '../../images/pac/';
@@ -28,7 +23,7 @@ DOJO.Viewer.prototype.init = function() {
                 top: true
             }
         ],
-        crossOriginPolicy: 'Anonymous',
+        maxZoomPixelRatio: 10,
         prefixUrl: '../../images/icons/',
         id: 'viaWebGL'
     });
@@ -38,5 +33,4 @@ DOJO.Viewer.prototype.init = function() {
             e.tiledImage.setOpacity(.8);
         }
     });
-
-}
+};
