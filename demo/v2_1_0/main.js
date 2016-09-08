@@ -8,4 +8,3 @@ window.onload = function(e){
 
     SCOPE.view = new DOJO.Viewer().init();
 };
-}
