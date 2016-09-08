@@ -2,7 +2,7 @@
 [__Get viaWebGL + openSeadragonGL stable release!__][13] — [See how it works][16]
 ## [OpenSeadragon][7] shaders by [openSeadragonGL][6]
 
-* [Sobel filter on tiled image][4]
+* Live demo: [Sobel filter on tiled image][4]
 
 [![Sobel filter on tiled image][9]][4]
 
@@ -28,7 +28,7 @@ seaGL.init();
 
 ## Image shaders by [viaWebGL][5]
 
-* [Sobel filter on vector image][8]
+* Live demo: [Sobel filter on vector image][8]
 
 [![Sobel filter on vector image][10]][8] 
 
