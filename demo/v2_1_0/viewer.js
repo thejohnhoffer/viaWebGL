@@ -7,8 +7,6 @@ var DOJO = DOJO || {};
 
 DOJO.Viewer = function(terms) {
 
-    // preset tile source
-    this.base = new DOJO.Sourcer(terms);
 }
 
 DOJO.Viewer.prototype.init = function() {
