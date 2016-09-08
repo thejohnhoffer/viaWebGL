@@ -16,7 +16,7 @@ DOJO.Viewer.prototype.init = function() {
 
     // Open a seadragon with two layers
     var openSD = OpenSeadragon({
-        tileSources: [src, src],
+        tileSources: [src+'?l=0', src+'?l=1'],
         crossOriginPolicy: 'Anonymous',
         prefixUrl: '../images/icons/',
         id: 'viaWebGL'
@@ -30,9 +30,9 @@ DOJO.Viewer.prototype.init = function() {
     var load = function(callback, e) {
 
         var source = e.tiledImage.source;
-        if (source.layer == 1) {
+        if (e.tile.url.slice(-1) == '1') {
             // Make the entire top tile transparent
-            e.tiledImage.setOpacity(.4);
+            e.tiledImage.setOpacity(.6);
             // via webGL
             callback(e);
         }
