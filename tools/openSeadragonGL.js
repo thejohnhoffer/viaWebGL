@@ -1,5 +1,8 @@
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
-/* openSeadragonGL - Set Shaders in OpenSeaDragon with viaWebGL
+/* openSeadragonGL
+/* Set Shaders in OpenSeaDragon with viaWebGL
+/* Built on 2016-9-9
+/* http://via.hoff.in
 */
 openSeadragonGL = function(openSD) {
 

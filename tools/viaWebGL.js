@@ -1,5 +1,8 @@
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
-/* viaWebGL - Set shaders on Image or Canvas with WebGL
+/* viaWebGL
+/* Set shaders on Image or Canvas with WebGL
+/* Built on 2016-9-9
+/* http://via.hoff.in
 */
 ViaWebGL = function(incoming) {
 
