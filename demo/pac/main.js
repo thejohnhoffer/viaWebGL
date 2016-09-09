@@ -27,10 +27,4 @@ window.onload = function(e){
         prefixUrl: '../../images/icons/',
         id: 'viaWebGL'
     });
-
-    openSD.addHandler('tile-drawing', function(e) {
-        if (e.tiledImage.source.top) {
-            e.tiledImage.setOpacity(.8);
-        }
-    });
 };
