@@ -6,7 +6,7 @@ var DOJO = DOJO || {};
 //-----------------------------------
 
 DOJO.Viewer = function(terms) {
-
+    this.iconPrefix = '../images/icons/';
 }
 
 DOJO.Viewer.prototype.init = function() {
@@ -17,8 +17,7 @@ DOJO.Viewer.prototype.init = function() {
     // Open a seadragon with two layers
     var openSD = OpenSeadragon({
         tileSources: [src+'?l=0', src+'?l=1'],
-        crossOriginPolicy: 'Anonymous',
-        prefixUrl: '../images/icons/',
+        prefixUrl: this.iconPrefix,
         id: 'viaWebGL'
     });
 
@@ -46,8 +45,15 @@ DOJO.Viewer.prototype.init = function() {
         }
     }
 
-//    seaGL.addHandler('tile-loaded',load);
     seaGL.addHandler('tile-drawing',draw);
+
+    // Add a custom button
+    seaGL.button({
+        tooltip: 'Toggle shaders',
+        prefix: this.iconPrefix,
+        name: 'shade'
+    });
+
 
     seaGL.init();
 }
