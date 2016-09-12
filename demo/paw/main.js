@@ -14,13 +14,11 @@ window.onload = function(e){
         tileSources: [
             {
                 type: 'image',
-                url:  src+'0.jpg',
-                top: false
+                url:  src+'0.jpg'
             },
             {
                 type: 'image',
-                url:  src+'1.jpg',
-                top: true
+                url:  src+'1.jpg'
             }
         ],
         maxZoomPixelRatio: 10,
