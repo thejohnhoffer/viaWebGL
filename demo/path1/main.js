@@ -15,10 +15,4 @@ window.onload = function(e){
         prefixUrl: "../../images/icons/",
         tileSources: [babel(0), babel(.5)]
     });
-
-//    viewer.addHandler('open', function() {
-//        viewer.viewport.fitBounds(new OpenSeadragon.Rect(-1, -1, 3, 3));
-//    });
-
-//    var drag = null;
 }
