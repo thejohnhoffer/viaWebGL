@@ -27,4 +27,11 @@ window.onload = function(e){
         prefixUrl: '../../images/icons/',
         id: 'viaWebGL'
     });
+
+    openSD.addHandler('tile-loaded', function(e) {
+      console.log(e.tiledImage.source)
+        if (e.tiledImage.source.top) {
+            e.tiledImage.setOpacity(.5);
+        }
+    });
 };
