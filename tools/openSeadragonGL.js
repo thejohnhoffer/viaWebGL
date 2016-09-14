@@ -1,8 +1,5 @@
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
-/* openSeadragonGL
-/* Set Shaders in OpenSeaDragon with viaWebGL
-/* Built on 2016-9-9
-/* http://via.hoff.in
+/* openSeadragonGL - Set Shaders in OpenSeaDragon with viaWebGL
 */
 openSeadragonGL = function(openSD) {
 
@@ -64,12 +61,14 @@ openSeadragonGL.prototype = {
         this.viaGL.init().then(this.adder.bind(this));
     },
     // Add all seadragon properties
-    adder: function() {
+    adder: function(e) {
         for (var key of this.and(this.defaults)) {
+            var handler = this[key].bind(this);
             var interface = this.interface[key].bind(this);
-            var handler = this[key].bind(this,interface);
             // Add all openSeadragon event handlers
-            this.openSD.addHandler(key, handler);
+            this.openSD.addHandler(key, function(e) {
+                handler.call(this, interface, e);
+            });
         }
     },
     // Joint keys
@@ -80,7 +79,7 @@ openSeadragonGL.prototype = {
     button: function(terms) {
 
         var name = terms.name || 'tool';
-        var prefix = terms.prefix || '';
+        var prefix = terms.prefix || this.openSD.prefixUrl;
         if (!terms.hasOwnProperty('onClick')){
             terms.onClick = this.shade;
         }
