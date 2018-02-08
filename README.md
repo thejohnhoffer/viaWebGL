@@ -1,8 +1,9 @@
 
 [__Get viaWebGL + openSeadragonGL stable release!__][13] — [See how it works][16]
 
-Featured as an [OpenSeadragon Plugin](http://openseadragon.github.io/#plugins)!
 ## [OpenSeadragon][7] shaders by [openSeadragonGL][6]
+
+Featured as an [OpenSeadragon Plugin](http://openseadragon.github.io/#plugins)!
 
 * Live demo: [Sobel filter on tiled image][4]
 
