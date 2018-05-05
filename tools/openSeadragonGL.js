@@ -13,9 +13,26 @@ openSeadragonGL = function(openSD) {
             e.image.src = output.toDataURL();
         },
         'tile-drawing': function(e) {
+            // Get input and output to tile
+            var input = e.rendered.__input;
+            var output = e.rendered.canvas;
+
+            // Store original canvas
+            if (input === undefined) {
+
+                var input = document.createElement('canvas');
+                input.width = output.width;
+                input.height = output.height;
+
+                // Copy original to rendered input
+                var input_context = input.getContext('2d');
+                input_context.drawImage(output, 0, 0);
+                e.rendered.__input = input;
+            }
+
             // Render a webGL canvas to an input canvas
-            var input = e.rendered.canvas;
-            e.rendered.drawImage(this.viaGL.toCanvas(input), 0, 0, input.width, input.height);
+            var output = this.viaGL.toCanvas(input);
+            e.rendered.drawImage(output, 0, 0);
         }
     };
     this.defaults = {
@@ -70,6 +87,8 @@ openSeadragonGL.prototype = {
                 handler.call(this, io, e);
             });
         }
+        this.openSD.world.resetItems(); 
+        this.openSD.world.update();
     },
     // Joint keys
     and: function(obj) {
