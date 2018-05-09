@@ -5,7 +5,7 @@ openSeadragonGL = function(openSD) {
 
     /* OpenSeaDragon API calls
     ~*~*~*~*~*~*~*~*~*~*~*~*/
-    this.interface = {
+    this.io = {
         'tile-loaded': function(e) {
             // Set the imageSource as a data URL and then complete
             var output = this.viaGL.toCanvas(e.image);
@@ -64,10 +64,10 @@ openSeadragonGL.prototype = {
     adder: function(e) {
         for (var key of this.and(this.defaults)) {
             var handler = this[key].bind(this);
-            var interface = this.interface[key].bind(this);
+            var io = this.io[key].bind(this);
             // Add all openSeadragon event handlers
             this.openSD.addHandler(key, function(e) {
-                handler.call(this, interface, e);
+                handler.call(this, io, e);
             });
         }
     },
