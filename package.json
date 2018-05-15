@@ -1,0 +1,37 @@
+{
+  "name": "viawebgl",
+  "version": "1.0.1",
+  "description": "Colorize and thresshold images.",
+  "main": "tools/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thejohnhoffer/viaWebGL.git"
+  },
+  "keywords": [
+    "openseadragon",
+    "webgl",
+    "image",
+    "zoom"
+  ],
+  "author": "John Hoffer",
+  "license": "LICENSE",
+  "bugs": {
+    "url": "https://github.com/thejohnhoffer/viaWebGL/issues"
+  },
+  "homepage": "https://github.com/thejohnhoffer/viaWebGL",
+  "dependencies": {
+    "openseadragon": "git://github.com/thejohnhoffer/openseadragon.git#ajax_callback"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "copy-webpack-plugin": "^4.5.1",
+    "webpack": "^4.7.0",
+    "webpack-cli": "^2.1.2"
+  },
+  "scripts": {
+    "build": "webpack --watch",
+    "clean": "rm -rf build"
+  }
+}
