@@ -45,15 +45,24 @@ ViaWebGL.prototype = {
             this.width = source.width;
         }
         this.source = source;
-        this.gl.canvas.width = this.width;
-        this.gl.canvas.height = this.height;
-        this.gl.viewport(0, 0, this.width, this.height);
+        this.updateShape(this.height, this.width);
+
         // Load the shaders when ready and return the promise
         var step = [[this.vShader, this.fShader].map(this.getter)];
         step.push(this.toProgram.bind(this), this.toBuffers.bind(this));
         return Promise.all(step[0]).then(step[1]).then(step[2]).then(this.ready);
 
     },
+
+    updateShape: function(width, height) {
+
+        this.width = width;
+        this.height = height;
+        this.gl.canvas.width = width;
+        this.gl.canvas.height = height;
+        this.gl.viewport(0, 0, this.width, this.height);
+    },
+
     // Make a canvas
     maker: function(options){
         return this.context(document.createElement('canvas'));
@@ -164,6 +173,8 @@ ViaWebGL.prototype = {
             }
             return tile;
         }
+        // Update shape for image or canvas
+        this.updateShape(tile.width, tile.height);
 
         // Allow for custom drawing in webGL
         this['gl-drawing'].call(this,tile);
