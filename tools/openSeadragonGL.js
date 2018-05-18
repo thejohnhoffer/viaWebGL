@@ -17,7 +17,7 @@ openSeadragonGL = function(openSD) {
 
                   // Assign the 16-bit array to the tile
                   img.data = img.data.slice(0, 2 * img.width * img.height)
-                  e.tile._array = new Uint16Array(img.data.buffer);
+                  e.tile._array = img.data;
                 }
                 resolve();
             });

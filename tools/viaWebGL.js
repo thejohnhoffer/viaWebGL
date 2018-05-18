@@ -130,10 +130,12 @@ ViaWebGL.prototype = {
         // Get uniform locations
         var tile_size = gl.getUniformLocation(program, 'u_tile_size');
         var tile_sampler = gl.getUniformLocation(program, 'u_tile');
+        var u8 = gl.getUniformLocation(program, 'u8');
 
         // Assign uniform values
         gl.uniform2f(tile_size, gl.canvas.height, gl.canvas.width);
         gl.uniform1i(tile_sampler, 0);
+        gl.uniform1ui(u8, 255);
 
         // Assign attributes
         this.att = ['a_pos', 'a_tile_pos'].map(function(name, index) {
@@ -188,9 +190,9 @@ ViaWebGL.prototype = {
             gl.texParameteri.apply(gl, x);
         });
         // Send the tile into the texture.
-        var output = [gl.TEXTURE_2D, 0, gl.R16UI,
+        var output = [gl.TEXTURE_2D, 0, gl.RG8UI,
                       this.width, this.height, 0,
-                      gl.RED_INTEGER, gl.UNSIGNED_SHORT,
+                      gl.RG_INTEGER, gl.UNSIGNED_BYTE,
                       pixels];
         gl.texImage2D.apply(gl, output);
 
