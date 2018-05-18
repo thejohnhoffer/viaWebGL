@@ -11,12 +11,12 @@ openSeadragonGL = function(openSD) {
             var decoder = new Promise(function(resolve, reject) {
                 // Decode the image array
                 var img  = window.UPNG.decode(e.image._array);
-                // Assign the array to the tile
-                e.tile._array = img.data;
                 
                 // Signal 16-bit png
                 if (img.ctype == 0 && img.depth == 16) {
-                  e.tiledImage.source.many_channel_bitdepth = 16
+                  e.tiledImage.source.many_channel_bitdepth = 16;
+                  // Assign the 16-bit array to the tile
+                  e.tile._array = new Uint16Array(img.data.buffer);
                 }
                 resolve();
             });
