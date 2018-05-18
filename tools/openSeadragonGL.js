@@ -78,15 +78,18 @@ openSeadragonGL.prototype = {
         this.viaGL.init().then(this.adder.bind(this));
     },
     // Add all seadragon properties
-    adder: function(e) {
+    adder: function() {
         var THIS = this;
-        for (var key of this.and(this.defaults)) {
-            // Add all openSeadragon event handlers
-            this.openSD.addHandler(key, function(e) {
-                var io = THIS.io[key].bind(THIS);
-                THIS[key].call(THIS, io, e);
-            });
-        }
+
+        // Add all openSeadragon event handlers
+        this.openSD.addHandler('tile-loaded', function(e) {
+            var io = THIS.io['tile-loaded'].bind(THIS);
+            THIS['tile-loaded'].call(THIS, io, e);
+        });
+        this.openSD.addHandler('tile-drawing', function(e) {
+            var io = THIS.io['tile-drawing'].bind(THIS);
+            THIS['tile-drawing'].call(THIS, io, e);
+        });
 
         // Indicate all tiles need draw
         var world = this.openSD.world;
