@@ -68,7 +68,7 @@ ViaWebGL.prototype = {
         return this.context(document.createElement('canvas'));
     },
     context: function(a){
-        return a.getContext('experimental-webgl') || a.getContext('webgl');
+        return a.getContext('webgl2');
     },
     // Get a file as a promise
     getter: function(where) {
