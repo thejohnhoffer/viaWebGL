@@ -14,9 +14,11 @@ openSeadragonGL = function(openSD) {
                 
                 // Signal 16-bit png
                 if (img.ctype == 0 && img.depth == 16) {
-                  e.tiledImage.source.many_channel_bitdepth = 16;
+
                   // Assign the 16-bit array to the tile
+                  img.data = img.data.slice(0, 2 * img.width * img.height)
                   e.tile._array = new Uint16Array(img.data.buffer);
+                  e.tiledImage.source.many_channel_bitdepth = 16;
                 }
                 resolve();
             });
