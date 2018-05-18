@@ -153,7 +153,6 @@ ViaWebGL.prototype = {
             ],
             bindTexture: [gl.TEXTURE_2D, gl.createTexture()],
             drawArrays: [gl.TRIANGLE_STRIP, 0, vertex_count],
-            pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1]
         };
 
         // Build the position and texture buffer
@@ -180,7 +179,8 @@ ViaWebGL.prototype = {
         // Set Texture for GLSL
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture.apply(gl, this.tex.bindTexture);
-        gl.pixelStorei.apply(gl, this.tex.pixelStorei);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
         // Apply texture parameters
         this.tex.texParameteri.map(function(x){
