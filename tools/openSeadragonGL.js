@@ -79,12 +79,12 @@ openSeadragonGL.prototype = {
     },
     // Add all seadragon properties
     adder: function(e) {
+        var THIS = this;
         for (var key of this.and(this.defaults)) {
-            var handler = this[key].bind(this);
-            var io = this.io[key].bind(this);
             // Add all openSeadragon event handlers
             this.openSD.addHandler(key, function(e) {
-                handler.call(this, io, e);
+                var io = THIS.io[key].bind(THIS);
+                THIS[key].call(THIS, io, e);
             });
         }
 
