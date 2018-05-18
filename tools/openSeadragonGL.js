@@ -7,31 +7,31 @@ openSeadragonGL = function(openSD) {
     ~*~*~*~*~*~*~*~*~*~*~*~*/
     this.io = {
         'tile-loaded': function(e) {
-            // Set the imageSource as a data URL and then complete
-            var output = this.viaGL.toCanvas(e.image);
-            e.image.onload = e.getCompletionCallback();
-            e.image.src = output.toDataURL();
+            // Unpack png images to a tile's typed array
+            var decoder = new Promise(function(resolve, reject) {
+                // Decode the image array
+                var img  = window.UPNG.decode(e.image._array);
+                // Assign the array to the tile
+                e.tile._array = img.data;
+                
+                // Signal 16-bit png
+                if (img.ctype == 0 && img.depth == 16) {
+                  e.tiledImage.source.many_channel_bitdepth = 16
+                }
+                resolve();
+            });
+           
+            // Notify openseadragon when decoded 
+            decoder.then(e.getCompletionCallback())
         },
         'tile-drawing': function(e) {
-            // Get input and output to tile
-            var input = e.rendered.__input;
-            var output = e.rendered.canvas;
-
-            // Store original canvas
-            if (input === undefined) {
-
-                var input = document.createElement('canvas');
-                input.width = output.width;
-                input.height = output.height;
-
-                // Copy original to rendered input
-                var input_context = input.getContext('2d');
-                input_context.drawImage(output, 0, 0);
-                e.rendered.__input = input;
-            }
+            // Get shape of tile
+            var w = e.rendered.canvas.width;
+            var h = e.rendered.canvas.height;
 
             // Render a webGL canvas to an input canvas
-            var output = this.viaGL.toCanvas(input);
+            var output = this.viaGL.loadArray(w, h,
+                                              e.tile._array);
             e.rendered.drawImage(output, 0, 0);
         }
     };

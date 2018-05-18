@@ -1,6 +1,7 @@
 'use strict';
 
 window.OpenSeadragon = require('openseadragon');
+window.UPNG = require('upng-js');
 require('./openSeadragonGL');
 require('./viaWebGL');
 

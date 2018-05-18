@@ -151,7 +151,6 @@ ViaWebGL.prototype = {
                 [gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.filter],
                 [gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.filter]
             ],
-            texImage2D: [gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
             bindTexture: [gl.TEXTURE_2D, gl.createTexture()],
             drawArrays: [gl.TRIANGLE_STRIP, 0, vertex_count],
             pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1]
@@ -161,23 +160,14 @@ ViaWebGL.prototype = {
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
     },
-    // Turns image or canvas into a rendered canvas
-    toCanvas: function(tile) {
-        // Stop Rendering
-        if (this.on%2 !== 0) {
-            if(tile.nodeName == 'IMG') {
-                this.flat.canvas.width = tile.width;
-                this.flat.canvas.height = tile.height;
-                this.flat.drawImage(tile,0,0,tile.width,tile.height);
-                return this.flat.canvas;
-            }
-            return tile;
-        }
+    // Turns array into a rendered canvas
+    loadArray: function(width, height, pixels) {
+
         // Update shape for image or canvas
-        this.updateShape(tile.width, tile.height);
+        this.updateShape(width, height);
 
         // Allow for custom drawing in webGL
-        this['gl-drawing'].call(this,tile);
+        this['gl-drawing'].call(this);
         var gl = this.gl;
 
         // Set Attributes for GLSL
@@ -197,7 +187,10 @@ ViaWebGL.prototype = {
             gl.texParameteri.apply(gl, x);
         });
         // Send the tile into the texture.
-        var output = this.tex.texImage2D.concat([tile]);
+        var output = [gl.TEXTURE_2D, 0, gl.R16UI,
+                      this.width, this.height, 0,
+                      gl.RED_INTEGER, gl.UNSIGNED_SHORT,
+                      pixels];
         gl.texImage2D.apply(gl, output);
 
         // Draw everything needed to canvas
