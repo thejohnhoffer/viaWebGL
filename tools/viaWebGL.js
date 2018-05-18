@@ -14,13 +14,10 @@ ViaWebGL = function(incoming) {
 
     var gl = this.maker();
     this.flat = document.createElement('canvas').getContext('2d');
-    this.tile_size = 'u_tile_size';
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
     this.wrap = gl.CLAMP_TO_EDGE;
-    this.tile_pos = 'a_tile_pos';
     this.filter = gl.NEAREST;
-    this.pos = 'a_pos';
     this.height = 128;
     this.width = 128;
     this.on = 0;
@@ -130,12 +127,16 @@ ViaWebGL.prototype = {
         var bytes = buffer.BYTES_PER_ELEMENT;
         var point_bytes = point_size * bytes;
 
-        // Get uniform term
-        var tile_size = gl.getUniformLocation(program, this.tile_size);
-        gl.uniform2f(tile_size, gl.canvas.height, gl.canvas.width);
+        // Get uniform locations
+        var tile_size = gl.getUniformLocation(program, 'u_tile_size');
+        var tile_sampler = gl.getUniformLocation(program, 'u_tile');
 
-        // Get attribute terms
-        this.att = [this.pos, this.tile_pos].map(function(name, index) {
+        // Assign uniform values
+        gl.uniform2f(tile_size, gl.canvas.height, gl.canvas.width);
+        gl.uniform1i(tile_sampler, 0);
+
+        // Assign attributes
+        this.att = ['a_pos', 'a_tile_pos'].map(function(name, index) {
 
             var vertex = gl.getAttribLocation(program, name);
             var offset = index * vertex_count * point_bytes;
