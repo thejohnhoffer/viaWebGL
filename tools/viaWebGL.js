@@ -130,12 +130,12 @@ ViaWebGL.prototype = {
         // Get uniform locations
         var tile_size = gl.getUniformLocation(program, 'u_tile_size');
         var tile_sampler = gl.getUniformLocation(program, 'u_tile');
-        var u8 = gl.getUniformLocation(program, 'u8');
+        var u16 = gl.getUniformLocation(program, 'u16');
 
         // Assign uniform values
         gl.uniform2f(tile_size, gl.canvas.height, gl.canvas.width);
         gl.uniform1i(tile_sampler, 0);
-        gl.uniform1ui(u8, 255);
+        gl.uniform1ui(u16, parseInt("0xFFFF"));
 
         // Assign attributes
         this.att = ['a_pos', 'a_tile_pos'].map(function(name, index) {
