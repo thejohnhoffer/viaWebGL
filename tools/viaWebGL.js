@@ -11,17 +11,24 @@ ViaWebGL = function(incoming) {
     this['gl-drawing'] = function(e) { return e; };
     this['gl-loaded'] = function(e) { return e; };
 
-    var gl = this.maker();
-    this.vertex_count = 4;
-    this.texture = gl.createTexture();
+    // Define vertex input buffer
+    this.one_point_size = 2 * Float32Array.BYTES_PER_ELEMENT;
+    this.points_list_size = 4 * this.one_point_size;
+    this.points_buffer = new Float32Array([
+        -1, 1, -1, -1, 1, 1, 1, -1
+    ]);
+
+    // Make texture and gl context
+    this.gl = document.createElement('canvas').getContext('webgl2');
+    this.texture = this.gl.createTexture();
+    this.buffer = this.gl.createBuffer();
+
+    // Intialize useless defaults
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
-    this.wrap = gl.CLAMP_TO_EDGE;
-    this.filter = gl.NEAREST;
-    this.height = 128;
-    this.width = 128;
-    this.on = 0;
-    this.gl = gl;
+    this.height = 0;
+    this.width = 0;
+
     // Assign from incoming terms
     for (var key in incoming) {
         this[key] = incoming[key];
@@ -30,11 +37,7 @@ ViaWebGL = function(incoming) {
 
 ViaWebGL.prototype = {
 
-    init: function(source) {
-        this.source = source;
-        this.width = source.width;
-        this.height = source.height;
-        this.updateShape(this.height, this.width);
+    init: function() {
 
         // Load the shaders when ready and return the promise
         var step = [[this.vShader, this.fShader].map(this.getter)];
@@ -52,13 +55,6 @@ ViaWebGL.prototype = {
         this.gl.viewport(0, 0, this.width, this.height);
     },
 
-    // Make a canvas
-    maker: function(options){
-        return this.context(document.createElement('canvas'));
-    },
-    context: function(a){
-        return a.getContext('webgl2');
-    },
 
     // Get a file as a promise
     getter: function(where) {
@@ -111,58 +107,23 @@ ViaWebGL.prototype = {
         gl.useProgram(program);
         this['gl-loaded'].call(this, program);
 
-        // Align viewport with image texture
-        var full_corners = [-1, 1, -1, -1, 1, 1, 1, -1];
-        var buffer = new Float32Array(full_corners);
-
-        // Simple constants
-        var point_size = 2;
-        var bytes = buffer.BYTES_PER_ELEMENT;
-        var point_bytes = point_size * bytes;
-
-        // Get uniform locations
-        var tile_size = gl.getUniformLocation(program, 'u_tile_size');
-        var tile_sampler = gl.getUniformLocation(program, 'u_tile');
+        // Get GLSL locations
+        var u_tile = gl.getUniformLocation(program, 'u_tile');
+        var a_pos = gl.getAttribLocation(program, 'a_pos');
         var u8 = gl.getUniformLocation(program, 'u8');
 
         // Assign uniform values
-        gl.uniform2f(tile_size, gl.canvas.height, gl.canvas.width);
-        gl.uniform1i(tile_sampler, 0);
         gl.uniform1ui(u8, 255);
+        gl.uniform1i(u_tile, 0);
 
-        // Assign attributes
-        var pos = gl.getAttribLocation(program, 'a_pos');
-        var offset = 0 * this.vertex_count * point_bytes;
+        // Assign vertex inputs
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.points_buffer, gl.STATIC_DRAW);
 
-        this.position_attributes = [pos, point_size, gl.FLOAT,
-                                    0, point_bytes, offset];
-
-        // Get texture
-        this.texture_parameters = [
-            [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrap],
-            [gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrap],
-            [gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.filter],
-            [gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.filter]
-        ];
-
-        // Build the position and texture buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
-    },
-    // Turns array into a rendered canvas
-    loadArray: function(width, height, pixels) {
-
-        // Update shape for image or canvas
-        this.updateShape(width, height);
-
-        // Allow for custom drawing in webGL
-        this['gl-drawing'].call(this);
-        var gl = this.gl;
-
-        // Set Attributes for GLSL
-        var pos = this.position_attributes
-        gl.enableVertexAttribArray(pos[0]);
-        gl.vertexAttribPointer.apply(gl, pos);
+        // Enable vertex buffer
+        gl.enableVertexAttribArray(a_pos);
+        gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, 0, this.one_point_size,
+                               0 * this.points_list_size)
 
         // Set Texture for GLSL
         gl.activeTexture(gl.TEXTURE0);
@@ -170,17 +131,26 @@ ViaWebGL.prototype = {
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
-        // Apply texture parameters
-        gl.texParameteri.apply(gl, this.texture_parameters);
+        // Assign texture parameters
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+
+    },
+    // Turns array into a rendered canvas
+    loadArray: function(width, height, pixels) {
+
+        // Allow for custom drawing in webGL
+        this['gl-drawing'].call(this);
+        var gl = this.gl;
 
         // Send the tile into the texture.
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8UI,
-                      this.width, this.height, 0,
-                      gl.RG_INTEGER, gl.UNSIGNED_BYTE,
-                      pixels);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8UI, width, height, 0,
+                      gl.RG_INTEGER, gl.UNSIGNED_BYTE, pixels);
 
-        // Draw everything needed to canvas
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.vertex_count);
+        // Draw four points
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
         return this.gl.canvas;
     }

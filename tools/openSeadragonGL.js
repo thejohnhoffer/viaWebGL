@@ -76,6 +76,7 @@ openSeadragonGL.prototype = {
         for (var key of this.and(this.viaGL)) {
             this.viaGL[key] = this[key];
         }
+        this.viaGL.updateShape(this.width, this.height);
         this.viaGL.init().then(this.adder.bind(this));
     },
     // Add all seadragon properties
@@ -109,9 +110,6 @@ openSeadragonGL.prototype = {
 
         var name = terms.name || 'tool';
         var prefix = terms.prefix || this.openSD.prefixUrl;
-        if (!terms.hasOwnProperty('onClick')){
-            terms.onClick = this.shade;
-        }
         terms.onClick = terms.onClick.bind(this);
         terms.srcRest = terms.srcRest || prefix+name+'_rest.png';
         terms.srcHover = terms.srcHover || prefix+name+'_hover.png';
@@ -121,11 +119,5 @@ openSeadragonGL.prototype = {
         this.openSD.clearControls().buttons.buttons.push(new OpenSeadragon.Button(terms));
         var toolbar = new OpenSeadragon.ButtonGroup({buttons: this.openSD.buttons.buttons});
         this.openSD.addControl(toolbar.element,{anchor: OpenSeadragon.ControlAnchor.TOP_LEFT});
-    },
-    // Switch Shaders on or off
-    shade: function() {
-
-        this.viaGL.on++;
-        this.openSD.world.resetItems();
     }
 }
