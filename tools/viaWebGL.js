@@ -138,13 +138,11 @@ ViaWebGL.prototype = {
         gl.uniform1ui(u8, 255);
 
         // Assign attributes
-        this.att = ['a_pos', 'a_tile_pos'].map(function(name, index) {
+        var pos = gl.getAttribLocation(program, 'a_pos');
+        var offset = 0 * vertex_count * point_bytes;
 
-            var vertex = gl.getAttribLocation(program, name);
-            var offset = index * vertex_count * point_bytes;
-
-            return [vertex, point_size, gl.FLOAT, 0, point_bytes, offset];
-        });
+        this.position_attributes = [pos, point_size, gl.FLOAT,
+                                    0, point_bytes, offset];
 
         // Get texture
         this.tex = {
@@ -173,11 +171,9 @@ ViaWebGL.prototype = {
         var gl = this.gl;
 
         // Set Attributes for GLSL
-        this.att.map(function(x){
-
-            gl.enableVertexAttribArray(x.slice(0,1));
-            gl.vertexAttribPointer.apply(gl, x);
-        });
+        var pos = this.position_attributes
+        gl.enableVertexAttribArray(pos[0]);
+        gl.vertexAttribPointer.apply(gl, pos);
 
         // Set Texture for GLSL
         gl.activeTexture(gl.TEXTURE0);
