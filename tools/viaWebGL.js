@@ -52,7 +52,7 @@ ViaWebGL.prototype = {
         this.height = height;
         this.gl.canvas.width = width;
         this.gl.canvas.height = height;
-        this.gl.viewport(0, 0, this.width, this.height);
+        this.gl.viewport(0, 0, width, height);
     },
 
 
