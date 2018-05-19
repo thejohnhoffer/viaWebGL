@@ -7,6 +7,7 @@ require('./viaWebGL');
 
 module.exports = {
   "ViaWebGL": ViaWebGL,
-  "openSeadragonGL": openSeadragonGL
+  "openSeadragonGL": openSeadragonGL,
+  "OpenSeadragon": window.OpenSeadragon
 }
 
