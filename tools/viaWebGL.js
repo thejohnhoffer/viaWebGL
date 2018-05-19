@@ -190,9 +190,9 @@ ViaWebGL.prototype = {
             gl.texParameteri.apply(gl, x);
         });
         // Send the tile into the texture.
-        var output = [gl.TEXTURE_2D, 0, gl.RG8UI,
+        var output = [gl.TEXTURE_2D, 0, gl.R16UI,
                       this.width, this.height, 0,
-                      gl.RG_INTEGER, gl.UNSIGNED_BYTE,
+                      gl.RED_INTEGER, gl.UNSIGNED_SHORT,
                       pixels];
         gl.texImage2D.apply(gl, output);
 
