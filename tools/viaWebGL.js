@@ -183,7 +183,7 @@ ViaWebGL.prototype = {
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture.apply(gl, this.tex.bindTexture);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 2);
 
         // Apply texture parameters
         this.tex.texParameteri.map(function(x){
