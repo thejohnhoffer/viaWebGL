@@ -10,10 +10,10 @@ ViaWebGL = function(incoming) {
     ~*~*~*~*~*~*~*~*~*~*~*~*/
     this['gl-drawing'] = function(e) { return e; };
     this['gl-loaded'] = function(e) { return e; };
-    this.ready = function(e) { return e; };
 
     var gl = this.maker();
-    this.flat = document.createElement('canvas').getContext('2d');
+    this.vertex_count = 4;
+    this.texture = gl.createTexture();
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
     this.wrap = gl.CLAMP_TO_EDGE;
@@ -31,23 +31,15 @@ ViaWebGL = function(incoming) {
 ViaWebGL.prototype = {
 
     init: function(source) {
-        var ready = this.ready;
-        // Allow for mouse actions on click
-        if (this.hasOwnProperty('container') && this.hasOwnProperty('onclick')) {
-            this.container.onclick = this[this.onclick].bind(this);
-        }
-        if (source && source.height && source.width) {
-            this.ready = this.toCanvas.bind(this,source);
-            this.height = source.height;
-            this.width = source.width;
-        }
         this.source = source;
+        this.width = source.width;
+        this.height = source.height;
         this.updateShape(this.height, this.width);
 
         // Load the shaders when ready and return the promise
         var step = [[this.vShader, this.fShader].map(this.getter)];
         step.push(this.toProgram.bind(this), this.toBuffers.bind(this));
-        return Promise.all(step[0]).then(step[1]).then(step[2]).then(this.ready);
+        return Promise.all(step[0]).then(step[1]).then(step[2]);
 
     },
 
@@ -67,6 +59,7 @@ ViaWebGL.prototype = {
     context: function(a){
         return a.getContext('webgl2');
     },
+
     // Get a file as a promise
     getter: function(where) {
         return new Promise(function(done){
@@ -86,6 +79,7 @@ ViaWebGL.prototype = {
             bid.send();
         });
     },
+
     // Link shaders from strings
     toProgram: function(files) {
         var gl = this.gl;
@@ -108,22 +102,21 @@ ViaWebGL.prototype = {
         gl.linkProgram(program);
         return ok('Program','LINK',program);
     },
+
     // Load data to the buffers
     toBuffers: function(program) {
 
         // Allow for custom loading
-        this.gl.useProgram(program);
+        var gl = this.gl;
+        gl.useProgram(program);
         this['gl-loaded'].call(this, program);
 
         // Align viewport with image texture
-        var image_corners = [0, 1, 0, 0, 1, 1, 1, 0];
         var full_corners = [-1, 1, -1, -1, 1, 1, 1, -1];
-        var buffer = new Float32Array(full_corners.concat(image_corners));
+        var buffer = new Float32Array(full_corners);
 
         // Simple constants
-        var gl = this.gl;
         var point_size = 2;
-        var vertex_count = 4;
         var bytes = buffer.BYTES_PER_ELEMENT;
         var point_bytes = point_size * bytes;
 
@@ -139,22 +132,18 @@ ViaWebGL.prototype = {
 
         // Assign attributes
         var pos = gl.getAttribLocation(program, 'a_pos');
-        var offset = 0 * vertex_count * point_bytes;
+        var offset = 0 * this.vertex_count * point_bytes;
 
         this.position_attributes = [pos, point_size, gl.FLOAT,
                                     0, point_bytes, offset];
 
         // Get texture
-        this.tex = {
-            texParameteri: [
-                [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrap],
-                [gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrap],
-                [gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.filter],
-                [gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.filter]
-            ],
-            bindTexture: [gl.TEXTURE_2D, gl.createTexture()],
-            drawArrays: [gl.TRIANGLE_STRIP, 0, vertex_count],
-        };
+        this.texture_parameters = [
+            [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrap],
+            [gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrap],
+            [gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.filter],
+            [gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.filter]
+        ];
 
         // Build the position and texture buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -177,34 +166,22 @@ ViaWebGL.prototype = {
 
         // Set Texture for GLSL
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture.apply(gl, this.tex.bindTexture);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture),
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
         // Apply texture parameters
-        this.tex.texParameteri.map(function(x){
-            gl.texParameteri.apply(gl, x);
-        });
+        gl.texParameteri.apply(gl, this.texture_parameters);
+
         // Send the tile into the texture.
-        var output = [gl.TEXTURE_2D, 0, gl.RG8UI,
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8UI,
                       this.width, this.height, 0,
                       gl.RG_INTEGER, gl.UNSIGNED_BYTE,
-                      pixels];
-        gl.texImage2D.apply(gl, output);
+                      pixels);
 
         // Draw everything needed to canvas
-        gl.drawArrays.apply(gl, this.tex.drawArrays);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.vertex_count);
 
-        // Apply to container if needed
-        if (this.container) {
-            this.container.appendChild(this.gl.canvas);
-        }
         return this.gl.canvas;
-    },
-    toggle: function() {
-        this.on ++;
-        this.container.innerHTML = '';
-        this.container.appendChild(this.toCanvas(this.source));
-
     }
 }
