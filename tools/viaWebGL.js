@@ -15,7 +15,7 @@ ViaWebGL = function(incoming) {
     this.one_point_size = 2 * Float32Array.BYTES_PER_ELEMENT;
     this.points_list_size = 4 * this.one_point_size;
     this.points_buffer = new Float32Array([
-        -1, 1, -1, -1, 1, 1, 1, -1
+        0, 1, 0, 0, 1, 1, 1, 0
     ]);
 
     // Make texture and gl context
@@ -109,7 +109,7 @@ ViaWebGL.prototype = {
 
         // Get GLSL locations
         var u_tile = gl.getUniformLocation(program, 'u_tile');
-        var a_pos = gl.getAttribLocation(program, 'a_pos');
+        var a_uv = gl.getAttribLocation(program, 'a_uv');
         var u8 = gl.getUniformLocation(program, 'u8');
 
         // Assign uniform values
@@ -121,8 +121,8 @@ ViaWebGL.prototype = {
         gl.bufferData(gl.ARRAY_BUFFER, this.points_buffer, gl.STATIC_DRAW);
 
         // Enable vertex buffer
-        gl.enableVertexAttribArray(a_pos);
-        gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, 0, this.one_point_size,
+        gl.enableVertexAttribArray(a_uv);
+        gl.vertexAttribPointer(a_uv, 2, gl.FLOAT, 0, this.one_point_size,
                                0 * this.points_list_size)
 
         // Set Texture for GLSL
