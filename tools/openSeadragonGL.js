@@ -29,11 +29,14 @@ openSeadragonGL = function(openSD) {
             // Get shape of tile
             var w = e.rendered.canvas.width;
             var h = e.rendered.canvas.height;
+            
+            // Get shape of filtered tile
+            var gl_w = this.viaGL.width;
+            var gl_h = this.viaGL.height;
 
             // Render a webGL canvas to an input canvas
-            var output = this.viaGL.loadArray(w, h,
-                                              e.tile._array);
-            e.rendered.drawImage(output, 0, 0);
+            var output = this.viaGL.loadArray(w, h, e.tile._array);
+            e.rendered.drawImage(output, 0, 0, gl_w, gl_h, 0, 0, w, h);
         }
     };
     this.defaults = {
