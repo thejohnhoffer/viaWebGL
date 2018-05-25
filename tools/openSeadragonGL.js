@@ -9,6 +9,9 @@ openSeadragonGL = function(openSD) {
         'tile-loaded': function(e) {
             // Unpack png images to a tile's typed array
             var decoder = new Promise(function(resolve, reject) {
+                if (!e.image) {
+                  reject();
+                }
                 // Decode the image array
                 var img  = window.UPNG.decode(e.image._array);
                 
