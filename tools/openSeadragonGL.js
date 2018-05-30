@@ -76,8 +76,8 @@ openSeadragonGL.prototype = {
     // Merge with viaGL
     merger: function(e) {
         // Take GL height and width from OpenSeaDragon
-        this.width = this.openSD.source.getTileWidth();
-        this.height = this.openSD.source.getTileHeight();
+        this.width = this.width || this.openSD.source.getTileWidth();
+        this.height = this.height || this.openSD.source.getTileHeight();
         // Add all viaWebGL properties
         for (var key of this.and(this.viaGL)) {
             this.viaGL[key] = this[key];
