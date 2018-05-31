@@ -45,15 +45,24 @@ ViaWebGL.prototype = {
             this.width = source.width;
         }
         this.source = source;
-        this.gl.canvas.width = this.width;
-        this.gl.canvas.height = this.height;
-        this.gl.viewport(0, 0, this.width, this.height);
+        this.updateShape(this.height, this.width);
+
         // Load the shaders when ready and return the promise
         var step = [[this.vShader, this.fShader].map(this.getter)];
         step.push(this.toProgram.bind(this), this.toBuffers.bind(this));
         return Promise.all(step[0]).then(step[1]).then(step[2]).then(this.ready);
 
     },
+
+    updateShape: function(width, height) {
+
+        this.width = width;
+        this.height = height;
+        this.gl.canvas.width = width;
+        this.gl.canvas.height = height;
+        this.gl.viewport(0, 0, this.width, this.height);
+    },
+
     // Make a canvas
     maker: function(options){
         return this.context(document.createElement('canvas'));
@@ -109,26 +118,31 @@ ViaWebGL.prototype = {
         this.gl.useProgram(program);
         this['gl-loaded'].call(this, program);
 
-        // Unchangeable square array buffer fills viewport with texture
-        var boxes = [[-1, 1,-1,-1, 1, 1, 1,-1], [0, 1, 0, 0, 1, 1, 1, 0]];
-        var buffer = new Float32Array([].concat.apply([], boxes));
-        var bytes = buffer.BYTES_PER_ELEMENT;
+        // Align viewport with image texture
+        var image_corners = [0, 1, 0, 0, 1, 1, 1, 0];
+        var full_corners = [-1, 1, -1, -1, 1, 1, 1, -1];
+        var buffer = new Float32Array(full_corners.concat(image_corners));
+
+        // Simple constants
         var gl = this.gl;
-        var count = 4;
+        var point_size = 2;
+        var vertex_count = 4;
+        var bytes = buffer.BYTES_PER_ELEMENT;
+        var point_bytes = point_size * bytes;
 
         // Get uniform term
         var tile_size = gl.getUniformLocation(program, this.tile_size);
         gl.uniform2f(tile_size, gl.canvas.height, gl.canvas.width);
 
         // Get attribute terms
-        this.att = [this.pos, this.tile_pos].map(function(name, number) {
+        this.att = [this.pos, this.tile_pos].map(function(name, index) {
 
-            var index = Math.min(number, boxes.length-1);
-            var vec = Math.floor(boxes[index].length/count);
             var vertex = gl.getAttribLocation(program, name);
+            var offset = index * vertex_count * point_bytes;
 
-            return [vertex, vec, gl.FLOAT, 0, vec*bytes, count*index*vec*bytes];
+            return [vertex, point_size, gl.FLOAT, 0, point_bytes, offset];
         });
+
         // Get texture
         this.tex = {
             texParameteri: [
@@ -139,9 +153,10 @@ ViaWebGL.prototype = {
             ],
             texImage2D: [gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
             bindTexture: [gl.TEXTURE_2D, gl.createTexture()],
-            drawArrays: [gl.TRIANGLE_STRIP, 0, count],
+            drawArrays: [gl.TRIANGLE_STRIP, 0, vertex_count],
             pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1]
         };
+
         // Build the position and texture buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
@@ -158,6 +173,8 @@ ViaWebGL.prototype = {
             }
             return tile;
         }
+        // Update shape for image or canvas
+        this.updateShape(tile.width, tile.height);
 
         // Allow for custom drawing in webGL
         this['gl-drawing'].call(this,tile);
