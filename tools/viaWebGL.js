@@ -139,14 +139,14 @@ ViaWebGL.prototype = {
 
     },
     // Turns array into a rendered canvas
-    loadArray: function(width, height, pixels, format='u16_1') {
+    loadArray: function(width, height, pixels, format='u16') {
 
         // Allow for custom drawing in webGL
         this['gl-drawing'].call(this);
         var gl = this.gl;
 
         // Send the tile into the texture.
-        if (format == 'u16_1') {
+        if (format == 'u16') {
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8UI, width, height, 0,
                         gl.RG_INTEGER, gl.UNSIGNED_BYTE, pixels);
         }

@@ -21,7 +21,7 @@ openSeadragonGL = function(openSD) {
                   // Assign the 16-bit array to the tile
                   img.data = img.data.slice(0, 2 * img.width * img.height)
                   e.tile._array = img.data;
-                  e.tile._format = 'u16_1';
+                  e.tile._format = 'u16';
                 }
                 // Signal 32-bit rgba png
                 else if (img.ctype == 6 && img.depth == 8) {
@@ -29,7 +29,7 @@ openSeadragonGL = function(openSD) {
                   // Assign the 16-bit array to the tile
                   img.data = img.data.slice(0, 4 * img.width * img.height)
                   e.tile._array = img.data;
-                  e.tile._format = 'u32_4';
+                  e.tile._format = 'u32';
                 }
 
                 resolve();
