@@ -150,7 +150,7 @@ ViaWebGL.prototype = {
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8UI, width, height, 0,
                         gl.RG_INTEGER, gl.UNSIGNED_BYTE, pixels);
         }
-        else if (format == 'u32_4') {
+        else if (format == 'u32') {
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8UI, width, height, 0,
                         gl.RGBA_INTEGER, gl.UNSIGNED_BYTE, pixels);
         }
