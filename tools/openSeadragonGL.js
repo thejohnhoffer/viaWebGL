@@ -21,7 +21,17 @@ openSeadragonGL = function(openSD) {
                   // Assign the 16-bit array to the tile
                   img.data = img.data.slice(0, 2 * img.width * img.height)
                   e.tile._array = img.data;
+                  e.tile._format = 'u16_1';
                 }
+                // Signal 32-bit rgba png
+                else if (img.ctype == 6 && img.depth == 8) {
+
+                  // Assign the 16-bit array to the tile
+                  img.data = img.data.slice(0, 4 * img.width * img.height)
+                  e.tile._array = img.data;
+                  e.tile._format = 'u32_4';
+                }
+
                 resolve();
             });
            
@@ -38,7 +48,7 @@ openSeadragonGL = function(openSD) {
             var gl_h = this.viaGL.height;
 
             // Render a webGL canvas to an input canvas
-            var output = this.viaGL.loadArray(w, h, e.tile._array);
+            var output = this.viaGL.loadArray(w, h, e.tile._array, e.tile._format);
             e.rendered.drawImage(output, 0, 0, gl_w, gl_h, 0, 0, w, h);
         }
     };

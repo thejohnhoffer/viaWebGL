@@ -139,15 +139,21 @@ ViaWebGL.prototype = {
 
     },
     // Turns array into a rendered canvas
-    loadArray: function(width, height, pixels) {
+    loadArray: function(width, height, pixels, format='u16_1') {
 
         // Allow for custom drawing in webGL
         this['gl-drawing'].call(this);
         var gl = this.gl;
 
         // Send the tile into the texture.
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8UI, width, height, 0,
-                      gl.RG_INTEGER, gl.UNSIGNED_BYTE, pixels);
+        if (format == 'u16_1') {
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8UI, width, height, 0,
+                        gl.RG_INTEGER, gl.UNSIGNED_BYTE, pixels);
+        }
+        else if (format == 'u32_4') {
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8UI, width, height, 0,
+                        gl.RGBA_INTEGER, gl.UNSIGNED_BYTE, pixels);
+        }
 
         // Draw four points
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
