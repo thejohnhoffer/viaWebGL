@@ -71,6 +71,8 @@ ViaWebGL.prototype = {
                 return done(where);
             };
             bid.open('GET', where, true);
+            // Prevent cache of shaders
+            bid.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
             bid.onerror = bid.onload = win;
             bid.send();
         });
