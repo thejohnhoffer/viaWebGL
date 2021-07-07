@@ -21,7 +21,7 @@
   "homepage": "https://github.com/thejohnhoffer/viaWebGL",
   "dependencies": {
     "upng-js": "^2.1.0",
-    "openseadragon": "git://github.com/thejohnhoffer/openseadragon.git#88a3858e8bb38d90831f2ae410e24ec7b8eb8873"
+    "openseadragon": "thejohnhoffer/openseadragon#88a3858e8bb38d90831f2ae410e24ec7b8eb8873"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
