@@ -10,21 +10,25 @@ ViaWebGL = function(incoming) {
     ~*~*~*~*~*~*~*~*~*~*~*~*/
     this['gl-drawing'] = function(e) { return e; };
     this['gl-loaded'] = function(e) { return e; };
-    this.ready = function(e) { return e; };
 
-    var gl = this.maker();
-    this.flat = document.createElement('canvas').getContext('2d');
-    this.tile_size = 'u_tile_size';
+    // Define vertex input buffer
+    this.one_point_size = 2 * Float32Array.BYTES_PER_ELEMENT;
+    this.points_list_size = 4 * this.one_point_size;
+    this.points_buffer = new Float32Array([
+        0, 1, 0, 0, 1, 1, 1, 0
+    ]);
+
+    // Make texture and gl context
+    this.gl = document.createElement('canvas').getContext('webgl2');
+    this.texture = this.gl.createTexture();
+    this.buffer = this.gl.createBuffer();
+
+    // Intialize useless defaults
     this.vShader = 'vShader.glsl';
     this.fShader = 'fShader.glsl';
-    this.wrap = gl.CLAMP_TO_EDGE;
-    this.tile_pos = 'a_tile_pos';
-    this.filter = gl.NEAREST;
-    this.pos = 'a_pos';
-    this.height = 128;
-    this.width = 128;
-    this.on = 0;
-    this.gl = gl;
+    this.height = 0;
+    this.width = 0;
+
     // Assign from incoming terms
     for (var key in incoming) {
         this[key] = incoming[key];
@@ -33,34 +37,25 @@ ViaWebGL = function(incoming) {
 
 ViaWebGL.prototype = {
 
-    init: function(source) {
-        var ready = this.ready;
-        // Allow for mouse actions on click
-        if (this.hasOwnProperty('container') && this.hasOwnProperty('onclick')) {
-            this.container.onclick = this[this.onclick].bind(this);
-        }
-        if (source && source.height && source.width) {
-            this.ready = this.toCanvas.bind(this,source);
-            this.height = source.height;
-            this.width = source.width;
-        }
-        this.source = source;
-        this.gl.canvas.width = this.width;
-        this.gl.canvas.height = this.height;
-        this.gl.viewport(0, 0, this.width, this.height);
+    init: function() {
+
         // Load the shaders when ready and return the promise
         var step = [[this.vShader, this.fShader].map(this.getter)];
         step.push(this.toProgram.bind(this), this.toBuffers.bind(this));
-        return Promise.all(step[0]).then(step[1]).then(step[2]).then(this.ready);
+        return Promise.all(step[0]).then(step[1]).then(step[2]);
 
     },
-    // Make a canvas
-    maker: function(options){
-        return this.context(document.createElement('canvas'));
+
+    updateShape: function(width, height) {
+
+        this.width = width;
+        this.height = height;
+        this.gl.canvas.width = width;
+        this.gl.canvas.height = height;
+        this.gl.viewport(0, 0, width, height);
     },
-    context: function(a){
-        return a.getContext('experimental-webgl') || a.getContext('webgl');
-    },
+
+
     // Get a file as a promise
     getter: function(where) {
         return new Promise(function(done){
@@ -76,10 +71,13 @@ ViaWebGL.prototype = {
                 return done(where);
             };
             bid.open('GET', where, true);
+            // Prevent cache of shaders
+            bid.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
             bid.onerror = bid.onload = win;
             bid.send();
         });
     },
+
     // Link shaders from strings
     toProgram: function(files) {
         var gl = this.gl;
@@ -102,100 +100,66 @@ ViaWebGL.prototype = {
         gl.linkProgram(program);
         return ok('Program','LINK',program);
     },
+
     // Load data to the buffers
     toBuffers: function(program) {
 
         // Allow for custom loading
-        this.gl.useProgram(program);
+        var gl = this.gl;
+        gl.useProgram(program);
         this['gl-loaded'].call(this, program);
 
-        // Unchangeable square array buffer fills viewport with texture
-        var boxes = [[-1, 1,-1,-1, 1, 1, 1,-1], [0, 1, 0, 0, 1, 1, 1, 0]];
-        var buffer = new Float32Array([].concat.apply([], boxes));
-        var bytes = buffer.BYTES_PER_ELEMENT;
-        var gl = this.gl;
-        var count = 4;
+        // Get GLSL locations
+        var u_tile = gl.getUniformLocation(program, 'u_tile');
+        var a_uv = gl.getAttribLocation(program, 'a_uv');
+        var u8 = gl.getUniformLocation(program, 'u8');
 
-        // Get uniform term
-        var tile_size = gl.getUniformLocation(program, this.tile_size);
-        gl.uniform2f(tile_size, gl.canvas.height, gl.canvas.width);
+        // Assign uniform values
+        gl.uniform1ui(u8, 255);
+        gl.uniform1i(u_tile, 0);
 
-        // Get attribute terms
-        this.att = [this.pos, this.tile_pos].map(function(name, number) {
+        // Assign vertex inputs
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.points_buffer, gl.STATIC_DRAW);
 
-            var index = Math.min(number, boxes.length-1);
-            var vec = Math.floor(boxes[index].length/count);
-            var vertex = gl.getAttribLocation(program, name);
-
-            return [vertex, vec, gl.FLOAT, 0, vec*bytes, count*index*vec*bytes];
-        });
-        // Get texture
-        this.tex = {
-            texParameteri: [
-                [gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrap],
-                [gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrap],
-                [gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.filter],
-                [gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.filter]
-            ],
-            texImage2D: [gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE],
-            bindTexture: [gl.TEXTURE_2D, gl.createTexture()],
-            drawArrays: [gl.TRIANGLE_STRIP, 0, count],
-            pixelStorei: [gl.UNPACK_FLIP_Y_WEBGL, 1]
-        };
-        // Build the position and texture buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
-    },
-    // Turns image or canvas into a rendered canvas
-    toCanvas: function(tile) {
-        // Stop Rendering
-        if (this.on%2 !== 0) {
-            if(tile.nodeName == 'IMG') {
-                this.flat.canvas.width = tile.width;
-                this.flat.canvas.height = tile.height;
-                this.flat.drawImage(tile,0,0,tile.width,tile.height);
-                return this.flat.canvas;
-            }
-            return tile;
-        }
-
-        // Allow for custom drawing in webGL
-        this['gl-drawing'].call(this,tile);
-        var gl = this.gl;
-
-        // Set Attributes for GLSL
-        this.att.map(function(x){
-
-            gl.enableVertexAttribArray(x.slice(0,1));
-            gl.vertexAttribPointer.apply(gl, x);
-        });
+        // Enable vertex buffer
+        gl.enableVertexAttribArray(a_uv);
+        gl.vertexAttribPointer(a_uv, 2, gl.FLOAT, 0, this.one_point_size,
+                               0 * this.points_list_size)
 
         // Set Texture for GLSL
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture.apply(gl, this.tex.bindTexture);
-        gl.pixelStorei.apply(gl, this.tex.pixelStorei);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture),
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
-        // Apply texture parameters
-        this.tex.texParameteri.map(function(x){
-            gl.texParameteri.apply(gl, x);
-        });
-        // Send the tile into the texture.
-        var output = this.tex.texImage2D.concat([tile]);
-        gl.texImage2D.apply(gl, output);
+        // Assign texture parameters
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 
-        // Draw everything needed to canvas
-        gl.drawArrays.apply(gl, this.tex.drawArrays);
-
-        // Apply to container if needed
-        if (this.container) {
-            this.container.appendChild(this.gl.canvas);
-        }
-        return this.gl.canvas;
     },
-    toggle: function() {
-        this.on ++;
-        this.container.innerHTML = '';
-        this.container.appendChild(this.toCanvas(this.source));
+    // Turns array into a rendered canvas
+    loadArray: function(width, height, pixels, format='u16') {
 
+        // Allow for custom drawing in webGL
+        this['gl-drawing'].call(this);
+        var gl = this.gl;
+
+        // Send the tile into the texture.
+        if (format == 'u16') {
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8UI, width, height, 0,
+                        gl.RG_INTEGER, gl.UNSIGNED_BYTE, pixels);
+        }
+        else if (format == 'u32') {
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8UI, width, height, 0,
+                        gl.RGBA_INTEGER, gl.UNSIGNED_BYTE, pixels);
+        }
+
+        // Draw four points
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+        return this.gl.canvas;
     }
 }
