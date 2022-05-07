@@ -1,2 +1,5 @@
 *.swp
 .idea/
+
+build
+node_modules
