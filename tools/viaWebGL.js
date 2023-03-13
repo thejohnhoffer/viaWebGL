@@ -4,7 +4,7 @@
 /* Built on 2016-9-9
 /* http://via.hoff.in
 */
-ViaWebGL = function(incoming) {
+const ViaWebGL = function(incoming) {
 
     /* Custom WebGL API calls
     ~*~*~*~*~*~*~*~*~*~*~*~*/
