@@ -2,8 +2,8 @@
 
 window.OpenSeadragon = require('openseadragon');
 window.UPNG = require('upng-js');
-require('./openSeadragonGL');
-require('./viaWebGL');
+const openSeadragonGL = require('./openSeadragonGL');
+const ViaWebGL = require('./viaWebGL');
 
 module.exports = {
   "ViaWebGL": ViaWebGL,

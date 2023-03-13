@@ -163,3 +163,5 @@ ViaWebGL.prototype = {
         return this.gl.canvas;
     }
 }
+
+module.exports = ViaWebGL;

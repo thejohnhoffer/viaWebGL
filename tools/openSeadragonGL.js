@@ -137,3 +137,5 @@ openSeadragonGL.prototype = {
         this.openSD.addControl(toolbar.element,{anchor: OpenSeadragon.ControlAnchor.TOP_LEFT});
     }
 }
+
+module.exports = openSeadragonGL;
