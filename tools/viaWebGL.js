@@ -1,10 +1,9 @@
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 /* viaWebGL
 /* Set shaders on Image or Canvas with WebGL
-/* Built on 2016-9-9
-/* http://via.hoff.in
+/* Built on 2023-03-13
 */
-const ViaWebGL = function(incoming) {
+function ViaWebGL(incoming) {
 
     /* Custom WebGL API calls
     ~*~*~*~*~*~*~*~*~*~*~*~*/

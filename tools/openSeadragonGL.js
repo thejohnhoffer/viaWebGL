@@ -2,7 +2,7 @@ const ViaWebGL = require('./viaWebGL');
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 /* openSeadragonGL - Set Shaders in OpenSeaDragon with viaWebGL
 */
-const openSeadragonGL = function(openSD) {
+function openSeadragonGL(openSD) {
 
     /* OpenSeaDragon API calls
     ~*~*~*~*~*~*~*~*~*~*~*~*/
